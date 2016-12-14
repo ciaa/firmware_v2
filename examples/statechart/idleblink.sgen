@@ -1,0 +1,11 @@
+GeneratorModel for yakindu::c {
+
+	statechart idleblink {
+
+		feature Outlet {
+			targetProject = "workspace"
+			targetFolder = "examples/statechart/gen"
+			libraryTargetFolder = "examples/statechart/gen"
+		}
+	}
+}
