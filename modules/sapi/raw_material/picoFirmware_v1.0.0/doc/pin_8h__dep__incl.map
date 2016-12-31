@@ -1,0 +1,17 @@
+<map id="inc/pin.h" name="inc/pin.h">
+<area shape="rect" id="node2" href="$pin_8c.html" title="src/pin.c" alt="" coords="5,229,77,256"/>
+<area shape="rect" id="node3" href="$systick_8c.html" title="src/systick.c" alt="" coords="737,229,834,256"/>
+<area shape="rect" id="node4" href="$uart_8c.html" title="src/uart.c" alt="" coords="525,304,603,331"/>
+<area shape="rect" id="node5" href="$analog_8h.html" title="inc/analog.h" alt="" coords="118,80,210,107"/>
+<area shape="rect" id="node7" href="$picoapi_8h.html" title="inc/picoapi.h" alt="" coords="315,155,410,181"/>
+<area shape="rect" id="node13" href="$sd__spi_8h.html" title="inc/sd_spi.h" alt="" coords="614,80,706,107"/>
+<area shape="rect" id="node14" href="$pwm_8h.html" title="inc/pwm.h" alt="" coords="412,80,495,107"/>
+<area shape="rect" id="node15" href="$spi_8h.html" title="inc/spi.h" alt="" coords="242,80,313,107"/>
+<area shape="rect" id="node16" href="$i2c_8h.html" title="inc/i2c.h" alt="" coords="519,80,590,107"/>
+<area shape="rect" id="node6" href="$analog_8c.html" title="src/analog.c" alt="" coords="101,229,195,256"/>
+<area shape="rect" id="node8" href="$i2c_8c.html" title="src/i2c.c" alt="" coords="523,229,595,256"/>
+<area shape="rect" id="node9" href="$pwm_8c.html" title="src/pwm.c" alt="" coords="320,229,403,256"/>
+<area shape="rect" id="node10" href="$sd__spi_8c.html" title="src/sd_spi.c" alt="" coords="619,229,712,256"/>
+<area shape="rect" id="node11" href="$spi_8c.html" title="src/spi.c" alt="" coords="427,229,499,256"/>
+<area shape="rect" id="node12" href="$uart_8h.html" title="inc/uart.h" alt="" coords="219,229,295,256"/>
+</map>

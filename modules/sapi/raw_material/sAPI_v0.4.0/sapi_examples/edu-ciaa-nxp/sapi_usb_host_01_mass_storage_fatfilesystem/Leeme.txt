@@ -1,0 +1,14 @@
+Recordar compilar con "make" desde adentro esta misma carpeta.
+
+De manera similar al "Makefile.mine" del CIAA Firmware tenemos el archivo 
+"project.mk" que permite seleccionar el proyecto y placa objetivo a compilar.
+
+Este ejemplo escribe un archivo de texto en un pendrive conectado al USB0 
+(USB OTG) de la EDU-CIAA-NXP. Para conectar el pedrive a dicho puerto es 
+necesario un cable OTG.
+
+Utiliza el modulo FatFs (http://elm-chan.org/fsw/ff/00index_e.html) y las
+funciones de la API de LPCOpen (https://www.lpcware.com/lpcopen).
+
+Se debe conectar el pendrive antes de correr el ejemplo y esperar unos 
+segundos a que concluya la grabación (se enciende el LEDG cuando esto ocurre).
