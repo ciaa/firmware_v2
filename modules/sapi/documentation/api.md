@@ -26,6 +26,7 @@ Además define los tipos de datos:
 - **Booleano** ``bool_t``
 - **Enteros sin signo** ``uint8_t, uint16_t, uint32_t, uint64_t``
 - **Enteros con signo** ``int8_t, int16_t, int32_t, int64_t``
+- **Flotantes** ``float32_t, float64_t``
 
 El tipo de datos para el conteo de tiempo en la unidad Tick
 
@@ -62,6 +63,11 @@ EDU-CIAA-NXP:
 	 CAN_TD, CAN_RD, 
 	 RS232_TXD, RS232_RXD``
 
+	``GPIO25, GPIO26, GPIO27, GPIO28, 
+	 GPIO29, GPIO30, GPIO31, 
+	 GPIO32, GPIO33, 
+	 GPIO34, GPIO35``
+
 
 - P2 header
 
@@ -69,6 +75,11 @@ EDU-CIAA-NXP:
 	 LCD1, LCD2, LCD3, LCD4, LCDEN, LCDRS,
 	 SPI_MISO, SPI_MOSI,
 	 ENET_TXD0, ENET_TXD1, ENET_TXEN, ENET_RXD0, ENET_RXD1, ENET_MDIO, ENET_CRS_DV, ENET_MDC,``
+
+	``GPIO0, GPIO1, GPIO2, GPIO3, GPIO4, GPIO5, GPIO6, GPIO7, GPIO8
+	 GPIO9, GPIO10, GPIO11, GPIO12, GPIO13, GPIO14,
+	 GPIO15, GPIO16,
+	 GPIO17, GPIO18, GPIO19, GPIO20, GPIO21, GPIO22, GPIO23, GPIO24,``
 
 
 - Switches
@@ -90,6 +101,8 @@ CIAA-NXP:
 
 EDU-CIAA-NXP: ``CH1, CH2, CH3``
 
+EDU-CIAA-NXP: ``ADC0CH0, ADC0CH1, ADC0CH2``
+
 CIAA-NXP: ``AI0, AI1, AI2, AI3``
 
 **DAC Map**
@@ -101,6 +114,11 @@ CIAA-NXP: ``AO``
 **Uart Map**
 
 ``UART_USB, UART_232, UART_485``
+``UART0, UART1, UART2``
+
+**Timer Map**
+
+``TIMER0, TIMER1, TIMER2, TIMER3, TIMER4``
 
 **Pwm Map**
 
@@ -115,19 +133,41 @@ CIAA-NXP: ``AO``
 ``I2C0``
 
 
-### ISR Vector
 
-Contiene la tabla de vectores de interrupción.
+### GPIO
 
-### Board
+Manejo de Entradas y Salidas (booleanas) de propósito general.
 
-Contiene la función de configuración para inicialización de la plataforma de
-hardware:
+**Configuración inicial y modo de una entrada o salida**
 
-``void boardConfig( void );``
+``bool_t gpioConfig( gpioMap_t pin, gpioConfig_t config );``
 
-- Parámetro: ``void``
-- Retorna: ``void``
+- Parámetro: ``gpioMap_t pin`` pin a configurar (ver GPIO Map).
+- Parámetro: ``gpioConfig_t config`` configuración.
+- Retorna: ``bool_t`` TRUE si la configuración es correcta.
+
+Posibles configuraciones:
+
+- ``GPIO_ENABLE`` Habilita las entradas y salidas de porpósito general.
+- ``GPIO_INPUT, GPIO_INPUT_PULLUP, GPIO_INPUT_PULLDOWN, GPIO_INPUT_PULLUP_PULLDOWN`` Pin configurado como entrada en sus distintas variantes.
+- ``GPIO_OUTPUT`` Pin configurado como salida.
+
+**Lectura de Entrada**
+
+``bool_t gpioRead( gpioMap_t pin );``
+
+- Parámetro: ``gpioMap_t pin`` pin a leer (ver GPIO Map).
+- Retorna: ``bool_t`` valor de la entrada.
+
+
+**Escritura de Salida**
+
+``bool_t gpioWrite( gpioMap_t pin, bool_t value );``
+
+- Parámetro: ``gpioMap_t pin`` pin a escribir (ver GPIO Map).
+- Parámetro: ``bool_t value`` valor a escribir en el pin.
+- Retorna: ``bool_t`` FALSE en caso de errores.
+
 
 ### Tick
 
@@ -251,39 +291,6 @@ Con ``delayWrite( &myDelay, 1000 );`` se puede cambiar la duración de un delay
 en tiempo de ejecución.
 
 
-### GPIO
-
-Manejo de Entradas y Salidas (booleanas) de propósito general.
-
-**Configuración inicial y modo de una entrada o salida**
-
-``bool_t gpioConfig( gpioMap_t pin, gpioConfig_t config );``
-
-- Parámetro: ``gpioMap_t pin`` pin a configurar (ver GPIO Map).
-- Parámetro: ``gpioConfig_t config`` configuración.
-- Retorna: ``bool_t`` TRUE si la configuración es correcta.
-
-Posibles configuraciones:
-
-- ``GPIO_ENABLE`` Habilita las entradas y salidas de porpósito general.
-- ``GPIO_INPUT, GPIO_INPUT_PULLUP, GPIO_INPUT_PULLDOWN, GPIO_INPUT_PULLUP_PULLDOWN`` Pin configurado como entrada en sus distintas variantes.
-- ``GPIO_OUTPUT`` Pin configurado como salida.
-
-**Lectura de Entrada**
-
-``bool_t gpioRead( gpioMap_t pin );``
-
-- Parámetro: ``gpioMap_t pin`` pin a leer (ver GPIO Map).
-- Retorna: ``bool_t`` valor de la entrada.
-
-
-**Escritura de Salida**
-
-``bool_t gpioWrite( gpioMap_t pin, bool_t value );``
-
-- Parámetro: ``gpioMap_t pin`` pin a escribir (ver GPIO Map).
-- Parámetro: ``bool_t value`` valor a escribir en el pin.
-- Retorna: ``bool_t`` FALSE en caso de errores.
 
 ### ADC
 
