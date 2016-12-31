@@ -1,0 +1,10 @@
+<map id="inc/sd_spi.h" name="inc/sd_spi.h">
+<area shape="rect" id="node2" href="$pin_8h.html" title="pin.h" alt="" coords="473,80,524,107"/>
+<area shape="rect" id="node3" href="$picoapi_8h.html" title="picoapi.h" alt="" coords="387,155,461,181"/>
+<area shape="rect" id="node7" href="$systick_8h.html" title="systick.h" alt="" coords="99,229,173,256"/>
+<area shape="rect" id="node8" href="$uart_8h.html" title="uart.h" alt="" coords="198,229,253,256"/>
+<area shape="rect" id="node9" href="$analog_8h.html" title="analog.h" alt="" coords="541,229,611,256"/>
+<area shape="rect" id="node10" href="$pwm_8h.html" title="pwm.h" alt="" coords="636,229,697,256"/>
+<area shape="rect" id="node11" href="$spi_8h.html" title="spi.h" alt="" coords="721,229,772,256"/>
+<area shape="rect" id="node12" href="$i2c_8h.html" title="i2c.h" alt="" coords="465,229,516,256"/>
+</map>
