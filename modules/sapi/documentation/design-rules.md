@@ -120,7 +120,7 @@ Valores posibles:
 - gpioSetValue( GPIOi, value );
 - gpioValue = gpioGetValue( GPIOi );
 
-- <gpioRead> alias de <gpioGetValue>
-- <gpioWrite> alias de <gpioSetValue>
-- <gpioConfig> alias de <gpioSetMode>
+- gpioRead alias de gpioGetValue
+- gpioWrite alias de gpioSetValue
+- gpioConfig> alias de gpioSetMode
 
