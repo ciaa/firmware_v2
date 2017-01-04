@@ -56,71 +56,133 @@ GPIO modela un único pin de entrada/salida de porpósito general.
 #### Propiedades de GPIO
 
 - Propiedades de configuración:
-   - mode (o direction? que les gusta más?)
-   - speed
-   - power
+    - ``mode`` *(o direction? que les gusta más?)*
+    - ``speed``
+    - ``power``
 - Propiedades de valor:
-   - value
+    - ``value``
 - Propiedades de eventos:
-   - event
-   - eventCallback
+    - ``event``
+    - ``eventCallback``
+
+**Valores posibles:**
+
+- mode:
+    - ``GPIO_INPUT`` (valor por defecto). Posibles flags de modificación:
+        - ``GPIO_NOPULL`` (valor por defecto)
+        - ``GPIO_PULLUP``
+        - ``GPIO_PULLDOWN``
+        - ``GPIO_PULLUP | GPIO_PULLDOWN``
+        - ``GPIO_PULLUPDOWN``
+    - ``GPIO_OUTPUT``. Posibles flags de modificación:
+        - ``GPIO_PUSHPULL`` (valor por defecto)
+        - ``GPIO_PUSHPULL | GPIO_STRENGTH<i>`` (i=0...7)
+        - ``GPIO_OPENCOLLECTOR`` ( es equivalente también ``GPIO_OPENDRAIN``)
+        - ``GPIO_OPENCOLLECTOR | GPIO_PULLUP``
+- speed: ``GPIO_SPEED<i>`` (i=0...7)
+
+- power: ``ON``, ``OFF``, ``ENABLE`` o ``DISABLE``
+
+- value: ``ON``, ``OFF``, ``HIGH``, ``LOW``, ``TRUE`` o ``FALSE``
+
+- event:
+    - ``GPIO_EVENT_DISABLE`` (valor por defecto)
+    - ``GPIO_LEVEL`` Level-sensitive (high/low). Posibles flags de modificación:
+        - ``GPIO_LEVEL_HIGH`` (valor por defecto)
+        - ``GPIO_LEVEL_LOW``
+        - ``GPIO_LEVEL_HIGH | GPIO_LEVEL_LOW``
+        - ``GPIO_LEVEL_BOTH``
+    - ``GPIO_EDGE`` Edge (Rising/falling). Posibles flags de modificación:
+        - ``GPIO_EDGE_RISING`` (valor por defecto)
+        - ``GPIO_EDGE_FALLING``
+        - ``GPIO_EDGE_RISING | GPIO_EDGE_FALLING``
+        - ``GPIO_EDGE_BOTH``
+    - ``GPIO_ASYNCHRONOUS_EDGE`` Asynchronous Edge (Rising/falling). Posibles flags de modificación:
+        - ``GPIO_EDGE_RISING`` (valor por defecto)
+        - ``GPIO_EDGE_FALLING``
+        - ``GPIO_EDGE_RISING | GPIO_EDGE_FALLING``
+        - ``GPIO_EDGE_BOTH``
+- eventCallback:
+    - Una estructura con el puentero a función y el puntero al parámetro que le pueda pasar el usuario a dicha función.
+
+
+#### Métodos de GPIO
+
+Getters y Setters de todas sus propiedades, por ejemplo:
+
+- ``gpioSetMode( GPIO<i>, GPIO_INPUT | GPIO_PULLUP );``
+- ``gpioMode = gpioGetMode( GPIO<i> );``
+
+- ``gpioSetValue( GPIO<i>, value );``
+- ``gpioValue = gpioGetValue( GPIO<i> );``
+
+Alias de los anteriores:
+
+- ``gpioRead();`` alias de ``gpioGetValue();``
+- ``gpioWrite();`` alias de ``gpioSetValue();``
+- ``gpioConfig();`` alias de ``gpioSetMode();``
+
+
+### Modelo de UART
+
+UART modela un transmisor/receptor asincrónico universal (coumnmente llamado *puerto serie*).
+
+#### Propiedades de UART
+
+- Propiedades de configuración:
+    - ``baudRate``
+    - ``dataBits``
+    - ``stopBits``
+    - ``parity``
+    - ``power``
+- Propiedades de valor:
+    - ``txValue``
+    - ``rxValue``
+- Propiedades de eventos:
+    - ``receiveByteEvent``
+    - ``receiveByteEventCallback``
+    - ``transmiterFreeEvent``
+    - ``transmiterFreeEventCallback``
 
 Valores posibles:
 
-- mode:
-   - GPIO_INPUT (valor por defecto)
-      Posibles flags de modificación:
-      - GPIO_NOPULL (valor por defecto)
-      - GPIO_PULLUP
-      - GPIO_PULLDOWN
-      - GPIO_PULLUP | GPIO_PULLDOWN
-      - GPIO_PULLUPDOWN
-   - GPIO_OUTPUT
-      Posibles flags de modificación:
-      - GPIO_PUSHPULL (valor por defecto)
-      - GPIO_PUSHPULL | GPIO_STRENGTHi (i=0...7)
-      - GPIO_OPENCOLLECTOR == GPIO_OPENDRAIN
-      - GPIO_OPENCOLLECTOR | GPIO_PULLUP
-- speed:
-   - GPIO_SPEEDi (i=0...7)
-- power:
-   - ON | OFF | ENABLE | DISABLE
+- baudRate: ``1200``, ``2400``, ``4800``, ``9600``, ``19200``, ``38400``, ``57600`` o ``115200``.
+- dataBits: ``5`` (o ``0``), ``6``, ``7``, ``8`` o ``9``.
+- stopBits: ``1`` (o ``0``) o ``2``.
+- parity: ``UART_PARITY_NONE`` (o ``0``), ``UART_PARITY_ODD`` (o ``1``)  o ``UART_PARITY_EVEN`` (o ``2``) .
 
-- value:
-   - ON | OFF | HIGH | LOW | TRUE | FALSE
+- power: ``ON``, ``OFF``, ``ENABLE`` o ``DISABLE``
 
-- event
-   - GPIO_NOEVENT (valor por defecto)
-   - GPIO_LEVEL [Level-sensitive (high/low)]
-      Posibles flags de modificación:
-      - GPIO_LEVEL_HIGH (valor por defecto)
-      - GPIO_LEVEL_LOW
-      - GPIO_LEVEL_HIGH | GPIO_LEVEL_LOW
-      - GPIO_LEVEL_BOTH
-   - GPIO_EDGE [Edge (Rising/falling)]
-      - GPIO_EDGE_RISING (valor por defecto)
-      - GPIO_EDGE_FALLING
-      - GPIO_EDGE_RISING | GPIO_EDGE_FALLING
-      - GPIO_EDGE_BOTH
-   - GPIO_ASYNCHRONOUS_EDGE [Asynchronous Edge (Rising/falling)]
-      - GPIO_EDGE_RISING (valor por defecto)
-      - GPIO_ASYNCHRONOUS_EDGE | GPIO_EDGE_FALLING
-      - GPIO_ASYNCHRONOUS_EDGE | GPIO_EDGE_RISING | GPIO_EDGE_FALLING
-      - GPIO_ASYNCHRONOUS_EDGE | GPIO_EDGE_BOTH
-- eventCallback
-   - Una estructura con el puentero a función y el puntero al 
-     parámetro que le pueda pasar el usuario a dicha función.
+- txValue: Un valor del tipo ``uint8_t``.
+- rxValue: {solo lectura} devuelve un valor del tipo ``uint8_t``.
+
+- receiveByteEvent: ``UART_EVENT_DISABLE`` (valor por defecto) o ``UART_EVENT_ENABLE``
+- receiveByteEventCallback: Una estructura con el puentero a función y el puntero al parámetro que le pueda pasar el usuario a dicha función.
+
+- transmiterFreeEvent: ``UART_EVENT_DISABLE`` (valor por defecto) o ``UART_EVENT_ENABLE``
+- transmiterFreeEventCallback: Una estructura con el puentero a función y el puntero al parámetro que le pueda pasar el usuario a dicha función.
 
 
-#### API pública de GPIO
+#### Métodos de UART
 
-- gpioSetMode( GPIOi, GPIO_INPUT | GPIO_PULLUP );
-- gpioMode = gpioGetMode( GPIOi );
+- Getters y Setters de sus propiedades.
 
-- gpioSetValue( GPIOi, value );
-- gpioValue = gpioGetValue( GPIOi );
+- Initialize: ``uartInitialize( UART<i>, UART_BAUDRATE(b) | UART_DATABITS(d) | UART_STOPBITS(s) | UART_PARITY(p) );``
+    - b = un valor de baudRate.
+    - d = un valor de dataBits.
+    - s = un valor de stopBits:.
+    - p = un valor de parity.
 
-- gpioRead alias de gpioGetValue
-- gpioWrite alias de gpioSetValue
-- gpioConfig> alias de gpioSetMode
+- Métodos optimizados utilizando buffers:
+    - ``uartRead( UART<i>, uint8_t* buffer, bufferSize );``
+    - ``uartWrite( UART<i>, uint8_t* buffer, bufferSize );``
+
+- Métodos *legacy*: *(pensemos si los ponemos o no ??)*
+
+    - ``uartReadByte();`` alias de ``uartGetRxValue();``
+    - ``uartWriteByte();`` alias de ``gpioSetTxValue();``
+    - ``uartConfig();`` alias de ``uartInitialize();``
+    - ``uartWriteString();`` *(que opinan de modelar un tipo string_t ??)*
+
+
 
