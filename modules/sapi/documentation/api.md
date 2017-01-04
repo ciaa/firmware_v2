@@ -21,12 +21,18 @@ Estados eléctricos
 - ``HIGH = 1``
 - ``LOW  = 0``
 
+Estados de habilitación
+
+- ``ENABLE  = 1``
+- ``DISABLE = 0``
+
 Además define los tipos de datos:
 
 - **Booleano** ``bool_t``
 - **Enteros sin signo** ``uint8_t, uint16_t, uint32_t, uint64_t``
 - **Enteros con signo** ``int8_t, int16_t, int32_t, int64_t``
 - **Flotantes** ``float32_t, float64_t``
+- **String** ``string_t`` *(lo modelamos?? imagino una struct con el puntero al array y el tamaño)*
 
 El tipo de datos para el conteo de tiempo en la unidad Tick
 
@@ -34,7 +40,7 @@ El tipo de datos para el conteo de tiempo en la unidad Tick
 
 Un tipo de datos para puntero a función:
 
-``typedef bool_t (*sAPI_FuncPtr_t)(void *);``
+``typedef bool_t (*sapiFuncPtr_t)(void *);``
 
 - Parámetro: ``void *`` Para poder pasar cualquier argumento.
 - Retorna: ``bool_t`` Para reportar errores (TRUE si todo está bien).
@@ -42,7 +48,7 @@ Un tipo de datos para puntero a función:
 Utilizando este tipo de datos define la finción Nula que no hace nada y Retorna
 siempre TRUE, esta se utiliza para evitar errores de NULL POINTER.
 
-``bool_t sAPI_NullFuncPtr(void *);``
+``bool_t sapiNullFuncPtr(void *);``
 
 - Parámetro: ``void *`` No usado.
 - Retorna: ``bool_t``Retorna siempre TRUE.

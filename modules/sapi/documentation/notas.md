@@ -208,6 +208,7 @@ periphSetEventCallback( PERIPHi, callbackFunction, myPtr );``
 
 
 
+--------------------------------------------------------------
 
 
 open drain push pull
@@ -224,6 +225,7 @@ open drain push pull
     However, the open-drain allows you to cshort several outputs together, with a common pullup. This is called an wired-OR connection. Now you can drive the output low with any of the IO pins. To drive it high all ouputs have to be high. This is advantageous in some situations, because it eliminates the external gates that would otherwise be required.
 
 
+--------------------------------------------------------------
 
 
 tickConfig( TICK_MS(1) ); o tickStart( TICK_MS(1) );
@@ -236,6 +238,16 @@ typedef tick_t uint64_t;
 #define TICK_S(t)  (((typedef)(t))*1000)
 
 ¿Porque alguien que solo quiere usar el Systick para medir intervalos tendria que tener en cuenta el callback?
+
+--------------------------------------------------------------
+
+UART_9600_8N1      UART_BAUDRATE(9600)
+UART_57600_8N1     UART_BAUDRATE(57600)
+UART_115200_8N1    UART_BAUDRATE(115200)
+
+UART_PARITY_NONE   0
+UART_PARITY_ODD    1
+UART_PARITY_EVEN   2
 
 
 
