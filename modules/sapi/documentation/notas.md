@@ -155,6 +155,10 @@ half-byte:
 
 1 - GPIO_OUTPUT and GPIO_MODE (3 val)
 
+543210
+OPxDUI
+000000
+
 0b0001 - GPIO_OUTPUT
 0b0001 - GPIO_OUTPUT | GPIO_PUSHPULL
 0b0010 - GPIO_OUTPUT | GPIO_OPENCOLLECTOR
@@ -248,6 +252,49 @@ UART_115200_8N1    UART_BAUDRATE(115200)
 UART_PARITY_NONE   0
 UART_PARITY_ODD    1
 UART_PARITY_EVEN   2
+
+--------------------------------------------------------------
+string_t, La idea sería:
+
+Pensando en "voz alta" para no usar memoria dinámica podríamos definirlo como una estructura que tenga un puntero al comienzo del vector con el texto y su cantidad de caracteres:
+
+- String: string_t
+
+typedef struct{
+   char * strPtr;
+   uint32_t strLen;
+} string_t;
+
+Entonces el uso sería:
+
+string_t mensaje = newString();
+msgArray"hola";
+
+stringInitialize( mensaje )
+
+--------------------------------------------------------------
+
+
+// FUNCTION POINTER VECTOR EXAMPLE
+
+// Función para no tener NULL pointer
+   void dummy(void){
+   }
+
+// Definición de un tipo con typedef.
+   typedef void (*voidFunctionPointer_t)(void);
+
+// Definición de una variable con el tipo de typedef, incializo en dummy (NULL)
+   voidFunctionPointer_t voidFunctionPointer[2] = {dummy, dummy};
+
+// Ejecuto la funcion
+   (* voidFunctionPointer[0] )();
+   (* voidFunctionPointer[1] )();
+
+// Asigno una funcion a cada posición del vector
+   voidFunctionPointer[0] = ledB;
+   voidFunctionPointer[1] = led1;
+
 
 
 

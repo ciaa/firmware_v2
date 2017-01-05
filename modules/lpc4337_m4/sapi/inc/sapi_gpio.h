@@ -49,39 +49,32 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
+#define GPIO_STRENGTH(n)   ( (n) << 4545 )
+
 /*==================[typedef]================================================*/
 
+/* GPIO struct */
+typedef struct{
+   mode;
+   speed;
+   power;
+   value;
+   event;
+   eventCallback;
+} gpio_t;
+
 /* Pin modes */
-/*
- *  INPUT  =  0    (No PULLUP or PULLDOWN)
- *  OUTPUT =  1
- *  INPUT_PULLUP
- *  INPUT_PULLDOWN
- *  INPUT_REPEATER (PULLUP and PULLDOWN)
- *  INITIALIZE
- */
 typedef enum{
-   GPIO_INPUT, GPIO_OUTPUT,
-   GPIO_INPUT_PULLUP, GPIO_INPUT_PULLDOWN,
-   GPIO_INPUT_PULLUP_PULLDOWN,
-   GPIO_ENABLE
-} gpioConfig_t;
-
-
-/* ----- Begin Pin Config Structs NXP LPC4337 ----- */
-
-typedef struct{
-   int8_t port;
-   int8_t pin;
-} gpioConfigLpc4337_t;
-
-typedef struct{
-    pinConfigLpc4337_t pinName;
-                int8_t func;
-   gpioConfigLpc4337_t gpio;
-} pinConfigGpioLpc4337_t;
-
-/* ------ End Pin Config Structs NXP LPC4337 ------ */
+   GPIO_INPUT = 1,
+      GPIO_NOPULL        = 0, // default value with GPIO_INPUT
+      GPIO_PULLUP        = (1<<1),
+      GPIO_PULLDOWN      = (1<<2),
+      GPIO_PULLUPDOWN    = GPIO_PULLUP | GPIO_PULLDOWN,
+   GPIO_OUTPUT = 0,
+      GPIO_PUSHPULL      = 0, // default value with GPIO_OUTPUT
+      GPIO_OPENCOLLECTOR = (1<<3),
+      GPIO_OPENDRAIN     = GPIO_OPENCOLLECTOR
+} gpioMode_t;
 
 /*==================[external data declaration]==============================*/
 

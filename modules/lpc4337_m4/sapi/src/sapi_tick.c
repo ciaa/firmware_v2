@@ -50,14 +50,14 @@
 /* This global variable holds the tick count */
 volatile tick_t tickCounter;
 volatile tick_t tickRateMS;
-volatile sAPI_FuncPtr_t tickHookFunction = sAPI_NullFuncPtr;
+volatile sapiFuncPtr_t tickHookFunction = sapiNullFuncPtr;
 
 /*==================[internal functions definition]==========================*/
 
 /*==================[external functions definition]==========================*/
 
 /* Tick rate configuration 1 to 50 ms */
-bool_t tickConfig(tick_t tickRateMSvalue, sAPI_FuncPtr_t tickHook ) {
+bool_t tickConfig(tick_t tickRateMSvalue, sapiFuncPtr_t tickHook ) {
 
    bool_t ret_val = 1;
    tick_t tickRateHz = 0;
@@ -68,7 +68,7 @@ bool_t tickConfig(tick_t tickRateMSvalue, sAPI_FuncPtr_t tickHook ) {
 
    if( (tickRateMSvalue >= 1) && (tickRateMSvalue <= 50) ){
 
-		tickRateMS = tickRateMSvalue;
+      tickRateMS = tickRateMSvalue;
 
       /*
       tickRateHz = 1000 => 1000 ticks per second =>  1 ms tick

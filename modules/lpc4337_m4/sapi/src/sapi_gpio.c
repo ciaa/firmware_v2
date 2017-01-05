@@ -39,11 +39,65 @@
 
 /*==================[macros and definitions]=================================*/
 
+/* ----- Begin Pin Config Structs NXP LPC4337 ----- */
+
+typedef struct{
+   int8_t port;
+   int8_t pin;
+} gpioConfigLpc4337_t;
+
+typedef struct{
+    pinConfigLpc4337_t pinName;
+                int8_t func;
+   gpioConfigLpc4337_t gpio;
+} pinConfigGpioLpc4337_t;
+
+/* ------ End Pin Config Structs NXP LPC4337 ------ */
+
 /*==================[internal data declaration]==============================*/
 
 /*==================[internal functions declaration]=========================*/
 
 /*==================[internal data definition]===============================*/
+
+gpio_t gpioInstances[35] = {
+   { 0, 0, 0, 0, 0, 0 }, // GPIO0
+   { 0, 0, 0, 0, 0, 0 }, // GPIO1
+   { 0, 0, 0, 0, 0, 0 }, // GPIO2
+   { 0, 0, 0, 0, 0, 0 }, // GPIO3
+   { 0, 0, 0, 0, 0, 0 }, // GPIO4
+   { 0, 0, 0, 0, 0, 0 }, // GPIO5
+   { 0, 0, 0, 0, 0, 0 }, // GPIO6
+   { 0, 0, 0, 0, 0, 0 }, // GPIO7
+   { 0, 0, 0, 0, 0, 0 }, // GPIO8
+   { 0, 0, 0, 0, 0, 0 }, // GPIO9
+   { 0, 0, 0, 0, 0, 0 }, // GPIO10
+   { 0, 0, 0, 0, 0, 0 }, // GPIO11
+   { 0, 0, 0, 0, 0, 0 }, // GPIO12
+   { 0, 0, 0, 0, 0, 0 }, // GPIO13
+   { 0, 0, 0, 0, 0, 0 }, // GPIO14
+   { 0, 0, 0, 0, 0, 0 }, // GPIO15
+   { 0, 0, 0, 0, 0, 0 }, // GPIO16
+   { 0, 0, 0, 0, 0, 0 }, // GPIO17
+   { 0, 0, 0, 0, 0, 0 }, // GPIO18
+   { 0, 0, 0, 0, 0, 0 }, // GPIO19
+   { 0, 0, 0, 0, 0, 0 }, // GPIO20
+   { 0, 0, 0, 0, 0, 0 }, // GPIO21
+   { 0, 0, 0, 0, 0, 0 }, // GPIO22
+   { 0, 0, 0, 0, 0, 0 }, // GPIO23
+   { 0, 0, 0, 0, 0, 0 }, // GPIO24
+   { 0, 0, 0, 0, 0, 0 }, // GPIO25
+   { 0, 0, 0, 0, 0, 0 }, // GPIO26
+   { 0, 0, 0, 0, 0, 0 }, // GPIO27
+   { 0, 0, 0, 0, 0, 0 }, // GPIO28
+   { 0, 0, 0, 0, 0, 0 }, // GPIO29
+   { 0, 0, 0, 0, 0, 0 }, // GPIO30
+   { 0, 0, 0, 0, 0, 0 }, // GPIO31
+   { 0, 0, 0, 0, 0, 0 }, // GPIO32
+   { 0, 0, 0, 0, 0, 0 }, // GPIO33
+   { 0, 0, 0, 0, 0, 0 }, // GPIO34
+   { 0, 0, 0, 0, 0, 0 }, // GPIO35
+}
 
 const pinConfigGpioLpc4337_t gpioPinsConfig[] = {
 
