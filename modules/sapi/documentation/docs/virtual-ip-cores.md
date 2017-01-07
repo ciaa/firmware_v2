@@ -252,8 +252,6 @@ La estructura del tipo ``HMC5883L_config_t`` contiene:
 
 ## Archivos que contienen estos módulos
 
-**ACTUALIZAR:**
-
 **src** (.c):
 
 - sapi_7_segment_display.c

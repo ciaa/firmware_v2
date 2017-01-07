@@ -23,8 +23,8 @@ deberá ser portada a los distintos microcontroladores a soportar.
 
 ### Tipos de IP Core
 
-Se diferencian dos tipos de IPCores, los IP Cores solamente "iniciables", y los
-IP Cores "creables e iniciables".
+Se diferencian dos tipos de IPCores, los IP Cores solamente "inicializables", y
+los IP Cores "creables e inicializables".
 
 - **IP Cores solamente inicializables**: 
 Modelan peiféricos con existencia física en el SoC. Estos periféricos no son
@@ -33,13 +33,13 @@ prefijados que no se pueden destruir o crear dos veces. Es decir, no se puede,
 por ejemplo, tener 10 SPI apuntando al mismo elemento fisico; SPI0, es SPI0 
 desde que el software arranca hasta que termina o se destrulle el chip.
 
-- **IP Cores creables e iniciables**: 
+- **IP Cores creables (instanciables) e inicializables**: 
 Estos modelan periféricos conectados al la placa a utilizar, como por ejemplo,
 un chip conectado al I2C o al SPI. También incluyen periféricos "virtuales",
 como un I2C por software que para funcionar utiliza GPIOs.
 La característica distintiva de este tipo de módulos es que se deben asignar
-estructuras específicas porque no existen hasta que se "crean" e "inicializan"
-(análogo al new de C++).
+estructuras específicas porque no existen hasta que se "crean" (instancian) e
+"inicializan" (análogo al new de C++).
 
 De esta manera, para GPIO, I2C, SPI, UART, o cualquier otro periférico físico,
 basta con que el nombre asignado por el CORE/BSP, para uno externo, hay que
@@ -63,7 +63,7 @@ UART4=3, etc.).
 
 - Obtener valor de una propiedad: ``<propertyValue> = <ipCore>Get<PropertyName>( <IPCOREi> );``
 
-- Ejemplo de cambio de una propiedad teniendo en cuenta el valor previo:``<ipCore>Set<PropertyName>( IPCORE<i>, <ipCore>Get<PropertyName>( IPCORE<i> ) | MODIFY_FLA> );``
+- Ejemplo de cambio de una propiedad teniendo en cuenta el valor previo:``<ipCore>Set<PropertyName>( IPCORE<i>, <ipCore>Get<PropertyName>( <IPCOREi> ) | <MODIFY_FLAGi> );``
 
 - Propiedades más comunes que encontraremos en un periférico:
    - configParamName: Un valor de configuración del periférico.

@@ -102,6 +102,14 @@ typedef uint64_t tick_t;
  */
 typedef bool_t (*sapiFuncPtr_t)(void *);
 
+
+/* Callback struct */
+typedef struct{
+   void* pointer;
+   sapiFuncPtr_t function;
+} Callback_t;
+
+
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/

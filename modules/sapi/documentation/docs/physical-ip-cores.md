@@ -26,14 +26,14 @@ pin es booleano.
 ### Propiedades de GPIO
 
 - Propiedades de configuración:
-    - ``mode``
-    - ``speed``
-    - ``power``
+    - ``mode`` (tipo ``gpioConfig_t``).
+    - ``speed`` (tipo ``gpioConfig_t``).
+    - ``power`` (tipo ``gpioConfig_t``).
 - Propiedades de valor:
-    - ``value``
+    - ``value`` (tipo ``bool_t``).
 - Propiedades de eventos:
-    - ``event``
-    - ``eventCallback``
+    - ``event`` (tipo ``gpioConfig_t``).
+    - ``eventCallback`` (tipo ``Callback_t``).
 
 **Valores posibles:**
 
@@ -51,7 +51,7 @@ pin es booleano.
         - ``GPIO_OPENCOLLECTOR | GPIO_PULLUP``
 - speed: ``GPIO_SPEED(i)`` (i = 0,...,7)
 
-- power: ``ON``, ``OFF``, ``ENABLE`` o ``DISABLE``
+- power: ``ON`` (valor por defecto), ``OFF``, ``ENABLE`` o ``DISABLE``
 
 - value: ``ON``, ``OFF``, ``HIGH``, ``LOW``, ``TRUE`` o ``FALSE``
 
@@ -80,69 +80,57 @@ pin es booleano.
 
 **Getters y Setters de todas sus propiedades**
 
-- Propiedades de configuración:
+- Getters y Setters de configuración:
     - ``mode``
+        - ``gpioSetMode( GPIO<i>, GPIO_INPUT | GPIO_PULLUP );``
+        - ``gpioSetMode( GPIO<i>, GPIO_OUTPUT | GPIO_PUSHPULL | GPIO_STRENGTH(7) );``
+        - ``gpioMode = gpioGetMode( GPIO<i> );``
     - ``speed``
+        - ``gpioSetSpeed( GPIO<i>, GPIO_SPEED(7) );``
+        - ``gpioSpeed = gpioGetSpeed( GPIO<i> );``
     - ``power``
+        - ``gpioSetPower( GPIO<i>, ON );``
+        - ``booleanValue = gpioGetPower( GPIO<i> );``
+- Getters y Setters de valor:
     - ``value``
-- Propiedades de eventos:
+        - ``gpioSetValue( GPIO<i>, HIGH );``
+        - ``booleanValue = gpioGetValue( GPIO<i> );``
+- Getters y Setters de eventos:
     - ``event``
+        - ``gpioSetEvent( GPIO<i>, GPIO_EDGE | GPIO_EDGE_RISING );``
+        - ``gpioEvent = gpioGetEvent( GPIO<i> );``
     - ``eventCallback``
-
-
-- ``gpioSetMode( GPIO<i>, GPIO_INPUT | GPIO_PULLUP );``
-- ``gpioMode = gpioGetMode( GPIO<i> );``
-
-- ``gpioSetSpeed( GPIO<i>, GPIO_INPUT | GPIO_PULLUP );``
-- ``gpioSpeed = gpioGetSpeed( GPIO<i> );``
-
-- ``gpioSetMode( GPIO<i>, GPIO_INPUT | GPIO_PULLUP );``
-- ``gpioMode = gpioGetMode( GPIO<i> );``
-
-- Propiedades de valor:
-- ``gpioSetValue( GPIO<i>, value );``
-- ``gpioValue = gpioGetValue( GPIO<i> );``
-
-Alias de los anteriores:
-
-- ``gpioRead();`` alias de ``gpioGetValue();``
-- ``gpioWrite();`` alias de ``gpioSetValue();``
-- ``gpioConfig();`` alias de ``gpioSetMode();``
-
-
-
+        - ``gpioSetValue( GPIO<i>, HIGH );``
+        - ``booleanValue = gpioGetValue( GPIO<i> );``
 
 **Configuración inicial y modo de una entrada o salida**
 
-``bool_t gpioConfig( gpioMap_t pin, gpioConfig_t config );``
+``bool_t gpioConfig( gpioMap_t pin, gpio_t mode );``
 
 - Parámetro: ``gpioMap_t pin`` pin a configurar (ver GPIO Map).
 - Parámetro: ``gpioConfig_t config`` configuración.
 - Retorna: ``bool_t`` TRUE si la configuración es correcta.
 
-Posibles configuraciones:
-
-- ``GPIO_ENABLE`` Habilita las entradas y salidas de porpósito general.
-- ``GPIO_INPUT, GPIO_INPUT_PULLUP, GPIO_INPUT_PULLDOWN, GPIO_INPUT_PULLUP_PULLDOWN`` Pin configurado como entrada en sus distintas variantes.
-- ``GPIO_OUTPUT`` Pin configurado como salida.
+Alias de ``gpioSetMode();`
 
 **Lectura de Entrada**
 
 ``bool_t gpioRead( gpioMap_t pin );``
 
 - Parámetro: ``gpioMap_t pin`` pin a leer (ver GPIO Map).
-- Retorna: ``bool_t`` valor de la entrada.
+- Retorna: ``bool_t`` estado del pin.
 
+Alias de ``gpioGetValue();``
 
 **Escritura de Salida**
 
-``bool_t gpioWrite( gpioMap_t pin, bool_t value );``
+``void gpioWrite( gpioMap_t pin, bool_t value );``
 
 - Parámetro: ``gpioMap_t pin`` pin a escribir (ver GPIO Map).
 - Parámetro: ``bool_t value`` valor a escribir en el pin.
-- Retorna: ``bool_t`` FALSE en caso de errores.
+- Retorna: nada.
 
-
+Alias de ``gpioSetValue();``
 
 ## ADC
 
@@ -435,9 +423,7 @@ Manejo de modos de consumo del microcontrolador.
 - Retorna: nada.
 
 
-## Archivos que componen la biblioteca
-
-**ACTUALIZAR:**
+## Archivos que contienen estos módulos
 
 **src** (.c):
 

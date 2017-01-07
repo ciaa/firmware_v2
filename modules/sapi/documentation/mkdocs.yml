@@ -4,7 +4,7 @@ pages:
 - Principios de diseño: design-rules.md
 - Tipos de datos: data-types.md
 - Periféricos físicos: physical-ip-cores.md
-- IP Cores creables e iniciables: virtual-ip-cores.md
+- Periféricos externos y virtuales: virtual-ip-cores.md
 - Utilización de la biblioteca: utilizacion.md
 - Ejemplos: ejemplos.md
 theme: readthedocs

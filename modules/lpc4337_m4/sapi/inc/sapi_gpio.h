@@ -54,17 +54,43 @@ extern "C" {
 
 /*==================[typedef]================================================*/
 
+/* GPIO configuration struct */
+typedef uint16_t gpioConfig_t;
+
 /* GPIO struct */
 typedef struct{
-   mode;
-   speed;
-   power;
-   value;
-   event;
-   eventCallback;
-} gpio_t;
+   gpioConfig_t config;
+   Callback_t eventCallback;
+} Gpio_t;
 
-/* Pin modes */
+#define GPIO_NULL { 0, { 0, 0 } }
+
+/*
+   config
+      mode;
+      speed;
+      power;
+      value;
+      event;
+
+   eventCallback; //struct
+
+p event  spe   mode
+1 11111
+5 43210 987 654 3210
+P FRAEL 00s 00s OPPI
+o aisde   p   t p /
+w lsygv   e   r eDUO
+e linee   e   e nop
+r inc l   d   n  w
+  ngh         g dn
+  g r         h r
+             t
+000000 000 000 0000 val
+
+*/
+
+/* GPIO Config Struct */
 typedef enum{
    GPIO_INPUT             = 1,
       GPIO_NOPULL         = 0, // default value with GPIO_INPUT
@@ -81,32 +107,45 @@ typedef enum{
    GPIO_EDGE              = (1<<11),
    GPIO_ASYNCHRONOUS_EDGE = (1<<12),
       GPIO_EDGE_RISING    = GPIO_LEVEL_HIGH,
-      GPIO_EDGE_FALLING   = GPIO_LEVEL_LOW
+      GPIO_EDGE_FALLING   = GPIO_LEVEL_LOW,
+   GPIO_POWER_ON          = (1<<15),
+   GPIO_POWER_OFF         = (0<<15),
 } gpioConfig_t;
 
-/*
-
-       str spd mode
-111111
-543210 987 654 3210
-xFRAEL 00s 00s OPPI
- aisde   t   p p /
- lsygv   r   e eDUO
- linee   e   e nop
- inc l   n   d  w
- ngh     g     dn
- g r     h     r
-000000 000 000 0000 val
-
-*/
 
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/
 
-bool_t gpioConfig( gpioMap_t pin, gpioConfig_t config );
-bool_t gpioRead( gpioMap_t pin );
-bool_t gpioWrite( gpioMap_t pin, bool_t value );
+/* Properties getters and setters */
+
+// mode
+void gpioSetMode( gpioMap_t gpioNumber, gpioConfig_t mode );
+gpioConfig_t gpioGetMode( gpioMap_t gpioNumber );
+// speed
+void gpioSetSpeed( gpioMap_t gpioNumber, gpioConfig_t speed );
+gpioConfig_t gpioGetSpeed( gpioMap_t gpioNumber );
+// power
+void gpioSetPower( gpioMap_t gpioNumber, gpioConfig_t power );
+gpioConfig_t gpioGetPower( gpioMap_t gpioNumber );
+
+// event
+void gpioSetEvent( gpioMap_t gpioNumber, gpioConfig_t event );
+gpioConfig_t gpioGetEvent( gpioMap_t gpioNumber );
+// eventCallback
+void gpioSetEventCallback( gpioMap_t gpioNumber, Callback_t callback );
+Callback_t gpioGetEventCallback( gpioMap_t gpioNumber );
+
+// value
+void gpioSetValue( gpioMap_t gpioNumber, bool_t value );
+bool_t gpioGetValue( gpioMap_t gpioNumber );
+
+
+/* Methods */
+
+bool_t gpioConfig( gpioMap_t gpioNumber, gpioConfig_t config );
+bool_t gpioRead( gpioMap_t gpioNumber );
+void gpioWrite( gpioMap_t gpioNumber, bool_t value );
 
 /*==================[cplusplus]==============================================*/
 

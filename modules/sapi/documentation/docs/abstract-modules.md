@@ -141,3 +141,15 @@ Con ``delayWrite( &myDelay, 1000 );`` se puede cambiar la duración de un delay
 en tiempo de ejecución.
 
 
+## Archivos que contienen estos módulos
+
+**src** (.c):
+
+- sapi_delay.c
+- sapi_tick.c
+
+**inc** (.h):
+
+- sapi_delay.h
+- sapi_tick.h
+
