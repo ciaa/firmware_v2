@@ -39,11 +39,93 @@
 
 /*==================[macros and definitions]=================================*/
 
+/* ----- Begin Pin Config Structs NXP LPC4337 ----- */
+
+typedef struct{
+   int8_t port;
+   int8_t pin;
+} gpioConfigLpc4337_t;
+
+typedef struct{
+    pinConfigLpc4337_t pinName;
+                int8_t func;
+   gpioConfigLpc4337_t gpio;
+} pinConfigGpioLpc4337_t;
+
+/* ------ End Pin Config Structs NXP LPC4337 ------ */
+
 /*==================[internal data declaration]==============================*/
 
 /*==================[internal functions declaration]=========================*/
 
 /*==================[internal data definition]===============================*/
+
+Gpio_t gpioInstances[64] = {
+   GPIO_NULL, // GPIO0
+   GPIO_NULL, // GPIO1
+   GPIO_NULL, // GPIO2
+   GPIO_NULL, // GPIO3
+   GPIO_NULL, // GPIO4
+   GPIO_NULL, // GPIO5
+   GPIO_NULL, // GPIO6
+   GPIO_NULL, // GPIO7
+   GPIO_NULL, // GPIO8
+   GPIO_NULL, // GPIO9
+   GPIO_NULL, // GPIO10
+   GPIO_NULL, // GPIO11
+   GPIO_NULL, // GPIO12
+   GPIO_NULL, // GPIO13
+   GPIO_NULL, // GPIO14
+   GPIO_NULL, // GPIO15
+   GPIO_NULL, // GPIO16
+   GPIO_NULL, // GPIO17
+   GPIO_NULL, // GPIO18
+   GPIO_NULL, // GPIO19
+   GPIO_NULL, // GPIO20
+   GPIO_NULL, // GPIO21
+   GPIO_NULL, // GPIO22
+   GPIO_NULL, // GPIO23
+   GPIO_NULL, // GPIO24
+   GPIO_NULL, // GPIO25
+   GPIO_NULL, // GPIO26
+   GPIO_NULL, // GPIO27
+   GPIO_NULL, // GPIO28
+   GPIO_NULL, // GPIO29
+   GPIO_NULL, // GPIO30
+   GPIO_NULL, // GPIO31
+   GPIO_NULL, // GPIO32
+   GPIO_NULL, // GPIO33
+   GPIO_NULL, // GPIO34
+   GPIO_NULL, // GPIO35
+   GPIO_NULL, // GPIO36
+   GPIO_NULL, // GPIO37
+   GPIO_NULL, // GPIO38
+   GPIO_NULL, // GPIO39
+   GPIO_NULL, // GPIO40
+   GPIO_NULL, // GPIO41
+   GPIO_NULL, // GPIO42
+   GPIO_NULL, // GPIO43
+   GPIO_NULL, // GPIO44
+   GPIO_NULL, // GPIO45
+   GPIO_NULL, // GPIO46
+   GPIO_NULL, // GPIO47
+   GPIO_NULL, // GPIO48
+   GPIO_NULL, // GPIO49
+   GPIO_NULL, // GPIO50
+   GPIO_NULL, // GPIO51
+   GPIO_NULL, // GPIO52
+   GPIO_NULL, // GPIO53
+   GPIO_NULL, // GPIO54
+   GPIO_NULL, // GPIO55
+   GPIO_NULL, // GPIO56
+   GPIO_NULL, // GPIO57
+   GPIO_NULL, // GPIO58
+   GPIO_NULL, // GPIO59
+   GPIO_NULL, // GPIO60
+   GPIO_NULL, // GPIO61
+   GPIO_NULL, // GPIO62
+   GPIO_NULL, // GPIO63
+}
 
 const pinConfigGpioLpc4337_t gpioPinsConfig[] = {
 
@@ -191,21 +273,110 @@ const pinConfigGpioLpc4337_t gpioPinsConfig[] = {
 
 /*==================[internal functions definition]==========================*/
 
-static void gpioObtainPinConfig( gpioMap_t pin,
-                                int8_t *pinNamePort, int8_t *pinNamePin,
-																int8_t *func, int8_t *gpioPort,
-																int8_t *gpioPin ){
+static void gpioObtainPinConfig( gpioMap_t gpioNumber,
+                                 int8_t *pinNamePort, 
+                                 int8_t *pinNamePin,
+                                 int8_t *func,
+                                 int8_t *gpioPort,
+                                 int8_t *gpioPin ){
 
-   *pinNamePort = gpioPinsConfig[pin].pinName.port;
-   *pinNamePin  = gpioPinsConfig[pin].pinName.pin;
-   *func        = gpioPinsConfig[pin].func;
-   *gpioPort    = gpioPinsConfig[pin].gpio.port;
-   *gpioPin     = gpioPinsConfig[pin].gpio.pin;
+   *pinNamePort = gpioPinsConfig[gpioNumber].pinName.port;
+   *pinNamePin  = gpioPinsConfig[gpioNumber].pinName.pin;
+   *func        = gpioPinsConfig[gpioNumber].func;
+   *gpioPort    = gpioPinsConfig[gpioNumber].gpio.port;
+   *gpioPin     = gpioPinsConfig[gpioNumber].gpio.pin;
 }
 
 /*==================[external functions definition]==========================*/
 
-bool_t gpioConfig( gpioMap_t pin, gpioConfig_t config ){
+/* Properties getters and setters */
+
+// mode
+void gpioSetMode( gpioMap_t gpioNumber, gpioConfig_t mode ){
+
+}
+
+gpioConfig_t gpioGetMode( gpioMap_t gpioNumber ){
+   return 0;
+}
+
+// speed
+void gpioSetSpeed( gpioMap_t gpioNumber, gpioConfig_t speed ){
+
+}
+
+gpioConfig_t gpioGetSpeed( gpioMap_t gpioNumber ){
+   return 0;
+}
+
+// power
+void gpioSetPower( gpioMap_t gpioNumber, gpioConfig_t power ){
+
+}
+
+gpioConfig_t gpioGetPower( gpioMap_t gpioNumber ){
+   return 0;
+}
+
+// event
+void gpioSetEvent( gpioMap_t gpioNumber, gpioConfig_t event ){
+
+}
+
+gpioConfig_t gpioGetEvent( gpioMap_t gpioNumber ){
+   return 0;
+}
+
+// eventCallback
+void gpioSetEventCallback( gpioMap_t gpioNumber, Callback_t callback ){
+
+}
+
+Callback_t gpioGetEventCallback( gpioMap_t gpioNumber ){
+   return 0;
+}
+
+// value
+void gpioSetValue( gpioMap_t gpioNumber, bool_t value ){
+
+   int8_t pinNamePort = 0;
+   int8_t pinNamePin  = 0;
+
+   int8_t func        = 0;
+
+   int8_t gpioPort    = 0;
+   int8_t gpioPin     = 0;
+
+   gpioObtainPinConfig( gpioNumber, &pinNamePort, &pinNamePin, &func,
+                        &gpioPort, &gpioPin );
+
+   Chip_GPIO_SetPinState( LPC_GPIO_PORT, gpioPort, gpioPin, value);
+}
+
+bool_t gpioGetValue( gpioMap_t gpioNumber ){
+
+   bool_t ret_val     = OFF;
+
+   int8_t pinNamePort = 0;
+   int8_t pinNamePin  = 0;
+
+   int8_t func        = 0;
+
+   int8_t gpioPort    = 0;
+   int8_t gpioPin     = 0;
+
+   gpioObtainPinConfig( gpioNumber, &pinNamePort, &pinNamePin, &func,
+                        &gpioPort, &gpioPin );
+
+   ret_val = (bool_t) Chip_GPIO_ReadPortBit( LPC_GPIO_PORT, gpioPort, gpioPin );
+
+   return ret_val;
+}
+
+
+/* Methods */
+
+bool_t gpioConfig( gpioMap_t gpioNumber, gpioConfig_t config ){
 
    bool_t ret_val     = 1;
 
@@ -217,15 +388,10 @@ bool_t gpioConfig( gpioMap_t pin, gpioConfig_t config ){
    int8_t gpioPort    = 0;
    int8_t gpioPin     = 0;
 
-   gpioObtainPinConfig( pin, &pinNamePort, &pinNamePin, &func,
-                           &gpioPort, &gpioPin );
+   gpioObtainPinConfig( gpioNumber, &pinNamePort, &pinNamePin, &func,
+                        &gpioPort, &gpioPin );
 
    switch(config){
-
-      case GPIO_ENABLE:
-		   /* Initializes GPIO */
-		   Chip_GPIO_Init(LPC_GPIO_PORT);
-	   break;
 
       case GPIO_INPUT:
          Chip_SCU_PinMux(
@@ -237,7 +403,7 @@ bool_t gpioConfig( gpioMap_t pin, gpioConfig_t config ){
          Chip_GPIO_SetDir( LPC_GPIO_PORT, gpioPort, ( 1 << gpioPin ), GPIO_INPUT );
       break;
 
-      case GPIO_INPUT_PULLUP:
+      case (GPIO_INPUT | GPIO_PULLUP):
          Chip_SCU_PinMux(
             pinNamePort,
             pinNamePin,
@@ -247,7 +413,7 @@ bool_t gpioConfig( gpioMap_t pin, gpioConfig_t config ){
          Chip_GPIO_SetDir( LPC_GPIO_PORT, gpioPort, ( 1 << gpioPin ), GPIO_INPUT );
       break;
 
-      case GPIO_INPUT_PULLDOWN:
+      case (GPIO_INPUT | GPIO_PULLDOWN):
          Chip_SCU_PinMux(
             pinNamePort,
             pinNamePin,
@@ -256,7 +422,7 @@ bool_t gpioConfig( gpioMap_t pin, gpioConfig_t config ){
          );
          Chip_GPIO_SetDir( LPC_GPIO_PORT, gpioPort, ( 1 << gpioPin ), GPIO_INPUT );
       break;
-      case GPIO_INPUT_PULLUP_PULLDOWN:
+      case (GPIO_INPUT | GPIO_PULLUP | GPIO_PULLDOWN):
          Chip_SCU_PinMux(
             pinNamePort,
             pinNamePin,
@@ -267,6 +433,17 @@ bool_t gpioConfig( gpioMap_t pin, gpioConfig_t config ){
       break;
 
       case GPIO_OUTPUT:
+      //case (GPIO_OUTPUT | GPIO_PUSHPULL):
+      case (GPIO_OUTPUT | GPIO_PUSHPULL | GPIO_STRENGTH(0)):
+      case (GPIO_OUTPUT | GPIO_PUSHPULL | GPIO_STRENGTH(1)):
+      case (GPIO_OUTPUT | GPIO_PUSHPULL | GPIO_STRENGTH(2)):
+      case (GPIO_OUTPUT | GPIO_PUSHPULL | GPIO_STRENGTH(3)):
+      case (GPIO_OUTPUT | GPIO_PUSHPULL | GPIO_STRENGTH(4)):
+      case (GPIO_OUTPUT | GPIO_PUSHPULL | GPIO_STRENGTH(5)):
+      case (GPIO_OUTPUT | GPIO_PUSHPULL | GPIO_STRENGTH(6)):
+      case (GPIO_OUTPUT | GPIO_PUSHPULL | GPIO_STRENGTH(7)):
+      case (GPIO_OUTPUT | GPIO_OPENDRAIN):
+      case (GPIO_OUTPUT | GPIO_OPENDRAIN | GPIO_PULLUP):
          Chip_SCU_PinMux(
             pinNamePort,
             pinNamePin,
@@ -287,45 +464,13 @@ bool_t gpioConfig( gpioMap_t pin, gpioConfig_t config ){
 }
 
 
-bool_t gpioWrite( gpioMap_t pin, bool_t value ){
-
-   bool_t ret_val     = 1;
-
-   int8_t pinNamePort = 0;
-   int8_t pinNamePin  = 0;
-
-   int8_t func        = 0;
-
-   int8_t gpioPort    = 0;
-   int8_t gpioPin     = 0;
-
-   gpioObtainPinConfig( pin, &pinNamePort, &pinNamePin, &func,
-                           &gpioPort, &gpioPin );
-
-   Chip_GPIO_SetPinState( LPC_GPIO_PORT, gpioPort, gpioPin, value);
-
-   return ret_val;
+void gpioWrite( gpioMap_t gpioNumber, bool_t value ){
+   gpioSetValue( gpioNumber, value );
 }
 
 
-bool_t gpioRead( gpioMap_t pin ){
-
-   bool_t ret_val     = OFF;
-
-   int8_t pinNamePort = 0;
-   int8_t pinNamePin  = 0;
-
-   int8_t func        = 0;
-
-   int8_t gpioPort    = 0;
-   int8_t gpioPin     = 0;
-
-   gpioObtainPinConfig( pin, &pinNamePort, &pinNamePin, &func,
-                           &gpioPort, &gpioPin );
-
-   ret_val = (bool_t) Chip_GPIO_ReadPortBit( LPC_GPIO_PORT, gpioPort, gpioPin );
-
-   return ret_val;
+bool_t gpioRead( gpioMap_t gpioNumber ){
+   return gpioGetValue( gpioNumber );
 }
 
 /*==================[end of file]============================================*/

@@ -65,6 +65,21 @@ typedef struct{
 /* ------- Begin EDU-CIAA-NXP Peripheral Map ------ */
 
 /* Defined for sapi_gpio.h */
+
+typedef enum{
+    GPIO0,  GPIO1,  GPIO2,  GPIO3,  GPIO4,  
+    GPIO5,  GPIO6,  GPIO7,  GPIO8,  GPIO9,
+   GPIO10, GPIO11, GPIO12, GPIO13, GPIO14, 
+   GPIO15, GPIO16, GPIO17, GPIO18, GPIO19,
+   GPIO20, GPIO21, GPIO22, GPIO23, GPIO24,
+   GPIO25, GPIO26, GPIO27, GPIO28, GPIO29,
+   GPIO30, GPIO31, GPIO32, GPIO33, GPIO34, 
+   GPIO35, GPIO36, GPIO37, GPIO38, GPIO39,
+   GPIO40, GPIO41, GPIO42, GPIO43, GPIO44, 
+   GPIO45, GPIO46, GPIO47, GPIO48, GPIO49,
+} gpioMap_t;
+
+
 typedef enum{
    /* EDU-CIAA-NXP */
 
@@ -89,13 +104,15 @@ typedef enum{
    // Leds
    // 40     41     42     43     44     45
    LED1,  LED2,  LED3,  LEDR,  LEDG,  LEDB,
+} gpioMapEduCiaaNxp_t;
 
+typedef enum{
    /* CIAA-NXP */
  /* 46     47     48     49     50     51     52     53 */
    DI0,   DI1,   DI2,   DI3,   DI4,   DI5,   DI6,   DI7,
  /* 54     55     56     57     58     59     60     61 */
    DO0,   DO1,   DO2,   DO3,   DO4,   DO5,   DO6,   DO7
-} gpioMap_t;
+} gpioMapCiaaNxp_t;
 
 /* Defined for sapi_adc.h */
 typedef enum{

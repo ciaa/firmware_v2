@@ -155,6 +155,18 @@ half-byte:
 
 1 - GPIO_OUTPUT and GPIO_MODE (3 val)
 
+       str spd mode
+111111
+543210 987 654 3210
+xFRAEL 00s 00s OPPI
+ aisde   t   p p /
+ lsygv   r   e eDUO
+ linee   e   e nop
+ inc l   n   d  w
+ ngh     g     dn
+ g r     h     n
+000000 000 000 0000 val
+
 0b0001 - GPIO_OUTPUT
 0b0001 - GPIO_OUTPUT | GPIO_PUSHPULL
 0b0010 - GPIO_OUTPUT | GPIO_OPENCOLLECTOR
@@ -163,9 +175,9 @@ half-byte:
 0b0110 - GPIO_OUTPUT | GPIO_OPENDRAIN | GPIO_PULLUP
 
 
-2 - GPIO_SPEED (Slew rate o histéresis), son 16 valores posibles (8 valores).
+2 - GPIO_SPEED (Slew rate o histéresis), son 8 valores posibles.
 
-3 - DRIVE_STRENGTH, son 16 valores posibles (8 valores).
+3 - DRIVE_STRENGTH, son 8 valores posibles.
 
 4 - Interrupts (GPIO events when GPIO_MODE is GPIO_INPUT)
 
@@ -205,6 +217,41 @@ periphSetEventCallback( PERIPHi, callbackFunction, myPtr );``
 ``void userCallbackFunction( void* userPtr ) {
   // User code
 }``
+
+
+2 bits (4 valores)
+00
+01
+10
+11
+
+3 bits (8 valores)
+000
+001
+010
+011
+100
+101
+110
+111
+
+4 bits (16 valores)
+0000
+0001
+0010
+0011
+0100
+0101
+0110
+0111
+1000
+1001
+1010
+1011
+1100
+1101
+1110
+1111
 
 
 
@@ -249,5 +296,103 @@ UART_PARITY_NONE   0
 UART_PARITY_ODD    1
 UART_PARITY_EVEN   2
 
+--------------------------------------------------------------
+string_t, La idea sería:
+
+Pensando en "voz alta" para no usar memoria dinámica podríamos definirlo como una estructura que tenga un puntero al comienzo del vector con el texto y su cantidad de caracteres:
+
+- String: string_t
+
+typedef struct{
+   char * strPtr;
+   uint32_t strLen;
+} string_t;
+
+Entonces el uso sería:
+
+string_t mensaje = newString();
+msgArray"hola";
+
+stringInitialize( mensaje )
+
+--------------------------------------------------------------
+
+
+// FUNCTION POINTER VECTOR EXAMPLE
+
+// Función para no tener NULL pointer
+   void dummy(void){
+   }
+
+// Definición de un tipo con typedef.
+   typedef void (*voidFunctionPointer_t)(void);
+
+// Definición de una variable con el tipo de typedef, incializo en dummy (NULL)
+   voidFunctionPointer_t voidFunctionPointer[2] = {dummy, dummy};
+
+// Ejecuto la funcion
+   (* voidFunctionPointer[0] )();
+   (* voidFunctionPointer[1] )();
+
+// Asigno una funcion a cada posición del vector
+   voidFunctionPointer[0] = ledB;
+   voidFunctionPointer[1] = led1;
+
+
+
+--------------------------------------------------------------
+
+
+## Archivos que componen la biblioteca
+
+**ACTUALIZAR:**
+
+**src** (.c):
+
+- sapi_7_segment_display.c
+- sapi_adc.c
+- sapi_board.c
+- sapi_dac.c
+- sapi_datatypes.c
+- sapi_delay.c
+- sapi_gpio.c
+- sapi_hmc5883l.c
+- sapi_i2c.c
+- sapi_isr_vector.c
+- sapi_keypad.c
+- sapi_pwm.c
+- sapi_rtc.c
+- sapi_sct.c
+- sapi_servo.c
+- sapi_sleep.c
+- sapi_spi.c
+- sapi_tick.c
+- sapi_timer.c
+- sapi_uart.c
+
+**inc** (.h):
+
+- sapi_7_segment_display.h
+- sapi_adc.h
+- sapi_board.h
+- sapi_dac.h
+- sapi_datatypes.h
+- sapi_delay.h
+- sapi_gpio.h
+- sapi_hmc5883l.h
+- sapi_i2c.h
+- sapi_isr_vector.h
+- sapi_keypad.h
+- sapi_peripheral_map.h
+- sapi_pwm.h
+- sapi_rtc.h
+- sapi_sct.h
+- sapi_servo.h
+- sapi_sleep.h
+- sapi_spi.h
+- sapi_tick.h
+- sapi_timer.h
+- sapi_uart.h
+- sapi.h
 
 

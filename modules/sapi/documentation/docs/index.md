@@ -1,17 +1,23 @@
 # Introducción a la biblioteca para microcontroladores sAPI
 
-Esta biblioteca implementa una API simple para la programación de
+Esta biblioteca implementa una API simple para la programación de 
 microcontroladores.
 
 ## Motivación
 
-La misma surge de la necesidad de manejar los periféricos directamente desde una
-VM de Java para el desarrollo de Java sobre la CIAA y corresponde a la parte de
-bajo nivel de las clases de periféricos en Java que básicamente bindea a
-funciones escritas en C.
+La misma surge de la necesidad de manejar los periféricos directamente desde
+una VM de Java para el desarrollo de Java sobre la CIAA y corresponde a la
+parte de bajo nivel de las clases de periféricos en Java que básicamente bindea
+a funciones escritas en C. 
 
 Luego se extendió la misma para facilitar el uso de la EDU-CIAA-NXP a personas
-no expertas en la arquitectura del LPC4337 facilitando el uso de esta plataforma.
+no expertas en la arquitectura del LPC4337 facilitando el uso de esta 
+plataforma.
+
+Finalmente se decide que, luego de una profunda revisión, esta biblioteca se
+convierta en al biblioteca estándar del proyecto CIAA, extendiendo su uso a
+todas las plataformas del proyecto CIAA bastadas en microcontroladores.
+
 
 ## Módulos incluidos
 

@@ -49,47 +49,103 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
+#define GPIO_SPEED(n)      ( (n) << 4 )
+#define GPIO_STRENGTH(n)   ( (n) << 7 )
+
 /*==================[typedef]================================================*/
 
-/* Pin modes */
+/* GPIO configuration struct */
+typedef uint16_t gpioConfig_t;
+
+/* GPIO struct */
+typedef struct{
+   gpioConfig_t config;
+   Callback_t eventCallback;
+} Gpio_t;
+
+#define GPIO_NULL { 0, { 0, 0 } }
+
 /*
- *  INPUT  =  0    (No PULLUP or PULLDOWN)
- *  OUTPUT =  1
- *  INPUT_PULLUP
- *  INPUT_PULLDOWN
- *  INPUT_REPEATER (PULLUP and PULLDOWN)
- *  INITIALIZE
- */
+   config
+      mode;
+      speed;
+      power;
+      value;
+      event;
+
+   eventCallback; //struct
+
+p event  spe   mode
+1 11111
+5 43210 987 654 3210
+P FRAEL 00s 00s OPPI
+o aisde   p   t p /
+w lsygv   e   r eDUO
+e linee   e   e nop
+r inc l   d   n  w
+  ngh         g dn
+  g r         h r
+             t
+000000 000 000 0000 val
+
+*/
+
+/* GPIO Config Struct */
 typedef enum{
-   GPIO_INPUT, GPIO_OUTPUT,
-   GPIO_INPUT_PULLUP, GPIO_INPUT_PULLDOWN,
-   GPIO_INPUT_PULLUP_PULLDOWN,
-   GPIO_ENABLE
+   GPIO_INPUT             = 1,
+      GPIO_NOPULL         = 0, // default value with GPIO_INPUT
+      GPIO_PULLUP         = (1<<1),
+      GPIO_PULLDOWN       = (1<<2),
+      GPIO_PULLUPDOWN     = GPIO_PULLUP | GPIO_PULLDOWN,
+   GPIO_OUTPUT            = 0,
+      GPIO_PUSHPULL       = 0, // default value with GPIO_OUTPUT
+      GPIO_OPENCOLLECTOR  = (1<<3),
+      GPIO_OPENDRAIN      = GPIO_OPENCOLLECTOR,
+   GPIO_LEVEL             = (1<<10),
+      GPIO_LEVEL_HIGH     = (1<<13),
+      GPIO_LEVEL_LOW      = (1<<14),
+   GPIO_EDGE              = (1<<11),
+   GPIO_ASYNCHRONOUS_EDGE = (1<<12),
+      GPIO_EDGE_RISING    = GPIO_LEVEL_HIGH,
+      GPIO_EDGE_FALLING   = GPIO_LEVEL_LOW,
+   GPIO_POWER_ON          = (1<<15),
+   GPIO_POWER_OFF         = (0<<15),
 } gpioConfig_t;
 
-
-/* ----- Begin Pin Config Structs NXP LPC4337 ----- */
-
-typedef struct{
-   int8_t port;
-   int8_t pin;
-} gpioConfigLpc4337_t;
-
-typedef struct{
-    pinConfigLpc4337_t pinName;
-                int8_t func;
-   gpioConfigLpc4337_t gpio;
-} pinConfigGpioLpc4337_t;
-
-/* ------ End Pin Config Structs NXP LPC4337 ------ */
 
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/
 
-bool_t gpioConfig( gpioMap_t pin, gpioConfig_t config );
-bool_t gpioRead( gpioMap_t pin );
-bool_t gpioWrite( gpioMap_t pin, bool_t value );
+/* Properties getters and setters */
+
+// mode
+void gpioSetMode( gpioMap_t gpioNumber, gpioConfig_t mode );
+gpioConfig_t gpioGetMode( gpioMap_t gpioNumber );
+// speed
+void gpioSetSpeed( gpioMap_t gpioNumber, gpioConfig_t speed );
+gpioConfig_t gpioGetSpeed( gpioMap_t gpioNumber );
+// power
+void gpioSetPower( gpioMap_t gpioNumber, gpioConfig_t power );
+gpioConfig_t gpioGetPower( gpioMap_t gpioNumber );
+
+// event
+void gpioSetEvent( gpioMap_t gpioNumber, gpioConfig_t event );
+gpioConfig_t gpioGetEvent( gpioMap_t gpioNumber );
+// eventCallback
+void gpioSetEventCallback( gpioMap_t gpioNumber, Callback_t callback );
+Callback_t gpioGetEventCallback( gpioMap_t gpioNumber );
+
+// value
+void gpioSetValue( gpioMap_t gpioNumber, bool_t value );
+bool_t gpioGetValue( gpioMap_t gpioNumber );
+
+
+/* Methods */
+
+bool_t gpioConfig( gpioMap_t gpioNumber, gpioConfig_t config );
+bool_t gpioRead( gpioMap_t gpioNumber );
+void gpioWrite( gpioMap_t gpioNumber, bool_t value );
 
 /*==================[cplusplus]==============================================*/
 
