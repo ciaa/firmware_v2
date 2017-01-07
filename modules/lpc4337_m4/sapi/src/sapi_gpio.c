@@ -97,6 +97,20 @@ gpio_t gpioInstances[35] = {
    { 0, 0, 0, 0, 0, 0 }, // GPIO33
    { 0, 0, 0, 0, 0, 0 }, // GPIO34
    { 0, 0, 0, 0, 0, 0 }, // GPIO35
+   { 0, 0, 0, 0, 0, 0 }, // GPIO36
+   { 0, 0, 0, 0, 0, 0 }, // GPIO37
+   { 0, 0, 0, 0, 0, 0 }, // GPIO38
+   { 0, 0, 0, 0, 0, 0 }, // GPIO39
+   { 0, 0, 0, 0, 0, 0 }, // GPIO40
+   { 0, 0, 0, 0, 0, 0 }, // GPIO41
+   { 0, 0, 0, 0, 0, 0 }, // GPIO42
+   { 0, 0, 0, 0, 0, 0 }, // GPIO43
+   { 0, 0, 0, 0, 0, 0 }, // GPIO44
+   { 0, 0, 0, 0, 0, 0 }, // GPIO45
+   { 0, 0, 0, 0, 0, 0 }, // GPIO46
+   { 0, 0, 0, 0, 0, 0 }, // GPIO47
+   { 0, 0, 0, 0, 0, 0 }, // GPIO48
+   { 0, 0, 0, 0, 0, 0 }, // GPIO49
 }
 
 const pinConfigGpioLpc4337_t gpioPinsConfig[] = {
@@ -275,11 +289,6 @@ bool_t gpioConfig( gpioMap_t pin, gpioConfig_t config ){
                            &gpioPort, &gpioPin );
 
    switch(config){
-
-      case GPIO_ENABLE:
-		   /* Initializes GPIO */
-		   Chip_GPIO_Init(LPC_GPIO_PORT);
-	   break;
 
       case GPIO_INPUT:
          Chip_SCU_PinMux(

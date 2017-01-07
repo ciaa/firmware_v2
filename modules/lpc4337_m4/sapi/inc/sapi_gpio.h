@@ -49,7 +49,8 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
-#define GPIO_STRENGTH(n)   ( (n) << 4545 )
+#define GPIO_SPEED(n)      ( (n) << 4 )
+#define GPIO_STRENGTH(n)   ( (n) << 7 )
 
 /*==================[typedef]================================================*/
 
@@ -65,16 +66,39 @@ typedef struct{
 
 /* Pin modes */
 typedef enum{
-   GPIO_INPUT = 1,
-      GPIO_NOPULL        = 0, // default value with GPIO_INPUT
-      GPIO_PULLUP        = (1<<1),
-      GPIO_PULLDOWN      = (1<<2),
-      GPIO_PULLUPDOWN    = GPIO_PULLUP | GPIO_PULLDOWN,
-   GPIO_OUTPUT = 0,
-      GPIO_PUSHPULL      = 0, // default value with GPIO_OUTPUT
-      GPIO_OPENCOLLECTOR = (1<<3),
-      GPIO_OPENDRAIN     = GPIO_OPENCOLLECTOR
-} gpioMode_t;
+   GPIO_INPUT             = 1,
+      GPIO_NOPULL         = 0, // default value with GPIO_INPUT
+      GPIO_PULLUP         = (1<<1),
+      GPIO_PULLDOWN       = (1<<2),
+      GPIO_PULLUPDOWN     = GPIO_PULLUP | GPIO_PULLDOWN,
+   GPIO_OUTPUT            = 0,
+      GPIO_PUSHPULL       = 0, // default value with GPIO_OUTPUT
+      GPIO_OPENCOLLECTOR  = (1<<3),
+      GPIO_OPENDRAIN      = GPIO_OPENCOLLECTOR,
+   GPIO_LEVEL             = (1<<10),
+      GPIO_LEVEL_HIGH     = (1<<13),
+      GPIO_LEVEL_LOW      = (1<<14),
+   GPIO_EDGE              = (1<<11),
+   GPIO_ASYNCHRONOUS_EDGE = (1<<12),
+      GPIO_EDGE_RISING    = GPIO_LEVEL_HIGH,
+      GPIO_EDGE_FALLING   = GPIO_LEVEL_LOW
+} gpioConfig_t;
+
+/*
+
+       str spd mode
+111111
+543210 987 654 3210
+xFRAEL 00s 00s OPPI
+ aisde   t   p p /
+ lsygv   r   e eDUO
+ linee   e   e nop
+ inc l   n   d  w
+ ngh     g     dn
+ g r     h     r
+000000 000 000 0000 val
+
+*/
 
 /*==================[external data declaration]==============================*/
 
