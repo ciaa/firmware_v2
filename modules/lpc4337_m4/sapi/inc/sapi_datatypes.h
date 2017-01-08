@@ -88,8 +88,8 @@ extern "C" {
 typedef uint8_t bool_t;
 
 /* Define real Data Types (floating point) */
-typedef float32_t float;
-typedef float64_t double;
+typedef float  float32_t;
+typedef double float64_t;
 
 /* Define Tick Data Type */
 typedef uint64_t tick_t;

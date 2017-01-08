@@ -49,103 +49,107 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
-#define GPIO_SPEED(n)      ( (n) << 4 )
-#define GPIO_STRENGTH(n)   ( (n) << 7 )
+#define GPIO_STRENGTH(n)    ( (n) << 4 )
+#define GPIO_SPEED(n)       ( (n) << 7 )
 
 /*==================[typedef]================================================*/
 
-/* GPIO configuration struct */
-typedef uint16_t gpioConfig_t;
-
-/* GPIO struct */
-typedef struct{
-   gpioConfig_t config;
-   Callback_t eventCallback;
-} Gpio_t;
-
-#define GPIO_NULL { 0, { 0, 0 } }
-
+/* GPIO Config enum type */
 /*
-   config
-      mode;
-      speed;
-      power;
-      value;
-      event;
+gpioConfig_t[15:0] bits = power[15], event[14:10], speed[9:7], mode[6:0]
 
-   eventCallback; //struct
+event[14:10] bits = falling[14], rising[13], asynch_edge[12], edge[11], 
+                    level[10]
 
-p event  spe   mode
-1 11111
-5 43210 987 654 3210
-P FRAEL 00s 00s OPPI
-o aisde   p   t p /
-w lsygv   e   r eDUO
-e linee   e   e nop
-r inc l   d   n  w
-  ngh         g dn
-  g r         h r
-             t
-000000 000 000 0000 val
-
+mode[6:0] bits = strength[6:4], open_drain[3], pull_down[2], pull_up[1], 
+                 input_output[0]
 */
-
-/* GPIO Config Struct */
 typedef enum{
-   GPIO_INPUT             = 1,
-      GPIO_NOPULL         = 0, // default value with GPIO_INPUT
-      GPIO_PULLUP         = (1<<1),
-      GPIO_PULLDOWN       = (1<<2),
-      GPIO_PULLUPDOWN     = GPIO_PULLUP | GPIO_PULLDOWN,
-   GPIO_OUTPUT            = 0,
-      GPIO_PUSHPULL       = 0, // default value with GPIO_OUTPUT
-      GPIO_OPENCOLLECTOR  = (1<<3),
-      GPIO_OPENDRAIN      = GPIO_OPENCOLLECTOR,
-   GPIO_LEVEL             = (1<<10),
-      GPIO_LEVEL_HIGH     = (1<<13),
-      GPIO_LEVEL_LOW      = (1<<14),
-   GPIO_EDGE              = (1<<11),
-   GPIO_ASYNCHRONOUS_EDGE = (1<<12),
-      GPIO_EDGE_RISING    = GPIO_LEVEL_HIGH,
-      GPIO_EDGE_FALLING   = GPIO_LEVEL_LOW,
-   GPIO_POWER_ON          = (1<<15),
-   GPIO_POWER_OFF         = (0<<15),
+   GPIO_INPUT                    = 1,
+      GPIO_NOPULL                = 0, // default value with GPIO_INPUT
+      GPIO_PULLUP                = (1<<1),
+      GPIO_PULLDOWN              = (1<<2),
+      GPIO_PULLUPDOWN            = GPIO_PULLUP | GPIO_PULLDOWN,
+         GPIO_INPUT_PULLUP       = GPIO_INPUT | GPIO_PULLUP,
+         GPIO_INPUT_PULLDOWN     = GPIO_INPUT | GPIO_PULLDOWN,
+         GPIO_INPUT_PULL_UP_DOWN = GPIO_INPUT | GPIO_PULLUP | GPIO_PULLDOWN,
+   GPIO_OUTPUT                   = 0,
+      GPIO_PUSHPULL              = 0, // default value with GPIO_OUTPUT
+      GPIO_OPENDRAIN             = (1<<3),
+      GPIO_OPENCOLLECTOR         = GPIO_OPENDRAIN,
+         GPIO_OUTPUT_GPIO_PUSHPULL_GPIO_STRENGTH1 = 128,
+         GPIO_OUTPUT_GPIO_PUSHPULL_GPIO_STRENGTH2 = 256,
+         GPIO_OUTPUT_GPIO_PUSHPULL_GPIO_STRENGTH3 = 384,
+         GPIO_OUTPUT_GPIO_PUSHPULL_GPIO_STRENGTH4 = 512,
+         GPIO_OUTPUT_GPIO_PUSHPULL_GPIO_STRENGTH5 = 640,
+         GPIO_OUTPUT_GPIO_PUSHPULL_GPIO_STRENGTH6 = 768,
+         GPIO_OUTPUT_GPIO_PUSHPULL_GPIO_STRENGTH7 = 896,
+         GPIO_OUTPUT_OPENDRAIN_PULLUP = GPIO_OUTPUT|GPIO_OPENDRAIN|GPIO_PULLUP,
+   GPIO_LEVEL                    = (1<<10),
+      GPIO_LEVEL_HIGH            = (1<<13),
+      GPIO_LEVEL_LOW             = (1<<14),
+   GPIO_EDGE                     = (1<<11),
+   GPIO_ASYNCHRONOUS_EDGE        = (1<<12),
+      GPIO_EDGE_RISING           = GPIO_LEVEL_HIGH,
+      GPIO_EDGE_FALLING          = GPIO_LEVEL_LOW,
+   GPIO_POWER_ON                 = (1<<15),
+   GPIO_POWER_OFF                = (0<<15)
 } gpioConfig_t;
 
+
+/* GPIO instance struct type */
+typedef struct{
+   gpioConfig_t config;
+   Callback_t   eventCallback;
+} Gpio_t;
 
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/
 
-/* Properties getters and setters */
+/* ----------------- Initialize method ----------------- */
+
+void gpioInitialize( void );
+
+/* ------ Properties getters and setters methods ------- */
 
 // mode
-void gpioSetMode( gpioMap_t gpioNumber, gpioConfig_t mode );
-gpioConfig_t gpioGetMode( gpioMap_t gpioNumber );
+void gpioSetMode( gpioName_t gpioName, gpioConfig_t mode );
+gpioConfig_t gpioGetMode( gpioName_t gpioName );
 // speed
-void gpioSetSpeed( gpioMap_t gpioNumber, gpioConfig_t speed );
-gpioConfig_t gpioGetSpeed( gpioMap_t gpioNumber );
+void gpioSetSpeed( gpioName_t gpioName, gpioConfig_t speed );
+gpioConfig_t gpioGetSpeed( gpioName_t gpioName );
 // power
-void gpioSetPower( gpioMap_t gpioNumber, gpioConfig_t power );
-gpioConfig_t gpioGetPower( gpioMap_t gpioNumber );
+void gpioSetPower( gpioName_t gpioName, gpioConfig_t power );
+gpioConfig_t gpioGetPower( gpioName_t gpioName );
 
 // event
-void gpioSetEvent( gpioMap_t gpioNumber, gpioConfig_t event );
-gpioConfig_t gpioGetEvent( gpioMap_t gpioNumber );
+void gpioSetEvent( gpioName_t gpioName, gpioConfig_t event );
+gpioConfig_t gpioGetEvent( gpioName_t gpioName );
 // eventCallback
-void gpioSetEventCallback( gpioMap_t gpioNumber, Callback_t callback );
-Callback_t gpioGetEventCallback( gpioMap_t gpioNumber );
+void gpioSetEventCallback( gpioName_t gpioName, Callback_t callback );
+//Callback_t gpioGetEventCallback( gpioName_t gpioName );
 
 // value
-void gpioSetValue( gpioMap_t gpioNumber, bool_t value );
-bool_t gpioGetValue( gpioMap_t gpioNumber );
+void gpioSetValue( gpioName_t gpioName, bool_t value );
+bool_t gpioGetValue( gpioName_t gpioName );
 
 
-/* Methods */
+/* ------------------- Action methods ------------------ */
 
-bool_t gpioConfig( gpioMap_t gpioNumber, gpioConfig_t config );
-bool_t gpioRead( gpioMap_t gpioNumber );
-void gpioWrite( gpioMap_t gpioNumber, bool_t value );
+// Config
+void gpioConfig( gpioName_t gpioName, gpioConfig_t config );
+
+// Group of GPIOs Config
+void gpioGroupConfig( gpioName_t* gpioNames, 
+                      uint8_t gpioNamesSize, 
+                      gpioConfig_t config );
+
+// Write a GPIO
+void gpioWrite( gpioName_t gpioName, bool_t value );
+
+// Read a GPIO
+bool_t gpioRead( gpioName_t gpioName );
 
 /*==================[cplusplus]==============================================*/
 

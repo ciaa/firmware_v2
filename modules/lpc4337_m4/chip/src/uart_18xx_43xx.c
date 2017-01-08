@@ -95,7 +95,7 @@ STATIC void Chip_UART_ABIntHandler(LPC_USART_T *pUART)
 /* Initializes the pUART peripheral */
 void Chip_UART_Init(LPC_USART_T *pUART)
 {
-    volatile uint32_t tmp;
+   volatile uint32_t tmp;
 
 	/* Enable UART clocking. UART base clock(s) must already be enabled */
 	Chip_Clock_EnableOpts(UART_PClock[Chip_UART_GetIndex(pUART)], true, true, 1);
