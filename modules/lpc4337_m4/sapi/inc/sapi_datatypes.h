@@ -49,37 +49,29 @@ extern "C" {
 #endif
 
 /*==================[macros]=================================================*/
-
-/* Logical states */
-#ifndef FALSE
-   #define FALSE   0
-#endif
-#ifndef TRUE
-   #define TRUE    (!FALSE)
-#endif
-
 /* Functional states */
 #ifndef ON
-   #define ON      TRUE
+   #define ON     1
 #endif
 #ifndef OFF
-   #define OFF     FALSE
+   #define OFF    0
 #endif
 
 /* Electrical states */
 #ifndef HIGH
-   #define HIGH    TRUE
+   #define HIGH   1
 #endif
 #ifndef LOW
-   #define LOW     FALSE
+   #define LOW    0
 #endif
 
-/* Enabling states */
-#ifndef ENABLE
-   #define ENABLE  TRUE
+/* Logical states */
+
+#ifndef FALSE
+   #define FALSE  0
 #endif
-#ifndef DISABLE
-   #define DISABLE FALSE
+#ifndef TRUE
+   #define TRUE   (!FALSE)
 #endif
 
 /*==================[typedef]================================================*/
@@ -88,8 +80,8 @@ extern "C" {
 typedef uint8_t bool_t;
 
 /* Define real Data Types (floating point) */
-typedef float  float32_t;
-typedef double float64_t;
+//typedef real32_t float;
+//typedef real64_t double;
 
 /* Define Tick Data Type */
 typedef uint64_t tick_t;
@@ -100,15 +92,7 @@ typedef uint64_t tick_t;
  * param:  void * - For passing arguments
  * return: bool_t - For Error Reports
  */
-typedef bool_t (*sapiFuncPtr_t)(void *);
-
-
-/* Callback struct */
-typedef struct{
-   void* pointer;
-   sapiFuncPtr_t function;
-} Callback_t;
-
+typedef bool_t (*sAPI_FuncPtr_t)(void *);
 
 /*==================[external data declaration]==============================*/
 
@@ -120,7 +104,7 @@ typedef struct{
  * param:  void * - Not used
  * return: bool_t - Return always true
  */
-bool_t sapiNullFuncPtr(void *);
+bool_t sAPI_NullFuncPtr(void *);
 
 /*==================[cplusplus]==============================================*/
 

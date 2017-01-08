@@ -82,8 +82,8 @@ static const timerStaticData_t timer_sd[4] = {
    { LPC_TIMER3, RGU_TIMER3_RST, TIMER3_IRQn }
 };
 
-/*Timers dynamic data. Function pointers and Compare match frequencies, which 
- * can vary. This is the default initialization*/
+/*Timers dynamic data. Function pointers and Compare match frequencies, which can vary.
+ * This is the default initialization*/
 static timerDinamicData_t timer_dd[4] = {
    {doNothing,errorOcurred,errorOcurred,errorOcurred},
    {doNothing,errorOcurred,errorOcurred,errorOcurred},
@@ -96,8 +96,7 @@ static timerDinamicData_t timer_dd[4] = {
 /*==================[internal functions definition]==========================*/
 
 /* Causes:
- * User forgot to initialize the functions for the compare match interrupt on 
- * Timer_init call
+ * User forgot to initialize the functions for the compare match interrupt on Timer_init call
  */
 static void errorOcurred(void){
    while(1);
@@ -112,8 +111,7 @@ static void doNothing(void){
  * @Brief   Initialize Timer peripheral
  * @param   timerNumber:   Timer number, 0 to 3
  * @param   ticks:   Number of ticks required to finish the cycle.
- * @param   voidFunctionPointer: function to be executed at the end of the 
- *                               timer cycle
+ * @param   voidFunctionPointer:   function to be executed at the end of the timer cycle
  * @return   nothing
  * @note   For the 'ticks' parameter, see function Timer_microsecondsToTicks
  */
@@ -136,8 +134,7 @@ void Timer_Init( uint8_t timerNumber, uint32_t ticks,
    /* Update the defalut function pointer name of the Compare match 0*/
    timer_dd[timerNumber].timerCompareMatchFunctionPointer[TIMERCOMPAREMATCH0] = voidFunctionPointer;
 
-   /* Initialize compare match with the specified ticks (number of counts
-      needed to clear the match counter) */
+   /* Initialize compare match with the specified ticks (number of counts needed to clear the match counter) */
    Chip_TIMER_MatchEnableInt(timer_sd[timerNumber].name, TIMERCOMPAREMATCH0);
    Chip_TIMER_SetMatch(timer_sd[timerNumber].name, TIMERCOMPAREMATCH0, ticks);
 
@@ -179,8 +176,7 @@ uint32_t Timer_microsecondsToTicks(uint32_t uS){
  * @param   timerNumber:   Timer number, 0 to 3
  * @param   compareMatchNumber:   Compare match number, 1 to 3
  * @param   ticks:   Number of ticks required to reach the compare match.
- * @param   voidFunctionPointer: function to be executed when the compare match
- *                               is reached
+ * @param   voidFunctionPointer: function to be executed when the compare match is reached
  * @return   None
  * @note   For the 'ticks' parameter, see function Timer_microsecondsToTicks
  */
@@ -216,8 +212,8 @@ void Timer_DisableCompareMatch( uint8_t timerNumber,
  *    (because that compare match resets the timer counter), which will be
  *    passed as a parameter when initializing a timer
  * @note:  The selected time (3rd parameter) must be less than
- *    TIMERCOMPAREMATCH0's compareMatchTime_uS for the compare match to make 
- *    the interruption
+ *    TIMERCOMPAREMATCH0's compareMatchTime_uS for the compare match to make the
+ *    interruption
  */
 void Timer_SetCompareMatch( uint8_t timerNumber,
                             uint8_t compareMatchNumber,

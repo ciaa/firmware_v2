@@ -56,7 +56,7 @@ extern "C" {
 
 /*==================[external functions definition]==========================*/
 
-bool_t tickConfig( tick_t tickRateMS, sapiFuncPtr_t tickHook );
+bool_t tickConfig( tick_t tickRateMS, sAPI_FuncPtr_t tickHook );
 
 tick_t tickRead( void );
 

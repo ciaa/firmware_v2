@@ -37,16 +37,16 @@
 /*==================[inclusions]=============================================*/
 
 #include "sapi_datatypes.h"
-#include "sapi_gpio.h"                /* <= GPIO header */
+#include "sapi_peripheral_map.h"
 
 /*==================[macros]=================================================*/
 
 /*==================[typedef]================================================*/
 
 typedef struct{
-   gpioName_t* keypadRowPins;
+   gpioMap_t* keypadRowPins;
    uint8_t keypadRowSize;
-   gpioName_t* keypadColPins;
+   gpioMap_t* keypadColPins;
    uint8_t keypadColSize;
 } keypad_t;
 
@@ -56,8 +56,8 @@ typedef struct{
 
 /* Configure keypad pins */
 bool_t keypadConfig( keypad_t* keypad,
-                     gpioName_t* keypadRowPins, uint8_t keypadRowSize,
-                     gpioName_t* keypadColPins, uint8_t keypadColSize );
+                     gpioMap_t* keypadRowPins, uint8_t keypadRowSize,
+                     gpioMap_t* keypadColPins, uint8_t keypadColSize );
 
 /* Return TRUE if any key is pressed or FALSE (0) in other cases.
  * If exist key pressed write pressed key on key variable */
