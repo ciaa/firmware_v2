@@ -132,6 +132,23 @@ static void SetupHardware( void ){
    /* Inicializar la placa */
    boardConfig();
 
+   /* Inicializar GPIOs */
+   gpioConfig( 0, GPIO_ENABLE );
+
+   /* Configuración de pines de entrada para Teclas de la CIAA-NXP */
+   gpioConfig( TEC1, GPIO_INPUT );
+   gpioConfig( TEC2, GPIO_INPUT );
+   gpioConfig( TEC3, GPIO_INPUT );
+   gpioConfig( TEC4, GPIO_INPUT );
+
+   /* Configuración de pines de salida para Leds de la CIAA-NXP */
+   gpioConfig( LEDR, GPIO_OUTPUT );
+   gpioConfig( LEDG, GPIO_OUTPUT );
+   gpioConfig( LEDB, GPIO_OUTPUT );
+   gpioConfig( LED1, GPIO_OUTPUT );
+   gpioConfig( LED2, GPIO_OUTPUT );
+   gpioConfig( LED3, GPIO_OUTPUT );
+
    #if( defined(CHIP_LPC43XX) || defined(CHIP_LPC18XX) )
    if( FlashDisk_MS_Interface.Config.PortNumber == 0 ){
       Chip_USB0_Init();

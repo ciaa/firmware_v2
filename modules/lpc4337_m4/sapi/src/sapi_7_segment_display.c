@@ -40,6 +40,7 @@
 #include "sapi_7_segment_display.h"   /* <= own header */
 
 #include "sapi_delay.h"               /* <= delay header */
+#include "sapi_gpio.h"                /* <= GPIO header */
 
 /*==================[macros and definitions]=================================*/
 
@@ -150,17 +151,17 @@ uint8_t display7SegmentOutputs[26] = {
  Segment 'h' ON | 0b10000000 |   0x80    | .....
 ----------------+------------+-----------+------------
 
-           a
-         -----
-     f /     / b
+                a
+              -----
+	  f /     / b
 	   /  g  /
 	   -----
-  e /     / c
+       e /     / c
 	/  d  /
 	-----    O h = dp (decimal pint).
 
 */
-void display7SegmentTestPins( gpioName_t* display7SegmentPins, gpioName_t pin ){
+void display7SegmentTestPins( gpioMap_t* display7SegmentPins, gpioMap_t pin ){
 
    uint8_t i = 0;
 
@@ -178,7 +179,7 @@ void display7SegmentTestPins( gpioName_t* display7SegmentPins, gpioName_t pin ){
 
 
 /* Configure 7-segment display GPIOs as Outputs */
-void display7SegmentPinConfig( gpioName_t* display7SegmentPins ){
+void display7SegmentPinConfig( gpioMap_t* display7SegmentPins ){
 
    uint8_t i = 0;
 
@@ -188,7 +189,7 @@ void display7SegmentPinConfig( gpioName_t* display7SegmentPins ){
 
 
 /* Write a symbol on 7-segment display */
-void display7SegmentWrite( gpioName_t* display7SegmentPins, uint8_t symbolIndex ){
+void display7SegmentWrite( gpioMap_t* display7SegmentPins, uint8_t symbolIndex ){
 
    uint8_t i = 0;
 
