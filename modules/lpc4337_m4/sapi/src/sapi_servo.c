@@ -101,15 +101,15 @@ static bool_t servoDetach( servoMap_t servoNumber );
 static const uint8_t servoMap[SERVO_TOTALNUMBER] =
 {
    /* Servo name | DIOMap name | Name in the board*/
-   /* SERVO0 */ T_FIL1, /* T_FIL1 */
-   /* SERVO1 */ T_COL0, /* T_COL0 */
-   /* SERVO2 */ T_FIL2, /* T_FIL2 */
-   /* SERVO3 */ T_FIL3, /* T_FIL3 */
-   /* SERVO4 */ GPIO8,  /* GPIO8  */
-   /* SERVO5 */ LCD1,   /* LCD1   */
-   /* SERVO6 */ LCD2,   /* LCD2   */
-   /* SERVO7 */ LCD3,   /* LCD3   */
-   /* SERVO8 */ GPIO2   /* GPIO2  */
+   /* SERVO0 */ TFIL1, /* T_FIL1 */
+   /* SERVO1 */ TCOL0, /* T_COL0 */
+   /* SERVO2 */ TFIL2, /* T_FIL2 */
+   /* SERVO3 */ TFIL3, /* T_FIL3 */
+   /* SERVO4 */ GPIO8, /* GPIO8  */
+   /* SERVO5 */ LCD1,  /* LCD1   */
+   /* SERVO6 */ LCD2,  /* LCD2   */
+   /* SERVO7 */ LCD3,  /* LCD3   */
+   /* SERVO8 */ GPIO2  /* GPIO2  */
 };
 
 /*when the user adds a servo with servoAttach the list updates with the servo number*/
@@ -269,7 +269,7 @@ static bool_t servoAttach( servoMap_t servoNumber)
    uint8_t position = 0;
 
    /* Pin must b config as Output */
-   gpioConfig( (gpioMap_t)servoNumber, GPIO_OUTPUT );
+   gpioConfig( (gpioName_t)servoNumber, GPIO_OUTPUT );
 
    position = servoIsAttached(servoNumber);
    if(position==0)

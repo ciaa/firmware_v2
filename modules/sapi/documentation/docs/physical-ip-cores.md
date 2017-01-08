@@ -16,7 +16,7 @@ Los periféricos modelados son:
 - UART0 a UART7.
 - I2C0 a I2C7.
 - SPI0 a SPI7.
-- POWER.
+- POWER_MANAGEMENT.
 
 ## GPIO
 
@@ -83,6 +83,7 @@ pin es booleano.
 - Getters y Setters de configuración:
     - ``mode``
         - ``gpioSetMode( GPIO<i>, GPIO_INPUT | GPIO_PULLUP );``
+
         - ``gpioSetMode( GPIO<i>, GPIO_OUTPUT | GPIO_PUSHPULL | GPIO_STRENGTH(7) );``
         - ``gpioMode = gpioGetMode( GPIO<i> );``
     - ``speed``
@@ -371,15 +372,16 @@ Manejo del periférico bus comunicación I2C (Inter Integrated Circuits).
 Posibles configuraciones de clockRateHz: 100000, etc.
 
 **Lectura**
-
-``bool_t i2cRead( i2cMap_t  i2cNumber,
-                  uint8_t  i2cSlaveAddress,
-                  uint8_t* dataToReadBuffer,
-                  uint16_t dataToReadBufferSize,
-                  bool_t   sendWriteStop,
-                  uint8_t* receiveDataBuffer,
-                  uint16_t receiveDataBufferSize,
-                  bool_t   sendReadStop );``
+```c
+bool_t i2cRead( i2cMap_t  i2cNumber,
+                uint8_t  i2cSlaveAddress,
+                uint8_t* dataToReadBuffer,
+                uint16_t dataToReadBufferSize,
+                bool_t   sendWriteStop,
+                uint8_t* receiveDataBuffer,
+                uint16_t receiveDataBufferSize,
+                bool_t   sendReadStop );
+```
 
 - Parámetro: ``i2cMap_t i2cNumber`` I2C a leer (ver I2C Map).
 - Parámetro: ``uint8_t i2cSlaveAddress`` Dirección del sensor conectado por I2C a leer.
@@ -393,11 +395,13 @@ Posibles configuraciones de clockRateHz: 100000, etc.
 
 **Escritura**
 
-``bool_t i2cWrite( i2cMap_t  i2cNumber,
-                   uint8_t  i2cSlaveAddress,
-                   uint8_t* transmitDataBuffer,
-                   uint16_t transmitDataBufferSize,
-                   bool_t   sendWriteStop );``
+```c
+bool_t i2cWrite( i2cMap_t  i2cNumber,
+                 uint8_t  i2cSlaveAddress,
+                 uint8_t* transmitDataBuffer,
+                 uint16_t transmitDataBufferSize,
+                 bool_t   sendWriteStop );
+```
 
 - Parámetro: ``i2cMap_t i2cNumber`` ID de periférico I2C a escribir (ver I2C Map). Actualmente funciona únicamente el I2C0.
 - Parámetro: ``uint8_t i2cSlaveAddress`` Dirección del sensor conectado por I2C a escribir.

@@ -1,4 +1,6 @@
-/* Copyright 2016, Eric Pernia.
+/* Copyright 2015, Eric Pernia.
+ * Copyright 2016, Ian Olivieri.
+ * Copyright 2016, Eric Pernia.
  * All rights reserved.
  *
  * This file is part sAPI library for microcontrollers.
@@ -31,57 +33,57 @@
  *
  */
 
-#ifndef _SAPI_7_SEGMENT_DISPLAY_H_
-#define _SAPI_7_SEGMENT_DISPLAY_H_
+/* Date: 2015-09-23 */
+
+#ifndef _SAPI_PERIPHERALMAP_SOC_H_
+#define _SAPI_PERIPHERALMAP_SOC_H_
 
 /*==================[inclusions]=============================================*/
 
 #include "sapi_datatypes.h"
-#include "sapi_gpio.h"                /* <= GPIO header */
+
+/*==================[cplusplus]==============================================*/
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*==================[macros]=================================================*/
 
-#define DISPLAY_OFF 25
-
 /*==================[typedef]================================================*/
+
+
+/* ----- Begin Pin Config Structs NXP LPC4337 ----- */
+
+typedef struct{
+   int8_t port;
+   int8_t pin;
+} pinConfigLpc4337_t;
+
+typedef struct{
+   int8_t port;
+   int8_t pin;
+} gpioConfigLpc4337_t;
+
+
+typedef struct{
+    pinConfigLpc4337_t pinName;
+                int8_t func;
+   gpioConfigLpc4337_t gpio;
+} pinConfigGpioLpc4337_t;
+
+/* ------ End Pin Config Structs NXP LPC4337 ------ */
+
 
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/
 
-/* Test 7-segment display connected pins */
-/*
-----------------+------------+-----------+------------
- Segment ON     | BIN Value  | HEX Value | Output pin
-----------------+------------+-----------+------------
- Segment 'a' ON | 0b00000001 |   0x20    | ..... (to be complete)
- Segment 'b' ON | 0b00000010 |   0x80    | .....
- Segment 'c' ON | 0b00000100 |   0x40    | .....
- Segment 'd' ON | 0b00001000 |   0x02    | .....
- Segment 'e' ON | 0b00010000 |   0x04    | .....
- Segment 'f' ON | 0b00100000 |   0x10    | .....
- Segment 'g' ON | 0b01000000 |   0x08    | .....
- Segment 'h' ON | 0b10000000 |   0x80    | .....
-----------------+------------+-----------+------------
+/*==================[cplusplus]==============================================*/
 
-                a
-              -----
-          f /     / b
-	   /  g  /
-	   -----
-       e /     / c
-	/  d  /
-	-----    O h = dp (decimal pint).
-
-*/
-void display7SegmentTestPins( gpioName_t* display7SegmentPins, gpioName_t pin );
-
-/* Configure 7-segment display GPIOs as Outputs */
-void display7SegmentPinConfig( gpioName_t* display7SegmentPins );
-
-/* Write a symbol on 7-segment display */
-void display7SegmentWrite( gpioName_t* display7SegmentPins, uint8_t symbolIndex );
-
+#ifdef __cplusplus
+}
+#endif
 
 /*==================[end of file]============================================*/
-#endif /* #ifndef _SAPI_7_SEGMENT_DISPLAY_H_ */
+#endif /* #ifndef _SAPI_PERIPHERALMAP_SOC_H_ */

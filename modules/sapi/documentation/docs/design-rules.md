@@ -55,9 +55,37 @@ estructura es el área donde se encuentra mapeado el IPCore y no es accesible
 desde el API pública más alla de como un indice con nombre (I2C0=0, SPI1=1,
 UART4=3, etc.).
 
+### Tipos de datos de IP Core
+
+Cada uno de los IP Cores tendrá un conjunto de "tipos de datos difinidos". 
+
+Estos tipos de datos modelan, entre otras cosas, la estructura que contiene las
+propiedades asociadas al periférico así como otros necesarios. Esta es de la
+forma:
+
+```c
+typedef struct{
+   <type> property1;
+   <type> property2;
+   ...
+} <IpCore>_t`` 
+```
+
+También existe el tipo enumerado asociado al nombre del periférico (para
+acceder por nombre a los periféricos físicos). Este tipo es de la forma:
+
+```c
+typedef enum{
+   <IPCORE0>,
+   <IPCORE1>,
+   ...
+} <ipCoreName>_t
+```
+
 ### Métodos de acceso a IPCores
 
-- Inicializar el IPCore (enciende el IPCore de ser necesario y lo inicializa con la configuración más típica utilizada): ``<ipCore>Initialize( <IPCOREi>, <mostCommonPropertyValue> | <MODIFY_FLAG1> | ... | <MODIFY_FLAGn> );``
+- Inicializar el IPCore (enciende el IPCore de ser necesario y lo inicializa con la configuración más típica utilizada): ``<ipCore>Initialize( <IPCOREi>, <mostCommonPropertyValue> | <MODIFY_FLAG1> | ... | <MODIFY_FLAGn> );
+``
 
 - Asignar valor de una propiedad: ``<ipCore>Set<PropertyName>( IPCORE<i>, <propertyValue> | MODIFY_FLAG1 | MODIFY_FLAG2(value) | ... | MODIFY_FLAGn );``
 

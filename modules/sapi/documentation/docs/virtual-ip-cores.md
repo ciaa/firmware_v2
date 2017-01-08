@@ -24,7 +24,8 @@ Configurar los pines conectados al display 7 segmentos como salida:
 
 Ejemplo:
 
-``uint8_t display7Segment[8] = {
+```c
+uint8_t display7Segment[8] = {
     GPIO5, // Segment 'a'
     GPIO7, // Segment 'b'
     GPIO6, // Segment 'c'
@@ -33,8 +34,8 @@ Ejemplo:
     GPIO4, // Segment 'f'
     GPIO3, // Segment 'g'
     GPIO8  // Segment 'h' or 'dp'
- };``
-
+ };
+```
 
 Testear en que orden están conectados los pines a los segmentos *a* a *h*:
 
@@ -69,12 +70,12 @@ Escribe un símbolo en el display 7 segmentos.
 - Retorna: nada.
 
 Tabla de símbolos:
-
-``0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 
- a, b, c, d, e, f,
- A, C, E, H, J, L, P, U
- ., DISPLAY_OFF``
-
+```
+0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 
+a, b, c, d, e, f,
+A, C, E, H, J, L, P, U
+., DISPLAY_OFF
+```
 
 ## Teclado matricial
 
@@ -82,9 +83,11 @@ Utiliza varios **GPIOs**.
 
 **Configuración**
 
-``bool_t keypadConfig( keypad_t* keypad,
-                      gpioMap_t* keypadRowPins, uint8_t keypadRowSize,
-                      gpioMap_t* keypadColPins, uint8_t keypadColSize );``
+```c
+bool_t keypadConfig( keypad_t* keypad,
+                     gpioMap_t* keypadRowPins, uint8_t keypadRowSize,
+                     gpioMap_t* keypadColPins, uint8_t keypadColSize );
+```
 
 - Parámetro: ``keypad_t* keypad`` puntero a estructura del teclado matricial donde se almacenan todos los parámetros necesarios del mismo.
 - Parámetro: ``gpioMap_t* keypadRowPins`` puntero a vector que contiene la lista de pines conectados a las filas del teclado matricial.
@@ -104,23 +107,25 @@ Ejemplo:
 
 - Filas a configuar como Salidas
 
-      ``uint8_t keypadRowPins1[4] = {
-          RS232_TXD, // Row 0
-          CAN_RD,    // Row 1
-          CAN_TD,    // Row 2
-          T_COL1     // Row 3
-       };``
-
+```c
+uint8_t keypadRowPins1[4] = {
+   GPIO10, // Row 0
+   GPIO11, // Row 1
+   GPIO12, // Row 2
+   GPIO13  // Row 3
+};
+```
 
 - Columnas a configurar como Entradas con pull-up (MODO = GPIO_INPUT_PULLUP)
 
-      ``uint8_t keypadColPins1[4] = {
-          T_FIL0,   // Column 0
-          T_FIL3,    // Column 1
-          T_FIL2,    // Column 2
-          T_COL0     // Column 3
-       };``
-
+```c
+uint8_t keypadColPins1[4] = {
+   GPIO14, // Column 0
+   GPIO15, // Column 1
+   GPIO16, // Column 2
+   GPIO17  // Column 3
+};
+```
 
 - Función de configuración
 
