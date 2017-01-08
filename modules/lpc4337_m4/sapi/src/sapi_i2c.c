@@ -73,9 +73,9 @@
                                    uint16_t transmitDataBufferSize,
                                    bool_t   sendWriteStop );
 
-   static void i2cSoftwarePinConfig( gpioMap_t pin, uint8_t mode );
-   static void i2cSoftwarePinWrite( gpioMap_t pin, bool_t value );
-   static bool_t i2cSoftwarePinRead( gpioMap_t pin );
+   static void i2cSoftwarePinConfig( gpioName_t pin, uint8_t mode );
+   static void i2cSoftwarePinWrite( gpioName_t pin, bool_t value );
+   static bool_t i2cSoftwarePinRead( gpioName_t pin );
 
 #else
 

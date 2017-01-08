@@ -56,8 +56,8 @@
 
 #include "sapi_7_segment_display.h" // Use GPIO and Delay modules
 #include "sapi_keypad.h"            // Use GPIO and Delay modules
-#include "sapi_pwm.h"               // Use SCT and GPIO modules
-#include "sapi_servo.h"             // Use Timer and GPIO modules
+//#include "sapi_pwm.h"               // Use SCT and GPIO modules
+//#include "sapi_servo.h"             // Use Timer and GPIO modules
 #include "sapi_hmc5883l.h"          // Use I2C module
 
 /* External Peripherals */

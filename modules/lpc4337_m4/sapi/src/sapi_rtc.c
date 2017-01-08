@@ -62,7 +62,6 @@ bool_t rtcConfig( rtc_t * rtc ){
    bool_t ret_val = 1;
 
    static bool_t init;
-   RTC_TIME_T rtcTime;
 
    if( init ){
       /* Already initialized */

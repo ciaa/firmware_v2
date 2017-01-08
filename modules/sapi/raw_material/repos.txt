@@ -1,0 +1,6 @@
+https://github.com/ARMmbed/mbed-os/blob/master/hal/gpio_api.h
+https://gist.github.com/martinribelotta/646592b5c10b66cdeccd1baa1b32c04f
+https://github.com/picociaa/picoFirmware
+https://github.com/epernia/sapi
+https://github.com/ciaa/firmware_v2
+https://github.com/ciaa/Firmware
