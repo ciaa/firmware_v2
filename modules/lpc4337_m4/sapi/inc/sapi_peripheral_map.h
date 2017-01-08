@@ -81,6 +81,16 @@ typedef enum{
 } uartName_t;
 
 
+/* --------------------- TIMER Map --------------------- */
+
+/* TIMER instances size */
+#define TIMER_INSTANCES_SIZE 8
+
+/* TIMER name enum type */
+typedef enum{
+   TIMER0, TIMER1, TIMER2, TIMER3, TIMER4, TIMER5, TIMER6, TIMER7
+} timerName_t;
+
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/

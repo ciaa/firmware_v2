@@ -1,4 +1,5 @@
-/* Copyright 2015-2016, Eric Pernia.
+/* Copyright 2016, Ian Olivieri
+ * Copyright 2016, Eric Pernia.
  * All rights reserved.
  *
  * This file is part sAPI library for microcontrollers.
@@ -31,36 +32,12 @@
  *
  */
 
-/* Date: 2015-09-23 */
+/* Date: 2016-02-20 */
 
-#ifndef _SAPI_H_
-#define _SAPI_H_
+#ifndef SAPI_ANALOGIO_H_
+#define SAPI_ANALOGIO_H_
 
 /*==================[inclusions]=============================================*/
-
-#include "sapi_datatypes.h"
-#include "sapi_peripheral_map.h"
-//#include "sapi_isr_vector.h"
-
-#include "sapi_board.h"
-#include "sapi_tick.h"
-#include "sapi_gpio.h"
-#include "sapi_uart.h"
-#include "sapi_adc.h"
-#include "sapi_dac.h"
-#include "sapi_i2c.h"
-#include "sapi_rtc.h"
-#include "sapi_sleep.h"
-
-#include "sapi_delay.h"             // Use Tick module
-
-#include "sapi_7_segment_display.h" // Use GPIO and Delay modules
-#include "sapi_keypad.h"            // Use GPIO and Delay modules
-//#include "sapi_pwm.h"               // Use SCT and GPIO modules
-//#include "sapi_servo.h"             // Use Timer and GPIO modules
-#include "sapi_hmc5883l.h"          // Use I2C module
-
-/* External Peripherals */
 
 /*==================[cplusplus]==============================================*/
 
@@ -68,13 +45,25 @@
 extern "C" {
 #endif
 
-/*==================[macros]=================================================*/
+/*==================[macros and definitions]=================================*/
 
 /*==================[typedef]================================================*/
+
+typedef enum{
+   ENABLE_ANALOG_INPUTS,  DISABLE_ANALOG_INPUTS,
+   ENABLE_ANALOG_OUTPUTS, DISABLE_ANALOG_OUTPUTS 
+} analogConfig_t;
 
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/
+
+void analogConfig( uint8_t config );
+
+uint16_t analogRead( uint8_t analogInput );
+
+void analogWrite( uint8_t analogOutput, uint16_t value );
+
 
 /*==================[cplusplus]==============================================*/
 
@@ -83,4 +72,5 @@ extern "C" {
 #endif
 
 /*==================[end of file]============================================*/
-#endif /* #ifndef _SAPI_H_ */
+
+#endif /* #ifndef _SAPI_ANALOGIO_H_ */

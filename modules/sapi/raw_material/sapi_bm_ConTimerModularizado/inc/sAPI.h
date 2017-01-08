@@ -1,4 +1,5 @@
-/* Copyright 2015-2016, Eric Pernia.
+/* Copyright 2015, Eric Pernia.
+ * Copyright 2016, Eric Pernia.
  * All rights reserved.
  *
  * This file is part sAPI library for microcontrollers.
@@ -32,41 +33,26 @@
  */
 
 /* Date: 2015-09-23 */
-
+ 
 #ifndef _SAPI_H_
 #define _SAPI_H_
 
 /*==================[inclusions]=============================================*/
 
-#include "sapi_datatypes.h"
-#include "sapi_peripheral_map.h"
-//#include "sapi_isr_vector.h"
+#include "sAPI_DataTypes.h"
+#include "sAPI_IsrVector.h"
 
-#include "sapi_board.h"
-#include "sapi_tick.h"
-#include "sapi_gpio.h"
-#include "sapi_uart.h"
-#include "sapi_adc.h"
-#include "sapi_dac.h"
-#include "sapi_i2c.h"
-#include "sapi_rtc.h"
-#include "sapi_sleep.h"
+#include "sAPI_Board.h"
+#include "sAPI_PeripheralMap.h"
+#include "sAPI_DigitalIO.h"
+#include "sAPI_AnalogIO.h"
+#include "sAPI_Uart.h"
+#include "sAPI_Timer.h"
+#include "sAPI_Servo.h"
+#include "sAPI_Pwm.h"
 
-#include "sapi_delay.h"             // Use Tick module
-
-#include "sapi_7_segment_display.h" // Use GPIO and Delay modules
-#include "sapi_keypad.h"            // Use GPIO and Delay modules
-//#include "sapi_pwm.h"               // Use SCT and GPIO modules
-//#include "sapi_servo.h"             // Use Timer and GPIO modules
-#include "sapi_hmc5883l.h"          // Use I2C module
-
-/* External Peripherals */
-
-/*==================[cplusplus]==============================================*/
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "sAPI_Tick.h"
+#include "sAPI_Delay.h"
 
 /*==================[macros]=================================================*/
 
@@ -75,12 +61,6 @@ extern "C" {
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/
-
-/*==================[cplusplus]==============================================*/
-
-#ifdef __cplusplus
-}
-#endif
 
 /*==================[end of file]============================================*/
 #endif /* #ifndef _SAPI_H_ */

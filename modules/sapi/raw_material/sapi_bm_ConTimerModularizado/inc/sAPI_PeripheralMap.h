@@ -35,12 +35,10 @@
 
 /* Date: 2015-09-23 */
 
-#ifndef _SAPI_PERIPHERALMAP_BOARD_H_
-#define _SAPI_PERIPHERALMAP_BOARD_H_
+#ifndef _SAPI_PERIPHERALMAP_H_
+#define _SAPI_PERIPHERALMAP_H_
 
 /*==================[inclusions]=============================================*/
-
-#include "sapi_datatypes.h"
 
 /*==================[cplusplus]==============================================*/
 
@@ -52,108 +50,62 @@ extern "C" {
 
 /*==================[typedef]================================================*/
 
+/* ----- Begin Pin Config Structs NXP LPC4337 ----- */
+
+typedef struct{
+   int8_t port;
+   int8_t pin;
+} pinConfigLpc4337_t;
+
+/* ------ End Pin Config Structs NXP LPC4337 ------ */
+
+
 /* ------- Begin EDU-CIAA-NXP Peripheral Map ------ */
 
-/* Defined for sapi_gpio.h */
-
+/* Defined for sAPI_DigitalIO.h */
 typedef enum{
+   
    /* EDU-CIAA-NXP */
-
-   // P2 header
-// GPIO0, GPIO1, GPIO2, GPIO3, GPIO4, GPIO5, GPIO6, GPIO7, GPIO8,
-   LCD1 = 9, LCD2, LCD3, LCD4, LCDRS, LCDEN,
-   ENET_RXD1, ENET_TXEN, ENET_MDC, ENET_RXD0, 
-   ENET_CRS_DV, ENET_MDIO, ENET_TXD0, ENET_TXD1,
-   SPI_MISO, SPI_MOSI,
-   
-   // P1 header
-   RS232_RXD, RS232_TXD,
-   CAN_RD, CAN_TD,
-   TFIL0, TFIL1, TFIL2, TFIL3, TCOL0, TCOL1, TCOL2,
-   
-   // Switches
-   // 36     37     38     39
+	DIO0,  DIO1,  DIO2,  DIO3,  DIO4,  DIO5,  DIO6,  DIO7,  DIO8,  DOI9,
+   DIO10, DIO11, DIO12, DIO13, DIO14, DIO15, DIO16, DIO17, DIO18, DIO19,
+   DIO20, DIO21, DIO22, DIO23, DIO24, DIO25, DIO26, DIO27, DIO28, DIO29,
+   DIO30, DIO31, DIO32, DIO33, DIO34, DIO35,
    TEC1,  TEC2,  TEC3,  TEC4,
-
-   // Leds
-   // 40     41     42     43     44     45
    LED1,  LED2,  LED3,  LEDR,  LEDG,  LEDB,
-}  gpioMapBoard_t;
+   
+   /* CIAA-NXP */
+	DI0,   DI1,   DI2,   DI3,   DI4,   DI5,   DI6,   DI7,
+	DO0,   DO1,   DO2,   DO3,   DO4,   DO5,   DO6,   DO7
+   
+} digitalIOMap_t;
 
-
-
-
-/* Defined for sapi_adc.h */
+/* Defined for sAPI_AnalogIO.h */
+/* 46        47   48   49 */
 typedef enum{
-/* 62         63       64        65       */
-   AI3 = 62, AI2 = 63, AI1 = 64, AI0 = 65,
-             CH3 = 63, CH2 = 64, CH1 = 65
-/*  46        47   48  49 */
-// AI2 = 46, AI1, AI0, AO
-} adcMap_t;
+   AI2 = 46, AI1, AI0, AO
+} analogIOMap_t;
 
-/* Defined for sapi_dac.h */
-typedef enum{
-/* 66 */
-   AO = 66,
-   DAC = 66
-} dacMap_t;
-
-/* Defined for sapi_uart.h */
+/* Defined for sAPI_Uart.h */
 typedef enum{
    UART_USB, UART_232, UART_485
 } uartMap_t;
 
-/*Defined for sapi_timer.h*/
-//NOTE: if servo is enable (servoConfig used) the only available timer to use
-// is TIMER0
+/* Defined for sAPI_Timer.h */
+/* NOTE: if servo is enable (servoConfig used) the only available timer to 
+   use is TIMER0 */
 typedef enum{
-   TIMERCOMPAREMATCH0, TIMERCOMPAREMATCH1,
-   TIMERCOMPAREMATCH2, TIMERCOMPAREMATCH3
-} timerCompareMatch_t;
+   TIMER0, TIMER1, TIMER2, TIMER3, SCT
+} timerMap_t;
 
-/*Defined for sapi_sct.h*/
-// NOTE: CTOUT11 has no SCT mode associated, so it can't be used!
-// NOTE: if pwm is enable (pwmConfig used) there will be no sct channels
-// available
-typedef enum{
-   CTOUT0,  CTOUT1,  CTOUT2,  CTOUT3,  CTOUT4,  CTOUT5,  CTOUT6,  CTOUT7,
-   CTOUT8,  CTOUT9, CTOUT10, CTOUT11, CTOUT12, CTOUT13
-} sctMap_t;
-
-/*Defined for sapi_pwm.h*/
+/*Defined for sAPI_Pwm.h*/
 typedef enum{
    PWM0, PWM1, PWM2, PWM3, PWM4, PWM5, PWM6, PWM7, PWM8, PWM9, PWM10
 } pwmMap_t;
 
-/*Defined for sapi_servo.h*/
+/*Defined for sAPI_Servo.h*/
 typedef enum{
    SERVO0, SERVO1, SERVO2, SERVO3, SERVO4, SERVO5, SERVO6, SERVO7, SERVO8
 } servoMap_t;
-
-/*Defined for sapi_i2c.h*/
-/* Comment because already defined in "i2c_18xx_43xx.h"*/
-/*
-typedef enum{
-   I2C0 // TODO: Add support for I2C1
-} i2cMap_t;
-*/
-typedef uint8_t i2cMap_t;
-
-
-
-/* ------- Begin CIAA-NXP Peripheral Map ------ */
-/*
-typedef enum{ 
- // 46     47     48     49     50     51     52     53
-   DI0,   DI1,   DI2,   DI3,   DI4,   DI5,   DI6,   DI7,
- // 54     55     56     57     58     59     60     61
-   DO0,   DO1,   DO2,   DO3,   DO4,   DO5,   DO6,   DO7
-} gpioMapBoard_t;
-*/
-
-
-
 
 /* ------- End EDU-CIAA-NXP Peripheral Map -------- */
 
@@ -168,4 +120,4 @@ typedef enum{
 #endif
 
 /*==================[end of file]============================================*/
-#endif /* #ifndef _SAPI_PERIPHERALMAP_BOARD_H_ */
+#endif /* #ifndef _SAPI_PERIPHERALMAP_H_ */

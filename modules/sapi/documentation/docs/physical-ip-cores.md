@@ -137,6 +137,8 @@ Alias de ``gpioSetValue();``
 
 Manejo de conversor analógico-digital.
 
+samplingRate
+
 **Configuración inicial de conversor analógico-digital**
 
 ``void adcConfig( adcConfig_t config );``
@@ -183,9 +185,108 @@ Posibles configuraciones:
 
 
 
-## Timer
+## TIMER
+
+Modela un periférico Timer/Counter.
+
+Modos de funcionamiento:
+
+
+     
+- TIMER_TICKER. A Ticker is used to call a function at a recurring interval 
+
+- TIMER_OVERFLOW =? COUNT_TO_OVERFLOW =? TIMER_NORMAL. Modo temporizador de propósito general. Este modo es utilizado cuando se requiere de temporizaciones precisas. Cuenta hasta overflow.
+    - Continuous normal operation (Reset timer counter on overflow) /|/|/|
+    - Continuous inverter operation (invert timer counter mode on overflow) /\/\/\ --> Solo si soporta conteo up-down
+    - Stop timer counter on overflow  /|___
+
+- TIMER_MATCH. Modo temporizador de propósito general. Este modo es utilizado cuando se requiere de temporizaciones precisas. Cuenta hasta llegar a cierto valor de comparación.
+    - Reset timer counter on match /|/|/|
+    - Invert timer counter mode on match /\/\/\ --> Solo si soporta conteo up-down
+    - Stop timer counter on match  /|___
+
+   - TIMER_MATCH_OUTPUT =? TIMER_OUTPUT_SIGNAL_GENERATOR =? TIMER_WAVEFORM_GENERATOR: Modo de generación de pulsos de un determinado ancho o señal periódica de una determinada frecuencia.
+       - TIMER_SET_OUTPUT_ON_MATCH (Set high on match)
+       - TIMER_CLEAR_OUTPUT_ON_MATCH (Set low on match)
+       - TIMER_TOGGLESET_OUTPUT_ON_MATCH (Toggle on match)
+
+   - TIMER_PWM: Generación de señal de salida PWM (modulación de ancho de pulso). En modo PWM hay que usar los 2 valores, el match y el overflow para cambiar el pin.
+       - TIMER_PWM_EDGE (alineado al flanco =? Fast PWM. Inicia con un flanco de subida o termia con un flanco de bajada, desde el punto de vista del ciclo de trabajo (Duty Cycle).
+           - TIMER_PWM_LOW_ON_COMPARE (comienza en alto y cae cuando llega a COMPARE)
+                 - Non-inverted Clear OCO on compare match, set OCO at TOP
+           - TIMER_PWM_HIGH_ON_COMPARE (comienza en bajo y sube cuando llega a COMPARE)
+                 - Inverted PWM Set OCO on compare match, clear OCO at TOP
+       - TIMER_PWM_CENTER (alineado al centro) =? Fase correcta. Alineado al centro del período T. Esta última característica es muy popular para el control de servo motores de 3 fases en CA y sin escobillas (brushless) en CD, en donde son necesarios  varios  canales  de  PWM.
+           - TIMER_PWM_LOW_ON_COMPARE (comienza en alto y cae cuando llega a COMPARE)
+           - TIMER_PWM_HIGH_ON_COMPARE (comienza en bajo y sube cuando llega a COMPARE)
+
+
+- TIMER_INPUT_CAPTURE: Modo de captura de eventos externos. En este modo el timer mide eventos temporales externos, aplicados a ciertos pines. Estos eventos pueden ser: medición de ancho de un pulso o la frecuencia de una señal.
+    - CAPTURE IN RISING EDGE
+    - CAPTURE IN FALLING EDGE
+    - CAPTURE IN BOTH EDGES
+
+    - Continuous normal operation (Reset timer counter on overflow) /|/|/|
+    - Continuous inverter operation (invert timer counter mode on overflow) /\/\/\ --> Solo si soporta conteo up-down
+    - Reset timer on capture /|/|/| 
+    - Invert timer on capture /\/\/\ --> Solo si soporta conteo up-down
+    - Stop timer on capture  /|___
+
+
+
+timer capture input
+timer match outputs
+
+
+
+Propiedades:
+
+- clockSource (pin, F_CPU)
+- prescaler (clockSource/8, /16, /32, /64, /128, /256, /512, /1024 )
+    - Entre estos 2 se calcula:
+        - frequency
+        - period
+
+- counterSize (tamaño del contador del timer, 8, 16, 24 o 32 bits)
+- counterMode (up, down o up-down(lo usa modo PWM alineado al centro) )
+- counterState (estado, running o stop)
+- counterValue (valor actual de conteo)
+
+- counterCompareValue (valor de comparacion, puede indicar hasta donde cuenta o desde donde cuenta).
+    - Con este valor se calcula el dutyCycle (cambia la formula segun el tipo de PWM)
+
+Eventos:
+
+- Overflow (marca evento de rebalse a 0, ejecuta un callback, ojo que en modo up-down no marca cuando llega al máximo).
+- Compare Match (marca evento de alcanzar el valor de comaración, ejecuta un callback). Puede tener más de un evento de match por timer (4 en LPC4337 TIMER, 16 en el SCT).
+- Input capture (marca el evento del pin, guarda el valor actual de counter y ejecuta un callback). Puede tener más de un evento de capture por timer (4 en LPC4337 TIMER, 8 en el SCT).
+
+- Cuando ocurre un evento además de lo que hace se puede:
+    - Continuous normal operation (no hace nada, NO VALIDO PARA EVENTO OVERFLOW)
+    - Reset timer counter on event /|/|/| 
+    - Invert counter mode timer on event /\/\/\ --> Solo si soporta conteo up-down
+    - Stop timer on event  /|___
+
+Timeout:
+
+The Timeout interface is used to setup an interrupt to call a function after a specified delay.
+
+**Métodos:**
+
+Timer:
+
+- start
+- stop
+- reset
+- readCounter
+
+
 
 ### PWM
+
+
+- frequency
+- dutyCycle
 
 Manejo de salidas PWM (modulación por ancho de pulso). En la EDU-CIAA-NXP se
 utiliza internamente el periférico SCT para generar los PWM.

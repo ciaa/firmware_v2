@@ -1,7 +1,8 @@
-/* Copyright 2015-2016, Eric Pernia.
+/* Copyright 2016, Ian Olivieri.
+ * Copyright 2016, Eric Pernia.
  * All rights reserved.
  *
- * This file is part sAPI library for microcontrollers.
+ * This file is part of CIAA Firmware.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,36 +32,12 @@
  *
  */
 
-/* Date: 2015-09-23 */
+/* Date: 2016-05-02 */
 
-#ifndef _SAPI_H_
-#define _SAPI_H_
+#ifndef _SAPI_LPC43XX_TIMER_H_
+#define _SAPI_LPC43XX_TIMER_H_
 
 /*==================[inclusions]=============================================*/
-
-#include "sapi_datatypes.h"
-#include "sapi_peripheral_map.h"
-//#include "sapi_isr_vector.h"
-
-#include "sapi_board.h"
-#include "sapi_tick.h"
-#include "sapi_gpio.h"
-#include "sapi_uart.h"
-#include "sapi_adc.h"
-#include "sapi_dac.h"
-#include "sapi_i2c.h"
-#include "sapi_rtc.h"
-#include "sapi_sleep.h"
-
-#include "sapi_delay.h"             // Use Tick module
-
-#include "sapi_7_segment_display.h" // Use GPIO and Delay modules
-#include "sapi_keypad.h"            // Use GPIO and Delay modules
-//#include "sapi_pwm.h"               // Use SCT and GPIO modules
-//#include "sapi_servo.h"             // Use Timer and GPIO modules
-#include "sapi_hmc5883l.h"          // Use I2C module
-
-/* External Peripherals */
 
 /*==================[cplusplus]==============================================*/
 
@@ -72,9 +49,33 @@ extern "C" {
 
 /*==================[typedef]================================================*/
 
+typedef void (*voidFunctionPointer_t)(void);
+
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/
+
+/*
+ * @Brief:  Converts a value in microseconds (uS = 1x10^-6 sec) to ticks
+ * @param:  uint32_t microseconds: Value in microseconds
+ * @return: uint32_t Equivalent in Ticks for the LPC4337
+ * @note:   Can be used for the second parameter in the Timer_init
+ */
+uint32_t timerMicrosecondsToTicks( uint32_t microseconds );
+
+/*==================[ISR external functions declaration]=====================*/
+
+/* 0x1c 0x00000070 - Handler for ISR TIMER0 (IRQ 12) */
+void TIMER0_IRQHandler(void);
+
+/* 0x1d 0x00000074 - Handler for ISR TIMER1 (IRQ 13) */
+void TIMER1_IRQHandler(void);
+
+/* 0x1e 0x00000078 - Handler for ISR TIMER2 (IRQ 14) */
+void TIMER2_IRQHandler(void);
+
+/* 0x1f 0x0000007C - Handler for ISR TIMER3 (IRQ 15) */
+void TIMER3_IRQHandler(void);
 
 /*==================[cplusplus]==============================================*/
 
@@ -83,4 +84,5 @@ extern "C" {
 #endif
 
 /*==================[end of file]============================================*/
-#endif /* #ifndef _SAPI_H_ */
+
+#endif /* _SAPI_LPC43XX_TIMER_H_ */

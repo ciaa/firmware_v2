@@ -1,4 +1,5 @@
-/* Copyright 2015-2016, Eric Pernia.
+/* Copyright 2015, Eric Pernia.
+ * Copyright 2016, Eric Pernia.
  * All rights reserved.
  *
  * This file is part sAPI library for microcontrollers.
@@ -30,57 +31,78 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  */
-
+ 
 /* Date: 2015-09-23 */
-
-#ifndef _SAPI_H_
-#define _SAPI_H_
 
 /*==================[inclusions]=============================================*/
 
-#include "sapi_datatypes.h"
-#include "sapi_peripheral_map.h"
-//#include "sapi_isr_vector.h"
+#include "sAPI_DataTypes.h"
+#include "sAPI_Tick.h"
 
-#include "sapi_board.h"
-#include "sapi_tick.h"
-#include "sapi_gpio.h"
-#include "sapi_uart.h"
-#include "sapi_adc.h"
-#include "sapi_dac.h"
-#include "sapi_i2c.h"
-#include "sapi_rtc.h"
-#include "sapi_sleep.h"
+#include "sAPI_Delay.h"
 
-#include "sapi_delay.h"             // Use Tick module
+/*==================[macros and definitions]=================================*/
 
-#include "sapi_7_segment_display.h" // Use GPIO and Delay modules
-#include "sapi_keypad.h"            // Use GPIO and Delay modules
-//#include "sapi_pwm.h"               // Use SCT and GPIO modules
-//#include "sapi_servo.h"             // Use Timer and GPIO modules
-#include "sapi_hmc5883l.h"          // Use I2C module
+/*==================[internal data declaration]==============================*/
 
-/* External Peripherals */
+/*==================[internal functions declaration]=========================*/
 
-/*==================[cplusplus]==============================================*/
+/*==================[internal data definition]===============================*/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+/*==================[external data definition]===============================*/
 
-/*==================[macros]=================================================*/
+extern volatile tick_t tickRateMS;
 
-/*==================[typedef]================================================*/
+/*==================[internal functions definition]==========================*/
 
-/*==================[external data declaration]==============================*/
+/*==================[external functions definition]==========================*/
 
-/*==================[external functions declaration]=========================*/
+/* ---- Inaccurate Blocking Delay ---- */
 
-/*==================[cplusplus]==============================================*/
+void delayInaccurate(tick_t delay_ms) {
+   volatile tick_t i;
+   volatile tick_t delay;
 
-#ifdef __cplusplus
+   delay = INACCURATE_TO_MS * delay_ms;
+
+   for( i=delay; i>0; i-- );
 }
-#endif
+
+/* ---- Blocking Delay ---- */
+
+void delay (tick_t time){
+    tick_t curTicks = tickRead();
+    while ( (tickRead() - curTicks) < time/tickRateMS );
+ }
+
+
+/* ---- Non Blocking Delay ---- */
+
+void delayConfig( delay_t * delay, tick_t duration ){
+   delay->duration = duration/tickRateMS;
+   delay->running = 0;
+}
+
+bool_t delayRead( delay_t * delay ){
+
+   bool_t timeArrived = 0;
+
+   if( !delay->running ){
+      delay->startTime = tickRead();
+      delay->running = 1;
+   }
+   else{
+      if ( (tickRead() - delay->startTime) >= delay->duration ){
+         timeArrived = 1;
+         delay->running = 0;
+      }
+   }
+
+   return timeArrived;
+}
+
+void delayWrite( delay_t * delay, tick_t duration ){
+   delay->duration = duration/tickRateMS;
+}
 
 /*==================[end of file]============================================*/
-#endif /* #ifndef _SAPI_H_ */

@@ -1,4 +1,5 @@
-/* Copyright 2015-2016, Eric Pernia.
+/* Copyright 2015, Eric Pernia.
+ * Copyright 2016, Eric Pernia.
  * All rights reserved.
  *
  * This file is part sAPI library for microcontrollers.
@@ -30,57 +31,35 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  */
-
+ 
 /* Date: 2015-09-23 */
-
-#ifndef _SAPI_H_
-#define _SAPI_H_
 
 /*==================[inclusions]=============================================*/
 
-#include "sapi_datatypes.h"
-#include "sapi_peripheral_map.h"
-//#include "sapi_isr_vector.h"
+#include "chip.h"
 
-#include "sapi_board.h"
-#include "sapi_tick.h"
-#include "sapi_gpio.h"
-#include "sapi_uart.h"
-#include "sapi_adc.h"
-#include "sapi_dac.h"
-#include "sapi_i2c.h"
-#include "sapi_rtc.h"
-#include "sapi_sleep.h"
+#include "sAPI_Board.h"
 
-#include "sapi_delay.h"             // Use Tick module
+/*==================[macros and definitions]=================================*/
 
-#include "sapi_7_segment_display.h" // Use GPIO and Delay modules
-#include "sapi_keypad.h"            // Use GPIO and Delay modules
-//#include "sapi_pwm.h"               // Use SCT and GPIO modules
-//#include "sapi_servo.h"             // Use Timer and GPIO modules
-#include "sapi_hmc5883l.h"          // Use I2C module
+/*==================[internal data declaration]==============================*/
 
-/* External Peripherals */
+/*==================[internal functions declaration]=========================*/
 
-/*==================[cplusplus]==============================================*/
+/*==================[internal data definition]===============================*/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+/*==================[external data definition]===============================*/
 
-/*==================[macros]=================================================*/
+/*==================[internal functions definition]==========================*/
 
-/*==================[typedef]================================================*/
+/*==================[external functions definition]==========================*/
 
-/*==================[external data declaration]==============================*/
+/* Set up and initialize board hardware */
+void boardConfig(void) {
 
-/*==================[external functions declaration]=========================*/
+   /* Read clock settings and update SystemCoreClock variable */
+   SystemCoreClockUpdate();
 
-/*==================[cplusplus]==============================================*/
-
-#ifdef __cplusplus
 }
-#endif
 
 /*==================[end of file]============================================*/
-#endif /* #ifndef _SAPI_H_ */

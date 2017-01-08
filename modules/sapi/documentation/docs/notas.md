@@ -396,3 +396,111 @@ stringInitialize( mensaje )
 - sapi.h
 
 
+
+---------------------------------------------------------
+
+Ver en GPIO si quiero agregar:
+------------------------------
+
+debounceTime ---> Para modo input
+toggleOutput() ---> Para modo output
+
+---------------------------------------------------------
+
+Para TIMER en general:
+----------------------
+
+    Timer(4, prescaler=624, period=13439, mode=UP, div=1)
+
+The information means that this timer is set to run at the peripheral
+clock speed divided by 624+1, 
+
+it will count from 0 up to 13439, at which point it triggers an interrupt, 
+and then starts counting again from 0.
+
+These numbers are set to make the timer trigger at 10 Hz: the source frequency
+of the timer is 84MHz (found by running ``tim.source_freq()``) so we
+get 84MHz / 625 / 13440 = 10Hz.
+
+Timer counter
+-------------
+
+So what can we do with our timer?  The most basic thing is to get the
+current value of its counter::
+
+    >>> tim.counter()
+    21504
+
+This counter will continuously change, and counts up.
+
+---------------------------------------------------------
+
+
+Para TIMER PWM:
+---------------
+
+	enum POLARITY{ ACTIVE_LOW=0, ACTIVE_HIGH=1 };
+
+	float analogFrequency;  //defaults to 100,000 Hz
+	float analogMax;        //defaults to 3.3V
+
+	int setPeriod(unsigned int period_ns);
+	 unsigned int getPeriod();
+	 int setFrequency(float frequency_hz);
+	 float getFrequency();
+	 int setDutyCycle(unsigned int duration_ns);
+	 int setDutyCycle(float percentage);
+	 unsigned int getDutyCycle();
+	 float getDutyCyclePercent();
+
+	 int setPolarity(PWM::POLARITY);
+	 void invertPolarity();
+	 PWM::POLARITY getPolarity();
+
+	virtual void setAnalogFrequency(float frequency_hz) { this->analogFrequency = frequency_hz; }
+	virtual int calibrateAnalogMax(float analogMax); //must be between 3.2 and 3.4
+	virtual int analogWrite(float voltage);
+
+	virtual int run();
+	virtual bool isRunning();
+	virtual int stop();
+
+	virtual ~PWM();
+private:
+	float period_nsToFrequency(unsigned int);
+	unsigned int frequencyToPeriod_ns(float);
+};
+
+---------------------------------------------------------
+
+Para TIMER Waveform generation output signal:
+----------------------------------------------
+
+   // Generate a periodic sine wave in an array of 100 values - using ints
+   unsigned int waveform[100];
+   float gain = 50.0f;
+   float phase = 0.0f;
+   float bias = 50.0f;
+   float freq = 2.0f * 3.14159f / 100.0f;
+   for (i=0; i<100; i++){
+      waveform[i] = (unsigned int)(bias + (gain * sin((i * freq) + phase)));
+   }
+
+
+---------------------------------------------------------
+
+
+Power control
+-------------
+
+:meth:`pyb.wfi` is used to reduce power consumption while waiting for an
+event such as an interrupt.  You would use it in the following situation::
+
+    while True:
+        do_some_processing()
+        pyb.wfi()
+
+Control the frequency using :meth:`pyb.freq`::
+
+    pyb.freq(30000000) # set CPU frequency to 30MHz
+

@@ -1,4 +1,5 @@
-/* Copyright 2015-2016, Eric Pernia.
+/* Copyright 2015, Eric Pernia.
+ * Copyright 2016, Eric Pernia.
  * All rights reserved.
  *
  * This file is part sAPI library for microcontrollers.
@@ -30,57 +31,74 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  */
-
+ 
 /* Date: 2015-09-23 */
 
-#ifndef _SAPI_H_
-#define _SAPI_H_
+#ifndef _SAPI_DATATYPES_H_
+#define _SAPI_DATATYPES_H_
 
 /*==================[inclusions]=============================================*/
 
-#include "sapi_datatypes.h"
-#include "sapi_peripheral_map.h"
-//#include "sapi_isr_vector.h"
-
-#include "sapi_board.h"
-#include "sapi_tick.h"
-#include "sapi_gpio.h"
-#include "sapi_uart.h"
-#include "sapi_adc.h"
-#include "sapi_dac.h"
-#include "sapi_i2c.h"
-#include "sapi_rtc.h"
-#include "sapi_sleep.h"
-
-#include "sapi_delay.h"             // Use Tick module
-
-#include "sapi_7_segment_display.h" // Use GPIO and Delay modules
-#include "sapi_keypad.h"            // Use GPIO and Delay modules
-//#include "sapi_pwm.h"               // Use SCT and GPIO modules
-//#include "sapi_servo.h"             // Use Timer and GPIO modules
-#include "sapi_hmc5883l.h"          // Use I2C module
-
-/* External Peripherals */
-
-/*==================[cplusplus]==============================================*/
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "stdint.h"
 
 /*==================[macros]=================================================*/
 
+/* Functional states */
+#ifndef ON
+   #define ON     1
+#endif
+#ifndef OFF
+   #define OFF    0
+#endif
+
+/* Electrical states */
+#ifndef HIGH
+   #define HIGH   1
+#endif
+#ifndef LOW
+   #define LOW    0
+#endif
+
+/* Logical states */
+
+#ifndef FALSE
+   #define FALSE  0
+#endif
+#ifndef TRUE
+   #define TRUE   (!FALSE)
+#endif
+
 /*==================[typedef]================================================*/
+
+/* Define Boolean Data Type */
+typedef uint8_t bool_t;
+
+/* Define real Data Types (floating point) */
+//typedef real32_t float;
+//typedef real64_t double;
+
+/* Define Tick Data Type */
+typedef uint64_t tick_t;
+
+/* 
+ * Function Pointer definition
+ * --------------------------------------
+ * param:  void * - For passing arguments
+ * return: bool_t - For Error Reports
+ */
+typedef bool_t (*sAPI_FuncPtr_t)(void *);
 
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/
 
-/*==================[cplusplus]==============================================*/
-
-#ifdef __cplusplus
-}
-#endif
+/* 
+ * Null Function Pointer definition
+ * --------------------------------------
+ * param:  void * - Not used
+ * return: bool_t - Return always true
+ */
+bool_t sAPI_NullFuncPtr(void *);
 
 /*==================[end of file]============================================*/
-#endif /* #ifndef _SAPI_H_ */
+#endif /* #ifndef _SAPI_DATATYPES_H_ */

@@ -1,4 +1,4 @@
-/* Copyright 2015-2016, Eric Pernia.
+/* Copyright 2016, Eric Pernia.
  * All rights reserved.
  *
  * This file is part sAPI library for microcontrollers.
@@ -30,57 +30,61 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  */
-
-/* Date: 2015-09-23 */
-
-#ifndef _SAPI_H_
-#define _SAPI_H_
+ 
+/* Date: 2016-06-05 */
 
 /*==================[inclusions]=============================================*/
 
-#include "sapi_datatypes.h"
-#include "sapi_peripheral_map.h"
-//#include "sapi_isr_vector.h"
+#include "sAPI_DataTypes.h"
 
-#include "sapi_board.h"
-#include "sapi_tick.h"
-#include "sapi_gpio.h"
-#include "sapi_uart.h"
-#include "sapi_adc.h"
-#include "sapi_dac.h"
-#include "sapi_i2c.h"
-#include "sapi_rtc.h"
-#include "sapi_sleep.h"
+/*==================[macros and definitions]=================================*/
 
-#include "sapi_delay.h"             // Use Tick module
+/*==================[internal data declaration]==============================*/
 
-#include "sapi_7_segment_display.h" // Use GPIO and Delay modules
-#include "sapi_keypad.h"            // Use GPIO and Delay modules
-//#include "sapi_pwm.h"               // Use SCT and GPIO modules
-//#include "sapi_servo.h"             // Use Timer and GPIO modules
-#include "sapi_hmc5883l.h"          // Use I2C module
+/*==================[internal functions declaration]=========================*/
 
-/* External Peripherals */
+/*==================[internal data definition]===============================*/
 
-/*==================[cplusplus]==============================================*/
+/*==================[external data definition]===============================*/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+/*==================[internal functions definition]==========================*/
 
-/*==================[macros]=================================================*/
+/*==================[external functions definition]==========================*/
 
-/*==================[typedef]================================================*/
-
-/*==================[external data declaration]==============================*/
-
-/*==================[external functions declaration]=========================*/
-
-/*==================[cplusplus]==============================================*/
-
-#ifdef __cplusplus
+/* 
+ * Null Function Pointer definition
+ * --------------------------------------
+ * param:  void * - Not used
+ * return: bool_t - Return always true
+ */
+bool_t sAPI_NullFuncPtr(void *ptr){
+   return 1;
 }
-#endif
 
+/*==================[ISR external functions definition]======================*/
+
+/*
+// FUNCTION POINTER VECTOR EXAMPLE
+
+// Función para no tener NULL pointer
+   void dummy(void){
+   }
+ 
+// Definición de un tipo con typedef.
+   typedef void (*voidFunctionPointer_t)(void);
+ 
+// Definición de una variable con el tipo de typedef, incializo en dummy (NULL)
+   voidFunctionPointer_t voidFunctionPointer[2] = {dummy, dummy};
+
+// Ejecuto la funcion
+   (* voidFunctionPointer[0] )();
+   (* voidFunctionPointer[1] )();
+      
+// Asigno una funcion a cada posición del vector
+   voidFunctionPointer[0] = ledB;
+   voidFunctionPointer[1] = led1;
+*/      
+
+
+/** @} doxygen end group definition */
 /*==================[end of file]============================================*/
-#endif /* #ifndef _SAPI_H_ */

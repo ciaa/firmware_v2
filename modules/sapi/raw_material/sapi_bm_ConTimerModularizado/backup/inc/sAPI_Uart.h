@@ -1,4 +1,4 @@
-/* Copyright 2015-2016, Eric Pernia.
+/* Copyright 2016, Eric Pernia.
  * All rights reserved.
  *
  * This file is part sAPI library for microcontrollers.
@@ -31,42 +31,14 @@
  *
  */
 
-/* Date: 2015-09-23 */
+/* Date: 2016-02-26 */
 
-#ifndef _SAPI_H_
-#define _SAPI_H_
-
+#ifndef _SAPI_UART_H_
+#define _SAPI_UART_H_
+ 
 /*==================[inclusions]=============================================*/
 
-#include "sapi_datatypes.h"
-#include "sapi_peripheral_map.h"
-//#include "sapi_isr_vector.h"
-
-#include "sapi_board.h"
-#include "sapi_tick.h"
-#include "sapi_gpio.h"
-#include "sapi_uart.h"
-#include "sapi_adc.h"
-#include "sapi_dac.h"
-#include "sapi_i2c.h"
-#include "sapi_rtc.h"
-#include "sapi_sleep.h"
-
-#include "sapi_delay.h"             // Use Tick module
-
-#include "sapi_7_segment_display.h" // Use GPIO and Delay modules
-#include "sapi_keypad.h"            // Use GPIO and Delay modules
-//#include "sapi_pwm.h"               // Use SCT and GPIO modules
-//#include "sapi_servo.h"             // Use Timer and GPIO modules
-#include "sapi_hmc5883l.h"          // Use I2C module
-
-/* External Peripherals */
-
-/*==================[cplusplus]==============================================*/
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "sAPI_PeripheralMap.h"
 
 /*==================[macros]=================================================*/
 
@@ -76,11 +48,21 @@ extern "C" {
 
 /*==================[external functions declaration]=========================*/
 
-/*==================[cplusplus]==============================================*/
+void uartConfig( uint8_t uart, uint32_t baudRate );
 
-#ifdef __cplusplus
-}
-#endif
+uint8_t uartReadByte( uint8_t uart );
+void uartWriteByte( uint8_t uart, uint8_t byte );
+
+void uartWriteString( uint8_t uart, uint8_t * str );
+
+/*==================[ISR external functions declaration]======================*/
+
+/* 0x28 0x000000A0 - Handler for ISR UART0 (IRQ 24) */
+void UART0_IRQHandler(void);
+/* 0x2a 0x000000A8 - Handler for ISR UART2 (IRQ 26) */
+void UART2_IRQHandler(void);
+/* 0x2b 0x000000AC - Handler for ISR UART3 (IRQ 27) */
+void UART3_IRQHandler(void);
 
 /*==================[end of file]============================================*/
-#endif /* #ifndef _SAPI_H_ */
+#endif /* _SAPI_UART_H_ */

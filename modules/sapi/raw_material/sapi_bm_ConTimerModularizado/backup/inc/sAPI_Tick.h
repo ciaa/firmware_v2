@@ -1,4 +1,5 @@
-/* Copyright 2015-2016, Eric Pernia.
+/* Copyright 2015, Eric Pernia.
+ * Copyright 2016, Eric Pernia.
  * All rights reserved.
  *
  * This file is part sAPI library for microcontrollers.
@@ -33,40 +34,12 @@
 
 /* Date: 2015-09-23 */
 
-#ifndef _SAPI_H_
-#define _SAPI_H_
+#ifndef _SAPI_TICK_H_
+#define _SAPI_TICK_H_
 
 /*==================[inclusions]=============================================*/
 
-#include "sapi_datatypes.h"
-#include "sapi_peripheral_map.h"
-//#include "sapi_isr_vector.h"
-
-#include "sapi_board.h"
-#include "sapi_tick.h"
-#include "sapi_gpio.h"
-#include "sapi_uart.h"
-#include "sapi_adc.h"
-#include "sapi_dac.h"
-#include "sapi_i2c.h"
-#include "sapi_rtc.h"
-#include "sapi_sleep.h"
-
-#include "sapi_delay.h"             // Use Tick module
-
-#include "sapi_7_segment_display.h" // Use GPIO and Delay modules
-#include "sapi_keypad.h"            // Use GPIO and Delay modules
-//#include "sapi_pwm.h"               // Use SCT and GPIO modules
-//#include "sapi_servo.h"             // Use Timer and GPIO modules
-#include "sapi_hmc5883l.h"          // Use I2C module
-
-/* External Peripherals */
-
-/*==================[cplusplus]==============================================*/
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "sAPI_DataTypes.h"
 
 /*==================[macros]=================================================*/
 
@@ -74,13 +47,20 @@ extern "C" {
 
 /*==================[external data declaration]==============================*/
 
-/*==================[external functions declaration]=========================*/
+/*==================[ISR external functions definition]======================*/
 
-/*==================[cplusplus]==============================================*/
+/*==================[external functions definition]==========================*/
 
-#ifdef __cplusplus
-}
-#endif
+bool_t tickConfig( tick_t tickRateMS, sAPI_FuncPtr_t tickHook );
+
+tick_t tickRead( void );
+
+void tickWrite( tick_t ticks );
+
+/*==================[ISR external functions declaration]======================*/
+
+/* SysTick Timer ISR Handler */
+void SysTick_Handler(void);
 
 /*==================[end of file]============================================*/
-#endif /* #ifndef _SAPI_H_ */
+#endif /* #ifndef _SAPI_TICK_H_ */
