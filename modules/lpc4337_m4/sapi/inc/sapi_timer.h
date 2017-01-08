@@ -1,4 +1,4 @@
-/* Copyright 2017, Eric Pernia.
+/* Copyright 2016, Ian Olivieri
  * All rights reserved.
  *
  * This file is part sAPI library for microcontrollers.
@@ -31,10 +31,10 @@
  *
  */
 
-/* Date: 2017-01-08 */
+/* Date: 2016-02-10 */
 
-#ifndef _SAPI_TIMER_H_
-#define _SAPI_TIMER_H_
+#ifndef SAPI_TIMER_H_
+#define SAPI_TIMER_H_
 
 /*==================[inclusions]=============================================*/
 
@@ -47,114 +47,76 @@
 extern "C" {
 #endif
 
-/*==================[macros]=================================================*/
-
-#define timer_STRENGTH(n)    ( (n) << 4 )
-#define timer_SPEED(n)       ( (n) << 7 )
+/*==================[macros and definitions]=================================*/
 
 /*==================[typedef]================================================*/
-
-/* timer Config enum type */
-/*
-timerConfig_t[15:0] bits = power[15], event[14:10], speed[9:7], mode[6:0]
-
-event[14:10] bits = falling[14], rising[13], asynch_edge[12], edge[11], 
-                    level[10]
-
-mode[6:0] bits = strength[6:4], open_drain[3], pull_down[2], pull_up[1], 
-                 input_output[0]
-*/
-typedef enum{
-   timer_INPUT                    = 1,
-      timer_NOPULL                = 0, // default value with timer_INPUT
-      timer_PULLUP                = (1<<1),
-      timer_PULLDOWN              = (1<<2),
-      timer_PULLUPDOWN            = timer_PULLUP | timer_PULLDOWN,
-         timer_INPUT_PULLUP       = timer_INPUT | timer_PULLUP,
-         timer_INPUT_PULLDOWN     = timer_INPUT | timer_PULLDOWN,
-         timer_INPUT_PULL_UP_DOWN = timer_INPUT | timer_PULLUP | timer_PULLDOWN,
-   timer_OUTPUT                   = 0,
-      timer_PUSHPULL              = 0, // default value with timer_OUTPUT
-      timer_OPENDRAIN             = (1<<3),
-      timer_OPENCOLLECTOR         = timer_OPENDRAIN,
-         timer_OUTPUT_timer_PUSHPULL_timer_STRENGTH1 = 128,
-         timer_OUTPUT_timer_PUSHPULL_timer_STRENGTH2 = 256,
-         timer_OUTPUT_timer_PUSHPULL_timer_STRENGTH3 = 384,
-         timer_OUTPUT_timer_PUSHPULL_timer_STRENGTH4 = 512,
-         timer_OUTPUT_timer_PUSHPULL_timer_STRENGTH5 = 640,
-         timer_OUTPUT_timer_PUSHPULL_timer_STRENGTH6 = 768,
-         timer_OUTPUT_timer_PUSHPULL_timer_STRENGTH7 = 896,
-         timer_OUTPUT_OPENDRAIN_PULLUP = timer_OUTPUT|timer_OPENDRAIN|timer_PULLUP,
-   timer_LEVEL                    = (1<<10),
-      timer_LEVEL_HIGH            = (1<<13),
-      timer_LEVEL_LOW             = (1<<14),
-   timer_EDGE                     = (1<<11),
-   timer_ASYNCHRONOUS_EDGE        = (1<<12),
-      timer_EDGE_RISING           = timer_LEVEL_HIGH,
-      timer_EDGE_FALLING          = timer_LEVEL_LOW,
-   timer_POWER_ON                 = (1<<15),
-   timer_POWER_OFF                = (0<<15),
-
-   COUNT_TO_OVERFLOW, COUNT_TO_MATCH,
-   INPUT_PULSE_CAPTURE, 
-   OUTPUT_SIGNAL_GENERATOR, PWM
-
-} timerConfig_t;
-
-
-/* timer instance struct type */
-typedef struct{
-   timerConfig_t config;
-   Callback_t   eventCallback;
-} Timer_t;
+typedef void (*voidFunctionPointer_t)(void);
 
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/
+/*
+ * @Brief   Initialize Timer peripheral
+ * @param   timerNumber:   Timer number, 0 to 3
+ * @param   ticks:   Number of ticks required to finish the cycle.
+ * @param   voidFunctionPointer:   function to be executed at the end of the timer cycle
+ * @return   nothing
+ * @note   For the 'ticks' parameter, see function Timer_microsecondsToTicks
+ */
+void Timer_Init(uint8_t timerNumber , uint32_t ticks, voidFunctionPointer_t voidFunctionPointer);
 
-/* ----------------- Initialize method ----------------- */
+/*
+ * @Brief   Disables timer peripheral
+ * @param   timerNumber:   Timer number, 0 to 3
+ * @return   nothing
+ */
+void Timer_DeInit(uint8_t timerNumber);
 
-void timerInitialize( void );
+/*
+ * @Brief   Converts a value in microseconds (uS = 1x10^-6 sec) to ticks
+ * @param   uS:   Value in microseconds
+ * @return   Equivalent in Ticks for the LPC4337
+ * @note   Can be used for the second parameter in the Timer_init
+ */
+uint32_t Timer_microsecondsToTicks(uint32_t uS);
 
-/* ------ Properties getters and setters methods ------- */
+/*
+ * @Brief   Enables a compare match in a timer
+ * @param   timerNumber:   Timer number, 0 to 3
+ * @param   compareMatchNumber:   Compare match number, 1 to 3
+ * @param   ticks:   Number of ticks required to reach the compare match.
+ * @param   voidFunctionPointer: function to be executed when the compare match is reached
+ * @return   None
+ * @note   For the 'ticks' parameter, see function Timer_microsecondsToTicks
+ */
+void Timer_EnableCompareMatch(uint8_t timerNumber, uint8_t compareMatchNumber , uint32_t ticks, voidFunctionPointer_t voidFunctionPointer);
 
-// mode
-void timerSetMode( timerName_t timerName, timerConfig_t mode );
-timerConfig_t timerGetMode( timerName_t timerName );
-// speed
-void timerSetSpeed( timerName_t timerName, timerConfig_t speed );
-timerConfig_t timerGetSpeed( timerName_t timerName );
-// power
-void timerSetPower( timerName_t timerName, timerConfig_t power );
-timerConfig_t timerGetPower( timerName_t timerName );
+/*
+ * @brief   Disables a compare match of a timer
+ * @param   timerNumber:   Timer number, 0 to 3
+ * @param   compareMatchNumber:   Compare match number, 1 to 3
+ * @return   None
+ */
+void Timer_DisableCompareMatch(uint8_t timerNumber, uint8_t compareMatchNumber);
 
-// event
-void timerSetEvent( timerName_t timerName, timerConfig_t event );
-timerConfig_t timerGetEvent( timerName_t timerName );
-// eventCallback
-void timerSetEventCallback( timerName_t timerName, Callback_t callback );
-//Callback_t timerGetEventCallback( timerName_t timerName );
+/*
+ * @Purpose:   Allows the user to change the compare value n? 'compareMatchNumber' of timer 'timerNumber'.
+ *    This is specially useful to generate square waves if used in the function for the TIMERCOMPAREMATCH0 (because
+ *    that compare match resets the timer counter), which will be passed as a parameter when initializing a timer
+ * @note:  The selected time (3rd parameter) must be less than TIMERCOMPAREMATCH0's compareMatchTime_uS
+ *   for the compare match to make the interruption
+ */
+void Timer_SetCompareMatch(uint8_t timerNumber, uint8_t compareMatchNumber,uint32_t ticks);
 
-// value
-void timerSetValue( timerName_t timerName, bool_t value );
-bool_t timerGetValue( timerName_t timerName );
-
-
-/* ------------------- Action methods ------------------ */
-
-// Config
-void timerConfig( timerName_t timerName, timerConfig_t config );
-
-// Group of timers Config
-void timerGroupConfig( timerName_t* timerNames, 
-                      uint8_t timerNamesSize, 
-                      timerConfig_t config );
-
-// Write a timer
-void timerWrite( timerName_t timerName, bool_t value );
-
-// Read a timer
-bool_t timerRead( timerName_t timerName );
+/*==================[ISR external functions declaration]=====================*/
+/*
+ * @Brief:   Executes the functions passed by parameter in the Timer_init,
+ *   at the chosen frequencies
+ */
+void TIMER0_IRQHandler(void);
+void TIMER1_IRQHandler(void);
+void TIMER2_IRQHandler(void);
+void TIMER3_IRQHandler(void);
 
 /*==================[cplusplus]==============================================*/
 
@@ -163,4 +125,4 @@ bool_t timerRead( timerName_t timerName );
 #endif
 
 /*==================[end of file]============================================*/
-#endif /* #ifndef _SAPI_TIMER_H_ */
+#endif /* SAPI_TIMER_H_ */

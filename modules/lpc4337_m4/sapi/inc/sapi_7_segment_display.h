@@ -37,7 +37,7 @@
 /*==================[inclusions]=============================================*/
 
 #include "sapi_datatypes.h"
-#include "sapi_gpio.h"                /* <= GPIO header */
+#include "sapi_peripheral_map.h"
 
 /*==================[macros]=================================================*/
 
@@ -74,13 +74,13 @@
 	-----    O h = dp (decimal pint).
 
 */
-void display7SegmentTestPins( gpioName_t* display7SegmentPins, gpioName_t pin );
+void display7SegmentTestPins( gpioMap_t* display7SegmentPins, gpioMap_t pin );
 
 /* Configure 7-segment display GPIOs as Outputs */
-void display7SegmentPinConfig( gpioName_t* display7SegmentPins );
+void display7SegmentPinConfig( gpioMap_t* display7SegmentPins );
 
 /* Write a symbol on 7-segment display */
-void display7SegmentWrite( gpioName_t* display7SegmentPins, uint8_t symbolIndex );
+void display7SegmentWrite( gpioMap_t* display7SegmentPins, uint8_t symbolIndex );
 
 
 /*==================[end of file]============================================*/
