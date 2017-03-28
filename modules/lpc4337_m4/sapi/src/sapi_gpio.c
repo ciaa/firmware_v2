@@ -270,7 +270,7 @@ bool_t gpioConfig( gpioMap_t pin, gpioConfig_t config ){
          Chip_SCU_PinMux(
             pinNamePort,
             pinNamePin,
-            SCU_MODE_INACT | SCU_MODE_ZIF_DIS,
+            SCU_MODE_INACT | SCU_MODE_ZIF_DIS | SCU_MODE_INBUFF_EN,
             func
          );
          Chip_GPIO_SetDir( LPC_GPIO_PORT, gpioPort, ( 1 << gpioPin ), GPIO_OUTPUT );
