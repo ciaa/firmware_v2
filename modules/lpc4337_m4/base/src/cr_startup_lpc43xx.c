@@ -176,6 +176,7 @@ extern void _vStackTop(void);
 // This relies on the linker script to place at correct location in memory.
 //
 //*****************************************************************************
+#ifndef USING_OSEK_RTOS /* osek generates its own interrupt vector */
 extern void (* const g_pfnVectors[])(void);
 __attribute__ ((used,section(".isr_vector")))
 void (* const g_pfnVectors[])(void) = {
@@ -260,7 +261,7 @@ void (* const g_pfnVectors[])(void) = {
     CAN0_IRQHandler,          // 67
     QEI_IRQHandler,           // 68
 };
-
+#endif
 
 //*****************************************************************************
 // Functions to carry out the initialization of RW and BSS data sections. These
