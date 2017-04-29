@@ -130,3 +130,9 @@ info:
 ctags:
 	@echo "Generating tags file."
 	ctags -R .
+
+generate:
+	php $(osek_PATH)/generator/generator.php --cmdline -l -v \
+	-DARCH=cortexM4 -DCPUTYPE=lpc43xx -DCPU=lpc4337 \
+	-c  $(PROJECT)/$(PROJECT_NAME).oil -f $(osek_GEN_FILES) -o $(PROJECT)/gen
+
