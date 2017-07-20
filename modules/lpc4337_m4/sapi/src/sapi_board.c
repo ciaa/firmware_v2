@@ -37,6 +37,9 @@
 
 #include "sapi_board.h"
 
+#include "sapi_tick.h"
+#include "sapi_gpio.h"
+
 /*==================[macros and definitions]=================================*/
 
 /*==================[internal data declaration]==============================*/
@@ -58,6 +61,47 @@ void boardConfig(void) {
    SystemCoreClockUpdate();
 
    Board_Init(); // From Board module (modules/lpc4337_m4/board)
+
+   /* Inicializar el conteo de Ticks con resolución de 1ms, sin tickHook */
+   tickConfig( 1, 0 );
+
+   /* Inicializar GPIOs */
+   gpioConfig( 0, GPIO_ENABLE );
+
+   /* Configuración de pines de entrada para Teclas de la EDU-CIAA-NXP */
+   gpioConfig( TEC1, GPIO_INPUT );
+   gpioConfig( TEC2, GPIO_INPUT );
+   gpioConfig( TEC3, GPIO_INPUT );
+   gpioConfig( TEC4, GPIO_INPUT );
+
+   /* Configuración de pines de salida para Leds de la EDU-CIAA-NXP */
+   gpioConfig( LEDR, GPIO_OUTPUT );
+   gpioConfig( LEDG, GPIO_OUTPUT );
+   gpioConfig( LEDB, GPIO_OUTPUT );
+   gpioConfig( LED1, GPIO_OUTPUT );
+   gpioConfig( LED2, GPIO_OUTPUT );
+   gpioConfig( LED3, GPIO_OUTPUT );
+
+
+   /* Configuración de pines de entrada de la CIAA-NXP */
+   gpioConfig( DI0, GPIO_INPUT );
+   gpioConfig( DI1, GPIO_INPUT );
+   gpioConfig( DI2, GPIO_INPUT );
+   gpioConfig( DI3, GPIO_INPUT );
+   gpioConfig( DI4, GPIO_INPUT );
+   gpioConfig( DI5, GPIO_INPUT );
+   gpioConfig( DI6, GPIO_INPUT );
+   gpioConfig( DI7, GPIO_INPUT );
+
+   /* Configuración de pines de salida de la CIAA-NXP */
+   gpioConfig( DO0, GPIO_OUTPUT );
+   gpioConfig( DO1, GPIO_OUTPUT );
+   gpioConfig( DO2, GPIO_OUTPUT );
+   gpioConfig( DO3, GPIO_OUTPUT );
+   gpioConfig( DO4, GPIO_OUTPUT );
+   gpioConfig( DO5, GPIO_OUTPUT );
+   gpioConfig( DO6, GPIO_OUTPUT );
+   gpioConfig( DO7, GPIO_OUTPUT );
 
 }
 

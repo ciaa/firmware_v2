@@ -78,9 +78,9 @@ void delayInaccurateUs(tick_t delay_us) {
 
 // delay( 1, DELAY_US );
 
-void delay (tick_t time){
-    tick_t curTicks = tickRead();
-    while ( (tickRead() - curTicks) < time/tickRateMS );
+void delay(tick_t duration){
+    tick_t startTime = tickRead();
+    while ( (tick_t)(tickRead() - startTime) < duration/tickRateMS );
  }
 
 
@@ -100,7 +100,7 @@ bool_t delayRead( delay_t * delay ){
       delay->running = 1;
    }
    else{
-      if ( (tickRead() - delay->startTime) >= delay->duration ){
+      if ( (tick_t)(tickRead() - delay->startTime) >= delay->duration ){
          timeArrived = 1;
          delay->running = 0;
       }

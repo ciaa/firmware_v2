@@ -57,7 +57,7 @@ volatile sAPI_FuncPtr_t tickHookFunction = sAPI_NullFuncPtr;
 /*==================[external functions definition]==========================*/
 
 /* Tick rate configuration 1 to 50 ms */
-bool_t tickConfig(tick_t tickRateMSvalue, sAPI_FuncPtr_t tickHook ) {
+bool_t tickConfig( tick_t tickRateMSvalue, sAPI_FuncPtr_t tickHook ) {
 
    bool_t ret_val = 1;
    tick_t tickRateHz = 0;

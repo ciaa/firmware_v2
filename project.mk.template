@@ -3,6 +3,7 @@
 #           Copy project.mk.template to project.mk and use project.mk.         #
 ################################################################################
 # Copyright 2016, Pablo Ridolfi
+# Copyright 2017, Eric Pernia
 # All rights reserved.
 #
 # This file is part of Workspace.
@@ -33,44 +34,56 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
+#-------------------------------------------------------------------------------
 # current project
-PROJECT = examples/blinky
+#-------------------------------------------------------------------------------
+
+# examples
+
+#PROJECT = examples/blinky
 #PROJECT = examples/blinky_rit
 #PROJECT = examples/adc_fir_dac
 #PROJECT = examples/freertos_blinky
-#PROJECT = projects/my_project
-
-
-#   sapi_examples
-
-#PROJECT = sapi_examples/edu-ciaa-nxp/sapi_gpio_01_switches_leds
-#PROJECT = sapi_examples/edu-ciaa-nxp/sapi_gpio_02_blinky
-#PROJECT = sapi_examples/edu-ciaa-nxp/sapi_gpio_03_blinky_switch
-#PROJECT = sapi_examples/edu-ciaa-nxp/sapi_gpio_04_led_sequences
-#PROJECT = sapi_examples/edu-ciaa-nxp/sapi_gpio_05_keypad_7segment
-
-#PROJECT = sapi_examples/edu-ciaa-nxp/sapi_tick_01_tickHook
-
-#PROJECT = sapi_examples/edu-ciaa-nxp/sapi_uart_01_echo
-#PROJECT = sapi_examples/edu-ciaa-nxp/sapi_uart_02_receive_string_blocking
-#PROJECT = sapi_examples/edu-ciaa-nxp/sapi_uart_03_receive_string
-#PROJECT = sapi_examples/edu-ciaa-nxp/sapi_uart_04_bridge_esp8266
-
-#PROJECT = sapi_examples/edu-ciaa-nxp/sapi_adc_dac_01
-#PROJECT = sapi_examples/edu-ciaa-nxp/sapi_rtc_01
-#PROJECT = sapi_examples/edu-ciaa-nxp/sapi_pwm_01
-
-#PROJECT = sapi_examples/edu-ciaa-nxp/sapi_servo_01
-#PROJECT = sapi_examples/edu-ciaa-nxp/sapi_i2c_01_hmc5883l
-#PROJECT = sapi_examples/edu-ciaa-nxp/sapi_spi_01_sdcard_fatfilesystem
-
 #PROJECT = sapi_examples/edu-ciaa-nxp/sapi_usb_host_01_mass_storage_fatfilesystem
 
-#PROJECT = sapi_examples/edu-ciaa-nxp/sapi_os_01_seos
-#PROJECT = sapi_examples/edu-ciaa-nxp/sapi_os_02_seos_bakground_foregroun
+# sapi_examples
 
+PROJECT = sapi_examples/edu-ciaa-nxp/gpio_01_switches_leds
+#PROJECT = sapi_examples/edu-ciaa-nxp/gpio_02_blinky
+#PROJECT = sapi_examples/edu-ciaa-nxp/gpio_03_blinky_switch
+#PROJECT = sapi_examples/edu-ciaa-nxp/gpio_04_led_sequences
+#PROJECT = sapi_examples/edu-ciaa-nxp/gpio_05_keypad_7segment
 
+#PROJECT = sapi_examples/edu-ciaa-nxp/uart_01_echo
+#PROJECT = sapi_examples/edu-ciaa-nxp/uart_02_receive_string_blocking
+#PROJECT = sapi_examples/edu-ciaa-nxp/uart_03_receive_string
+#PROJECT = sapi_examples/edu-ciaa-nxp/uart_04_bridge_esp8266
+
+#PROJECT = sapi_examples/edu-ciaa-nxp/adc_dac_01
+
+#PROJECT = sapi_examples/edu-ciaa-nxp/tick_01_tickHook
+#PROJECT = sapi_examples/edu-ciaa-nxp/rtc_01
+
+#PROJECT = sapi_examples/edu-ciaa-nxp/pwm_01
+#PROJECT = sapi_examples/edu-ciaa-nxp/servo_01
+
+#PROJECT = sapi_examples/edu-ciaa-nxp/i2c_01_hmc5883l
+
+#PROJECT = sapi_examples/edu-ciaa-nxp/spi_01_sdcard_fatfilesystem
+
+#PROJECT = sapi_examples/edu-ciaa-nxp/cooperative_os_scheduler_01_seos
+#PROJECT = sapi_examples/edu-ciaa-nxp/cooperative_os_scheduler_02_seos_background_foreground
+
+#PROJECT = sapi_examples/edu-ciaa-nxp/freeOSEK_01_blinky
+
+#PROJECT = sapi_examples/edu-ciaa-nxp/freeRTOS_01_blinky
+#PROJECT = sapi_examples/edu-ciaa-nxp/freeRTOS_02_ChanFatFS_SPI_SdCard_ADC_log
+#PROJECT = sapi_examples/edu-ciaa-nxp/freeRTOS_03_Queue
+
+#-------------------------------------------------------------------------------
 # current target
+#-------------------------------------------------------------------------------
+
 TARGET = lpc4337_m4
 #TARGET = lpc4337_m0
 #TARGET = lpc1769
@@ -78,14 +91,18 @@ TARGET = lpc4337_m4
 #TARGET = lpc54102_m0
 #TARGET = lpc11u68
 
+#-------------------------------------------------------------------------------
 # current board (optional)
+#-------------------------------------------------------------------------------
+
 BOARD = edu_ciaa_nxp
 #BOARD = ciaa_nxp
 #BOARD = lpcxpresso1769
+
+#-------------------------------------------------------------------------------
 
 # Object file for multicore applications (only needed by lpc54102_m4 target if
 # you need to add an lpc54102_m0 program). For example:
 #SLAVE_OBJ_FILE = out/lpc54102_m0/blinky_m0.axf.o
 
-# If you want to use semihosting libraries (LPCXpresso) then define
-# USE_SEMIHOSTING = 1
+#-------------------------------------------------------------------------------

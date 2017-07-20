@@ -1,0 +1,8 @@
+site_name: Biblioteca para microcontroladores sAPI
+pages:
+- Introducción: index.md
+- Diseño: diseno.md
+- API: api.md
+- Utilización: utilizacion.md
+- Ejemplos EDU-CIAA-NXP: ejemplos.md
+theme: readthedocs

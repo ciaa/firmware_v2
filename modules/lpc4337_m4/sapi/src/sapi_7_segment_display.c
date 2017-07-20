@@ -95,7 +95,7 @@
         -----
     e /     / c
      /  d  /
-     -----    O h = dp
+     -----    O h = dp (decimal point).
 
 */
 uint8_t display7SegmentOutputs[26] = {
