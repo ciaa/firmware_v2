@@ -73,6 +73,7 @@ PROJECT = sapi_examples/edu-ciaa-nxp/gpio_01_switches_leds
 
 #PROJECT = sapi_examples/edu-ciaa-nxp/cooperative_os_scheduler_01_seos
 #PROJECT = sapi_examples/edu-ciaa-nxp/cooperative_os_scheduler_02_seos_background_foreground
+#PROJECT = sapi_examples/edu-ciaa-nxp/cooperative_os_scheduler_03_seos_Pont2014
 
 #PROJECT = sapi_examples/edu-ciaa-nxp/freeOSEK_01_blinky
 
