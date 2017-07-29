@@ -87,6 +87,73 @@ STATIC const PINMUX_GRP_T pinmuxing[] = {
  * Private functions
  ****************************************************************************/
 
+/* Setup Chip Core clock */ //FIXME: Fix for horrible crystal!!
+static void ciaaSetupCoreClock(CHIP_CGU_CLKIN_T clkin, uint32_t core_freq, bool setbase)
+{
+	int i;
+	volatile uint32_t delay = 500;
+	uint32_t direct = 0;
+	PLL_PARAM_T ppll;
+
+	if (clkin == CLKIN_CRYSTAL) {
+		/* Switch main system clocking to crystal */
+		Chip_Clock_EnableCrystal();
+	}
+	Chip_Clock_SetBaseClock(CLK_BASE_MX, clkin, true, false);
+	Chip_Clock_DisableMainPLL(); /* Disable PLL */
+
+	/* Calculate the PLL Parameters */
+	ppll.srcin = clkin;
+	Chip_Clock_CalcMainPLLValue(core_freq, &ppll);
+
+	if (core_freq > 110000000UL) {
+		if (!(ppll.ctrl & (1 << 7)) || ppll.psel) {
+			PLL_PARAM_T lpll;
+			/* Calculate the PLL Parameters */
+			lpll.srcin = clkin;
+			Chip_Clock_CalcMainPLLValue(110000000UL, &lpll);
+			Chip_Clock_SetupMainPLL(&lpll);
+			/* Wait for the PLL to lock */
+			while(!Chip_Clock_MainPLLLocked()) {}
+			Chip_Clock_SetBaseClock(CLK_BASE_MX, CLKIN_MAINPLL, true, false);
+			while(delay --){}
+			delay = 500;
+		} else {
+			direct = 1;
+			ppll.ctrl &= ~(1 << 7);
+		}
+	}
+
+	/* Setup and start the PLL */
+	Chip_Clock_SetupMainPLL(&ppll);
+
+	/* Wait for the PLL to lock */
+	while(!Chip_Clock_MainPLLLocked()) {}
+
+	/* Set core clock base as PLL1 */
+	Chip_Clock_SetBaseClock(CLK_BASE_MX, CLKIN_MAINPLL, true, false);
+
+	while(delay --){} /* Wait for approx 50 uSec */
+	if (direct) {
+		delay = 5000;
+		ppll.ctrl |= 1 << 7;
+		Chip_Clock_SetupMainPLL(&ppll); /* Set DIRECT to operate at full frequency */
+		while(delay --){} /* Wait for approx 50 uSec */
+	}
+
+	if (setbase) {
+		/* Setup system base clocks and initial states. This won't enable and
+		   disable individual clocks, but sets up the base clock sources for
+		   each individual peripheral clock. */
+		for (i = 0; i < (sizeof(InitClkStates) / sizeof(InitClkStates[0])); i++) {
+			Chip_Clock_SetBaseClock(InitClkStates[i].clk, InitClkStates[i].clkin,
+									InitClkStates[i].autoblock_enab, InitClkStates[i].powerdn);
+		}
+	}
+}
+
+
+
 /*****************************************************************************
  * Public functions
  ****************************************************************************/
@@ -137,5 +204,7 @@ void Board_SystemInit(void)
 	   application and tools to clear memory and use scatter loading to
 	   external memory. */
 	Board_SetupMuxing();
-	Chip_SetupXtalClocking();
+
+	//Chip_SetupXtalClocking();
+	ciaaSetupCoreClock(CLKIN_CRYSTAL, MAX_CLOCK_FREQ, true);
 }
