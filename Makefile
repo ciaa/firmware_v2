@@ -93,10 +93,38 @@ $(PROJECT_NAME): $(foreach MOD,$(notdir $(PROJECT_MODULES)),lib$(MOD).a) $(PROJE
 doc:
 	doxygen doxyfile
 
+
+OSEK_OIL_FILE_PATH = $(PROJECT)/$(PROJECT_NAME).oil
+ifneq ($(wildcard $(OSEK_OIL_FILE_PATH)),)
 clean:
+	@echo "Clean freeOSEK project..."
 	rm -f $(OBJ_PATH)/*.*
 	rm -f $(OUT_PATH)/*.*
 	rm -f *.launch
+	rm -rf $(PROJECT)/gen/
+	@echo "Clean complete."
+	@echo ""
+	@echo ""
+	@echo "Generate freeOSEK files..."
+	@echo ""
+	@make generate
+	@echo ""
+	@echo "Generate complete."
+else
+clean:
+	@echo "Clean project..."
+	rm -f $(OBJ_PATH)/*.*
+	rm -f $(OUT_PATH)/*.*
+	rm -f *.launch
+	@echo "Clean complete."
+endif
+
+
+#	@echo "$(wildcard $(PROJECT))"
+#	ifneq ( $(PROJECT)/gen, )
+#		rm -rf $(PROJECT)/gen/
+#	endif
+#	@make generate
 
 clean_all:
 	@make TARGET=lpc1769 clean --no-print-directory
