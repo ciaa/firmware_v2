@@ -119,13 +119,6 @@ clean:
 	@echo "Clean complete."
 endif
 
-
-#	@echo "$(wildcard $(PROJECT))"
-#	ifneq ( $(PROJECT)/gen, )
-#		rm -rf $(PROJECT)/gen/
-#	endif
-#	@make generate
-
 clean_all:
 	@make TARGET=lpc1769 clean --no-print-directory
 	@make TARGET=lpc4337_m0 clean --no-print-directory
