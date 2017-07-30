@@ -1,4 +1,5 @@
 # Copyright 2016, Pablo Ridolfi
+# Copyright 2017, Eric Pernia
 # All rights reserved.
 #
 # This file is part of Workspace.
@@ -57,7 +58,39 @@ vpath %.c $(PROJECT_SRC_FOLDERS) $(foreach MOD,$(notdir $(PROJECT_MODULES)),$($(
 vpath %.S $(PROJECT_SRC_FOLDERS) $(foreach MOD,$(notdir $(PROJECT_MODULES)),$($(MOD)_SRC_FOLDERS))
 vpath %.a $(OUT_PATH)
 
-all : $(PROJECT_NAME)
+#Check if is an freeOSEK project
+OSEK_OIL_FILE_PATH = $(PROJECT)/$(PROJECT_NAME).oil
+
+ifneq ($(wildcard $(OSEK_OIL_FILE_PATH)),)
+all: 
+	@echo "Build freeOSEK project..." 
+	@echo ""
+	@echo "Clean OSEK /gen folder..."
+	rm -rf $(PROJECT)/gen/
+	@echo "Clean complete."
+	@echo ""
+	@echo "Generate OSEK C files form .oil configuration file..."
+	@echo ""
+	@make generate
+	@echo ""
+	@echo "Generate OSEK C files complete."
+	@echo ""
+	@echo "Build freeOSEK C project..." 
+	@echo ""
+	@make $(PROJECT_NAME)
+	@echo ""
+	@echo "Build complete."
+	@echo ""
+else
+all:
+	@echo "Build project..."
+	@echo ""
+	@make $(PROJECT_NAME)
+	@echo ""
+	@echo "Build complete."
+	@echo ""
+endif
+
 
 define makemod
 lib$(1).a: $(2)
@@ -80,8 +113,6 @@ $(foreach MOD,$(notdir $(PROJECT_MODULES)), $(eval $(call makemod,$(MOD),$(notdi
 
 -include $(wildcard $(OBJ_PATH)/*.d)
 
-all : $(PROJECT_NAME)
-
 $(PROJECT_NAME): $(foreach MOD,$(notdir $(PROJECT_MODULES)),lib$(MOD).a) $(PROJECT_OBJS)
 	@echo "*** linking project $@ ***"
 	@$(CROSS_PREFIX)gcc $(LFLAGS) $(LD_FILE) -o $(OUT_PATH)/$(PROJECT_NAME).axf $(PROJECT_OBJ_FILES) $(SLAVE_OBJ_FILE) -L$(OUT_PATH) $(addprefix -l,$(notdir $(PROJECT_MODULES))) $(addprefix -L,$(EXTERN_LIB_FOLDERS)) $(addprefix -l,$(notdir $(EXTERN_LIBS)))
@@ -93,30 +124,27 @@ $(PROJECT_NAME): $(foreach MOD,$(notdir $(PROJECT_MODULES)),lib$(MOD).a) $(PROJE
 doc:
 	doxygen doxyfile
 
-
-OSEK_OIL_FILE_PATH = $(PROJECT)/$(PROJECT_NAME).oil
 ifneq ($(wildcard $(OSEK_OIL_FILE_PATH)),)
 clean:
 	@echo "Clean freeOSEK project..."
+	@echo ""
 	rm -f $(OBJ_PATH)/*.*
 	rm -f $(OUT_PATH)/*.*
 	rm -f *.launch
 	rm -rf $(PROJECT)/gen/
+	@echo ""
 	@echo "Clean complete."
 	@echo ""
-	@echo ""
-	@echo "Generate freeOSEK files..."
-	@echo ""
-	@make generate
-	@echo ""
-	@echo "Generate complete."
 else
 clean:
 	@echo "Clean project..."
+	@echo ""
 	rm -f $(OBJ_PATH)/*.*
 	rm -f $(OUT_PATH)/*.*
 	rm -f *.launch
+	@echo ""
 	@echo "Clean complete."
+	@echo ""
 endif
 
 clean_all:
@@ -148,7 +176,7 @@ info:
 	@echo INCLUDES: $(INCLUDES)
 	@echo PROJECT_SRC_FOLDERS: $(PROJECT_SRC_FOLDERS)
 
-ctags:
+ctags:   
 	@echo "Generating tags file."
 	ctags -R .
 
@@ -157,3 +185,6 @@ generate:
 	-DARCH=cortexM4 -DCPUTYPE=lpc43xx -DCPU=lpc4337 \
 	-c  $(PROJECT)/$(PROJECT_NAME).oil -f $(osek_GEN_FILES) -o $(PROJECT)/gen
 
+.DEFAULT: all
+
+.PHONY: all doc clean clean_all openocd download erase info ctags generate
