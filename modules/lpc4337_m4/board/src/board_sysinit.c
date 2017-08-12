@@ -27,7 +27,8 @@
 #include "board.h"
 
 /* The System initialization code is called prior to the application and
-   initializes the board for run-time operation. */
+   initializes the board for run-time operation. Board initialization
+   includes clock setup and default pin muxing configuration. */
 
 /*****************************************************************************
  * Private types/enumerations/variables
@@ -35,48 +36,57 @@
 
 /* Structure for initial base clock states */
 struct CLK_BASE_STATES {
-	CHIP_CGU_BASE_CLK_T clk;	/* Base clock */
-	CHIP_CGU_CLKIN_T clkin;	/* Base clock source, see UM for allowable souorces per base clock */
-	bool autoblock_enab;/* Set to true to enable autoblocking on frequency change */
-	bool powerdn;		/* Set to true if the base clock is initially powered down */
+   CHIP_CGU_BASE_CLK_T clk;    /* Base clock */
+   CHIP_CGU_CLKIN_T clkin; /* Base clock source, see UM for allowable souorces per base clock */
+   bool autoblock_enab;/* Set to true to enable autoblocking on frequency change */
+   bool powerdn;       /* Set to true if the base clock is initially powered down */
 };
 
 /* Initial base clock states are mostly on */
 STATIC const struct CLK_BASE_STATES InitClkStates[] = {
-	{CLK_BASE_PHY_TX, CLKIN_ENET_TX, true, false},
-#if defined(USE_RMII)
-	{CLK_BASE_PHY_RX, CLKIN_ENET_TX, true, false},
-#else
-	{CLK_BASE_PHY_RX, CLKIN_ENET_RX, true, false},
-#endif
 
-	/* Clocks derived from dividers */
-	{CLK_BASE_LCD, CLKIN_IDIVC, true, false},
-	{CLK_BASE_USB1, CLKIN_IDIVD, true, true}
-};
+   /* Ethernet Clock base */
+   {CLK_BASE_PHY_TX, CLKIN_ENET_TX, true, false},
+   {CLK_BASE_PHY_RX, CLKIN_ENET_TX, true, false},
 
-/* SPIFI high speed pin mode setup */
-STATIC const PINMUX_GRP_T spifipinmuxing[] = {
-	{0x3, 3,  (SCU_PINIO_FAST | SCU_MODE_FUNC3)},	/* SPIFI CLK */
-	{0x3, 4,  (SCU_PINIO_FAST | SCU_MODE_FUNC3)},	/* SPIFI D3 */
-	{0x3, 5,  (SCU_PINIO_FAST | SCU_MODE_FUNC3)},	/* SPIFI D2 */
-	{0x3, 6,  (SCU_PINIO_FAST | SCU_MODE_FUNC3)},	/* SPIFI D1 */
-	{0x3, 7,  (SCU_PINIO_FAST | SCU_MODE_FUNC3)},	/* SPIFI D0 */
-	{0x3, 8,  (SCU_PINIO_FAST | SCU_MODE_FUNC3)}	/* SPIFI CS/SSEL */
+   /* Clocks derived from dividers */
+   {CLK_BASE_USB0, CLKIN_IDIVD, true, true}
 };
 
 STATIC const PINMUX_GRP_T pinmuxing[] = {
-		   /* RMII pin group */
-		      {0x7, 7, MD_EHS | MD_PLN | MD_EZI | MD_ZI |FUNC6},
-		      {0x1 ,17 , MD_EHS | MD_PLN | MD_EZI | MD_ZI| FUNC3},  // ENET_MDIO: P1_17 -> FUNC3
-		      {0x1 ,18 , MD_EHS | MD_PLN | MD_EZI | MD_ZI| FUNC3},  // ENET_TXD0: P1_18 -> FUNC3
-		      {0x1 ,20 , MD_EHS | MD_PLN | MD_EZI | MD_ZI| FUNC3},  // ENET_TXD1: P1_20 -> FUNC3
-		      {0x1 ,19 , MD_EHS | MD_PLN | MD_EZI | MD_ZI| FUNC0},  // ENET_REF: P1_19 -> FUNC0 (default)
-		      {0x0 ,1 , MD_EHS | MD_PLN | MD_EZI | MD_ZI| FUNC6},   // ENET_TX_EN: P0_1 -> FUNC6
-		      {0x1 ,15 ,MD_EHS | MD_PLN | MD_EZI | MD_ZI| FUNC3},   // ENET_RXD0: P1_15 -> FUNC3
-		      {0x0 ,0 , MD_EHS | MD_PLN | MD_EZI | MD_ZI| FUNC2},   // ENET_RXD1: P0_0 -> FUNC2
-		      {0x1 ,16 ,MD_EHS | MD_PLN | MD_EZI | MD_ZI| FUNC7}
+   /* Board LEDs */
+   {2, 10, (SCU_MODE_INBUFF_EN | SCU_MODE_PULLUP | SCU_MODE_FUNC0)},
+   {2, 11, (SCU_MODE_INBUFF_EN | SCU_MODE_PULLUP | SCU_MODE_FUNC0)},
+   {2, 12, (SCU_MODE_INBUFF_EN | SCU_MODE_PULLUP | SCU_MODE_FUNC0)},
+   {2, 0, (SCU_MODE_INBUFF_EN | SCU_MODE_PULLUP | SCU_MODE_FUNC4)},
+   {2, 1, (SCU_MODE_INBUFF_EN | SCU_MODE_PULLUP | SCU_MODE_FUNC4)},
+   {2, 2, (SCU_MODE_INBUFF_EN | SCU_MODE_PULLUP | SCU_MODE_FUNC4)},
 
+   /* UART 3 */
+   {2, 3, (SCU_MODE_INBUFF_EN | SCU_MODE_INACT | SCU_MODE_FUNC2)},
+   {2, 4, (SCU_MODE_INBUFF_EN | SCU_MODE_INACT | SCU_MODE_FUNC2)},
+
+   /* UART 0 */
+   {9, 5, (SCU_MODE_INBUFF_EN | SCU_MODE_INACT | SCU_MODE_FUNC2)},
+    {9, 6, (SCU_MODE_INBUFF_EN | SCU_MODE_INACT | SCU_MODE_FUNC7)},
+    {6, 2, (SCU_MODE_INBUFF_EN | SCU_MODE_INACT | SCU_MODE_FUNC7)},
+
+    /* BUTTONS */
+    {1, 0, (SCU_MODE_INBUFF_EN | SCU_MODE_INACT | SCU_MODE_FUNC0)},
+    {1, 1, (SCU_MODE_INBUFF_EN | SCU_MODE_INACT | SCU_MODE_FUNC0)},
+    {1, 2, (SCU_MODE_INBUFF_EN | SCU_MODE_INACT | SCU_MODE_FUNC0)},
+    {1, 6, (SCU_MODE_INBUFF_EN | SCU_MODE_INACT | SCU_MODE_FUNC0)},
+
+   /* ENET Pin mux (RMII Pins) */
+   {1, 15, (SCU_MODE_HIGHSPEEDSLEW_EN | SCU_MODE_INACT | SCU_MODE_INBUFF_EN | SCU_MODE_ZIF_DIS | SCU_MODE_FUNC3)}, /* RXD0 */
+   {1, 16, (SCU_MODE_HIGHSPEEDSLEW_EN | SCU_MODE_INACT | SCU_MODE_INBUFF_EN | SCU_MODE_ZIF_DIS | SCU_MODE_FUNC7)}, /* CRS_DV */
+   {1, 17, (SCU_MODE_HIGHSPEEDSLEW_EN | SCU_MODE_INACT | SCU_MODE_INBUFF_EN | SCU_MODE_ZIF_DIS | SCU_MODE_FUNC3)}, /* MDIO */
+   {1, 18, (SCU_MODE_HIGHSPEEDSLEW_EN | SCU_MODE_INACT | SCU_MODE_ZIF_DIS | SCU_MODE_FUNC3)}, /* TXD0 */
+   {1, 19, (SCU_MODE_HIGHSPEEDSLEW_EN | SCU_MODE_INACT | SCU_MODE_INBUFF_EN | SCU_MODE_ZIF_DIS | SCU_MODE_FUNC0)}, /* REFCLK */
+   {1, 20, (SCU_MODE_HIGHSPEEDSLEW_EN | SCU_MODE_INACT | SCU_MODE_ZIF_DIS | SCU_MODE_FUNC3)}, /* TXD1 */
+   {7,  7, (SCU_MODE_HIGHSPEEDSLEW_EN | SCU_MODE_INACT | SCU_MODE_ZIF_DIS | SCU_MODE_FUNC6)}, /* MDC */
+   {0,  0, (SCU_MODE_HIGHSPEEDSLEW_EN | SCU_MODE_INACT | SCU_MODE_INBUFF_EN | SCU_MODE_ZIF_DIS | SCU_MODE_FUNC2)},  /* RXD1 */
+   {0,  1, (SCU_MODE_HIGHSPEEDSLEW_EN | SCU_MODE_INACT | SCU_MODE_ZIF_DIS | SCU_MODE_FUNC6)}, /* TXEN */
 };
 
 /*****************************************************************************
@@ -87,73 +97,6 @@ STATIC const PINMUX_GRP_T pinmuxing[] = {
  * Private functions
  ****************************************************************************/
 
-/* Setup Chip Core clock */ //FIXME: Fix for horrible crystal!!
-static void ciaaSetupCoreClock(CHIP_CGU_CLKIN_T clkin, uint32_t core_freq, bool setbase)
-{
-	int i;
-	volatile uint32_t delay = 500;
-	uint32_t direct = 0;
-	PLL_PARAM_T ppll;
-
-	if (clkin == CLKIN_CRYSTAL) {
-		/* Switch main system clocking to crystal */
-		Chip_Clock_EnableCrystal();
-	}
-	Chip_Clock_SetBaseClock(CLK_BASE_MX, clkin, true, false);
-	Chip_Clock_DisableMainPLL(); /* Disable PLL */
-
-	/* Calculate the PLL Parameters */
-	ppll.srcin = clkin;
-	Chip_Clock_CalcMainPLLValue(core_freq, &ppll);
-
-	if (core_freq > 110000000UL) {
-		if (!(ppll.ctrl & (1 << 7)) || ppll.psel) {
-			PLL_PARAM_T lpll;
-			/* Calculate the PLL Parameters */
-			lpll.srcin = clkin;
-			Chip_Clock_CalcMainPLLValue(110000000UL, &lpll);
-			Chip_Clock_SetupMainPLL(&lpll);
-			/* Wait for the PLL to lock */
-			while(!Chip_Clock_MainPLLLocked()) {}
-			Chip_Clock_SetBaseClock(CLK_BASE_MX, CLKIN_MAINPLL, true, false);
-			while(delay --){}
-			delay = 500;
-		} else {
-			direct = 1;
-			ppll.ctrl &= ~(1 << 7);
-		}
-	}
-
-	/* Setup and start the PLL */
-	Chip_Clock_SetupMainPLL(&ppll);
-
-	/* Wait for the PLL to lock */
-	while(!Chip_Clock_MainPLLLocked()) {}
-
-	/* Set core clock base as PLL1 */
-	Chip_Clock_SetBaseClock(CLK_BASE_MX, CLKIN_MAINPLL, true, false);
-
-	while(delay --){} /* Wait for approx 50 uSec */
-	if (direct) {
-		delay = 5000;
-		ppll.ctrl |= 1 << 7;
-		Chip_Clock_SetupMainPLL(&ppll); /* Set DIRECT to operate at full frequency */
-		while(delay --){} /* Wait for approx 50 uSec */
-	}
-
-	if (setbase) {
-		/* Setup system base clocks and initial states. This won't enable and
-		   disable individual clocks, but sets up the base clock sources for
-		   each individual peripheral clock. */
-		for (i = 0; i < (sizeof(InitClkStates) / sizeof(InitClkStates[0])); i++) {
-			Chip_Clock_SetBaseClock(InitClkStates[i].clk, InitClkStates[i].clkin,
-									InitClkStates[i].autoblock_enab, InitClkStates[i].powerdn);
-		}
-	}
-}
-
-
-
 /*****************************************************************************
  * Public functions
  ****************************************************************************/
@@ -161,50 +104,40 @@ static void ciaaSetupCoreClock(CHIP_CGU_CLKIN_T clkin, uint32_t core_freq, bool 
 /* Sets up system pin muxing */
 void Board_SetupMuxing(void)
 {
-	/* Setup system level pin muxing */
-	Chip_SCU_SetPinMuxing(pinmuxing, sizeof(pinmuxing) / sizeof(PINMUX_GRP_T));
-
-	/* SPIFI pin setup is done prior to setting up system clocking */
-	Chip_SCU_SetPinMuxing(spifipinmuxing, sizeof(spifipinmuxing) / sizeof(PINMUX_GRP_T));
+   /* Setup system level pin muxing */
+   Chip_SCU_SetPinMuxing(pinmuxing, sizeof(pinmuxing) / sizeof(PINMUX_GRP_T));
 }
 
 /* Set up and initialize clocking prior to call to main */
 void Board_SetupClocking(void)
 {
-	int i;
+   int i;
 
-	Chip_SetupCoreClock(CLKIN_CRYSTAL, MAX_CLOCK_FREQ, true);
+   /* Enable Flash acceleration and setup wait states */
+   Chip_CREG_SetFlashAcceleration(MAX_CLOCK_FREQ);
 
-	/* Reset and enable 32Khz oscillator */
-	LPC_CREG->CREG0 &= ~((1 << 3) | (1 << 2));
-	LPC_CREG->CREG0 |= (1 << 1) | (1 << 0);
+   /* Setup System core frequency to MAX_CLOCK_FREQ */
+   Chip_SetupCoreClock(CLKIN_CRYSTAL, MAX_CLOCK_FREQ, true);
 
-	/* Setup a divider E for main PLL clock switch SPIFI clock to that divider.
-	   Divide rate is based on CPU speed and speed of SPI FLASH part. */
-#if (MAX_CLOCK_FREQ > 180000000)
-	Chip_Clock_SetDivider(CLK_IDIV_E, CLKIN_MAINPLL, 5);
-#else
-	Chip_Clock_SetDivider(CLK_IDIV_E, CLKIN_MAINPLL, 4);
-#endif
-	Chip_Clock_SetBaseClock(CLK_BASE_SPIFI, CLKIN_IDIVE, true, false);
+   /* Setup system base clocks and initial states. This won't enable and
+      disable individual clocks, but sets up the base clock sources for
+      each individual peripheral clock. */
+   for (i = 0; i < (sizeof(InitClkStates) / sizeof(InitClkStates[0])); i++) {
+       Chip_Clock_SetBaseClock(InitClkStates[i].clk, InitClkStates[i].clkin,
+                               InitClkStates[i].autoblock_enab, InitClkStates[i].powerdn);
+   }
 
-	/* Setup system base clocks and initial states. This won't enable and
-	   disable individual clocks, but sets up the base clock sources for
-	   each individual peripheral clock. */
-	for (i = 0; i < (sizeof(InitClkStates) / sizeof(InitClkStates[0])); i++) {
-		Chip_Clock_SetBaseClock(InitClkStates[i].clk, InitClkStates[i].clkin,
-								InitClkStates[i].autoblock_enab, InitClkStates[i].powerdn);
-	}
+   /* Reset and enable 32Khz oscillator */
+   LPC_CREG->CREG0 &= ~((1 << 3) | (1 << 2));
+   LPC_CREG->CREG0 |= (1 << 1) | (1 << 0);
 }
 
 /* Set up and initialize hardware prior to call to main */
 void Board_SystemInit(void)
 {
-	/* Setup system clocking and memory. This is done early to allow the
-	   application and tools to clear memory and use scatter loading to
-	   external memory. */
-	Board_SetupMuxing();
-
-	//Chip_SetupXtalClocking();
-	ciaaSetupCoreClock(CLKIN_CRYSTAL, MAX_CLOCK_FREQ, true);
+   /* Setup system clocking and memory. This is done early to allow the
+      application and tools to clear memory and use scatter loading to
+      external memory. */
+   Board_SetupMuxing();
+   Board_SetupClocking();
 }
