@@ -32,11 +32,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  */
- 
+
 /*==================[inlcusiones]============================================*/
 
-#include "sd_spi.h"   // <= su propio archivo de cabecera
-#include "sapi.h"     // <= Biblioteca sAPI
+#include "sd_spi.h"   // <= own header (optional)
+#include "sapi.h"       // <= sAPI header
 
 #include "ff.h"       // <= Biblioteca FAT FS
 
@@ -70,15 +70,15 @@ int main( void ){
 
    // SPI configuration
    spiConfig( SPI0 );
-   
-   // Inicializar el conteo de Ticks con resolución de 10ms, 
+
+   // Inicializar el conteo de Ticks con resolución de 10ms,
    // con tickHook diskTickHook
    tickConfig( 10, diskTickHook );
-             
+
    // ------ PROGRAMA QUE ESCRIBE EN LA SD -------
 
    UINT nbytes;
-   
+
    // Give a work area to the default drive
    if( f_mount( &fs, "", 0 ) != FR_OK ){
       // If this fails, it means that the function could
@@ -87,11 +87,11 @@ int main( void ){
    }
 
    // Create/open a file, then write a string and close it
-   
+
    uint8_t i=0;
-   
+
    for( i=0; i<5; i++ ){
-         
+
       if( f_open( &fp, FILENAME, FA_WRITE | FA_OPEN_APPEND ) == FR_OK ){
          f_write( &fp, "Hola mundo\r\n", 12, &nbytes );
 
@@ -106,14 +106,14 @@ int main( void ){
          gpioWrite( LEDR, ON );
       }
    }
-   
+
    // ---------- REPETIR POR SIEMPRE --------------------------
    while( TRUE )
-   {      
+   {
       sleepUntilNextInterrupt();
-   } 
+   }
 
-   // NO DEBE LLEGAR NUNCA AQUI, debido a que a este programa se ejecuta 
+   // NO DEBE LLEGAR NUNCA AQUI, debido a que a este programa se ejecuta
    // directamenteno sobre un microcontroladore y no es llamado/ por ningun
    // Sistema Operativo, como en el caso de un programa para PC.
    return 0;

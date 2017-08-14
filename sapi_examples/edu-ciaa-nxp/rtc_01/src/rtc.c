@@ -37,9 +37,8 @@
 
 /*==================[inclusions]=============================================*/
 
-#include "rtc.h"          /* <= own header */
-
-#include "sapi.h"         /* <= sAPI header */
+//#include "rtc.h"   // <= own header (optional)
+#include "sapi.h"    // <= sAPI header
 
 /*==================[macros and definitions]=================================*/
 
