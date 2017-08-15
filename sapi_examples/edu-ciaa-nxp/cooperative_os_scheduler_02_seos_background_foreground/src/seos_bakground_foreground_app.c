@@ -46,12 +46,11 @@
 
 /*==================[inclusions]=============================================*/
 
-#include "seos_bakground_foreground_app.h" /* <= own header */
+//#include "seos_bakground_foreground_app.h"   // <= own header (optional)
+#include "sapi.h"        // <= sAPI header
 
-#include "sapi.h"                      /* <= sAPI header */
-
-#include "tasks.h"                     /* <= tasks header */
-#include "seos_bakground_foreground.h" /* <= scheduler and dispatcher header */
+#include "tasks.h"                     // <= tasks header
+#include "seos_bakground_foreground.h" // <= scheduler and dispatcher header
 
 /*==================[macros and definitions]=================================*/
 

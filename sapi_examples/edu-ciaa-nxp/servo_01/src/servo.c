@@ -37,9 +37,8 @@
 
 /*==================[inclusions]=============================================*/
 
-#include "servo.h"        /* <= own header */
-
-#include "sapi.h"         /* <= sAPI header */
+//#include "servo.h"   // <= own header (optional)
+#include "sapi.h"      // <= sAPI header
 
 /*==================[macros and definitions]=================================*/
 

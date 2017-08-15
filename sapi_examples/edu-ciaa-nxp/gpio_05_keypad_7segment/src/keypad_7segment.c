@@ -37,9 +37,8 @@
 
 /*==================[inclusions]=============================================*/
 
-#include "keypad_7segment.h"          /* <= own header */
-
-#include "sapi.h"                     /* <= sAPI header */
+//#include "keypad_7segment.h"   // <= own header (optional)
+#include "sapi.h"                // <= sAPI header
 
 /*==================[macros and definitions]=================================*/
 

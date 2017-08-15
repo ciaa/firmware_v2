@@ -45,9 +45,8 @@
 
 /*==================[inclusions]=============================================*/
 
-#include "seos.h"         /* <= own header */
-
-#include "sapi.h"         /* <= sAPI header */
+//#include "seos.h"    // <= own header (optional)
+#include "sapi.h"      // <= sAPI header
 
 /*==================[macros and definitions]=================================*/
 

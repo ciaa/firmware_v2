@@ -37,9 +37,8 @@
 
 /*==================[inclusions]=============================================*/
 
-#include "uart_receive_string_blocking.h"  /* <= own header */
-
-#include "sapi.h"                          /* <= sAPI header */
+//#include "uart_receive_string_blocking.h"   // <= own header (optional)
+#include "sapi.h"     // <= sAPI header
 
 /*==================[macros and definitions]=================================*/
 
@@ -116,13 +115,13 @@ int main(void){
                     10000
                  );
 
-      /* Si recibe el string almacenado en miTexto indica que llego el 
+      /* Si recibe el string almacenado en miTexto indica que llego el
        * mensaje esperado. */
       if( received ){
          uartWriteString( UART_USB, "\r\nLlego el mensaje esperado\r\n" );
       }
-      /* Si no lo recibe indica que salio de la funcion 
-       * waitForReceiveStringOrTimeoutBlocking  por timeout. */ 
+      /* Si no lo recibe indica que salio de la funcion
+       * waitForReceiveStringOrTimeoutBlocking  por timeout. */
       else{
          uartWriteString( UART_USB, "\r\nSalio por timeout\r\n" );
       }

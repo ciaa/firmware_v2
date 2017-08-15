@@ -30,7 +30,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  */
- 
+
 /*==================[inlcusiones]============================================*/
 
 // Includes de FreeRTOS
@@ -38,7 +38,7 @@
 #include "FreeRTOSConfig.h"
 #include "task.h"
 
-#include "sapi.h"     // <= Biblioteca sAPI
+#include "sapi.h"        // <= sAPI header
 
 /*==================[definiciones y macros]==================================*/
 
@@ -64,34 +64,34 @@ int main(void)
    // ---------- CONFIGURACIONES ------------------------------
    // Inicializar y configurar la plataforma
    boardConfig();
-   
+
    // UART for debug messages
    debugPrintConfigUart( UART_USB, 115200 );
    debugPrintlnString( "Blinky con freeRTOS y sAPI." );
-  
-   // Led para dar señal de vida
+
+   // Led para dar seï¿½al de vida
    gpioWrite( LED3, ON );
-   
+
    // Crear tarea en freeRTOS
-	xTaskCreate( 
+	xTaskCreate(
                 myTask,                     // Funcion de la tarea a ejecutar
 		          (const char *)"myTask",     // Nombre de la tarea como String amigable para el usuario
-					 configMINIMAL_STACK_SIZE*2, // Tamaño del stack de la tarea
+					 configMINIMAL_STACK_SIZE*2, // Tamaï¿½o del stack de la tarea
 					 0,                          // Parametros de tarea
 					 tskIDLE_PRIORITY+1,         // Prioridad de la tarea
 					 0                           // Puntero a la tarea creada en el sistema
               );
-   
+
    // Iniciar scheduler
 	vTaskStartScheduler();
 
    // ---------- REPETIR POR SIEMPRE --------------------------
    while( TRUE )
-   {            
+   {
       // Si cae en este while 1 significa que no pudo iniciar el scheduler
-   } 
+   }
 
-   // NO DEBE LLEGAR NUNCA AQUI, debido a que a este programa se ejecuta 
+   // NO DEBE LLEGAR NUNCA AQUI, debido a que a este programa se ejecuta
    // directamenteno sobre un microcontroladore y no es llamado por ningun
    // Sistema Operativo, como en el caso de un programa para PC.
    return 0;
@@ -106,13 +106,13 @@ int main(void)
 void myTask( void* taskParmPtr )
 {
    // ---------- CONFIGURACIONES ------------------------------
-   
+
    // ---------- REPETIR POR SIEMPRE --------------------------
 	while(TRUE)
    {
       // Intercambia el estado del LEDB
 		gpioToggle( LEDB );
-      
+
       // Envia la tarea al estado bloqueado durante 500ms
 		vTaskDelay( 500 / portTICK_RATE_MS );
 	}

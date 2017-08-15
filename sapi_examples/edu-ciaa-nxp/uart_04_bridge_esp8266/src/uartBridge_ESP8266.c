@@ -37,12 +37,12 @@
  */
 
 /* Diagrama de conexion ESP8266
-  ┌--------------------------------┐	
+  ┌--------------------------------┐
   |  |       █████                 |
-  |  └-┐     █████      RX OO VCC  | 
-  |  ┌-┘ |           GPIO0 OO RST  |  
-  |  └-┐ |   █████   GPIO2 OO CH_PD|  
-  |  ┌-┘ |   █████     GND OO TX   |  
+  |  └-┐     █████      RX OO VCC  |
+  |  ┌-┘ |           GPIO0 OO RST  |
+  |  └-┐ |   █████   GPIO2 OO CH_PD|
+  |  ┌-┘ |   █████     GND OO TX   |
   |  └---┴                         |
   └--------------------------------┘
 
@@ -61,9 +61,8 @@
 
 /*==================[inclusions]=============================================*/
 
-#include "uartBridge_ESP8266.h"   /* <= own header */
-
-#include "sapi.h"                 /* <= sAPI header */
+//#include "uartBridge_ESP8266.h"   // <= own header (optional)
+#include "sapi.h"     // <= sAPI header
 
 /*==================[macros and definitions]=================================*/
 
@@ -84,29 +83,29 @@
 void imprimirMensajeDeBienvenida( void ){
 
    /* Imprimo el mensaje de bienvenida */
-   uartWriteString( UART_USB, 
+   uartWriteString( UART_USB,
       "Bievenido al asistente de configuracion del modulo ESP8266\r\n" );
-   uartWriteString( UART_USB, 
+   uartWriteString( UART_USB,
       "Antes de continuar, por favor asegurese que su terminal\r\n" );
-   uartWriteString( UART_USB, 
+   uartWriteString( UART_USB,
       "serie dispone del terminador CR+LF (enter)\r\n\r\n" );
-   uartWriteString( UART_USB, 
+   uartWriteString( UART_USB,
       "A continuacion se realiza un listado de algunos de los\r\n" );
    uartWriteString( UART_USB, "comandos AT disponibles:\r\n\r\n" );
-   uartWriteString( UART_USB, 
+   uartWriteString( UART_USB,
       "> Saber si el modulo responde correctamente: AT\r\n" );
-   uartWriteString( UART_USB, 
+   uartWriteString( UART_USB,
       "> Version del Firmware: AT+GMR\r\n" );
    uartWriteString( UART_USB, "> Resetear el modulo: AT+RST\r\n" );
-   uartWriteString( UART_USB, 
+   uartWriteString( UART_USB,
       "> Listar todas las redes disponibles: AT+CWLAP\r\n" );
-   uartWriteString( UART_USB, 
+   uartWriteString( UART_USB,
       "> Checkear la red actual: AT+CWJAP?\r\n" );
-   uartWriteString( UART_USB, 
+   uartWriteString( UART_USB,
       "> Unirse a una red: AT+CWJAP=\"nombreRedInalambrica\",\"password\"\r\n" );
-   uartWriteString( UART_USB, 
+   uartWriteString( UART_USB,
       "  - NOTA: Las comillas dobles son parte del mensaje\r\n" );
-   uartWriteString( UART_USB, 
+   uartWriteString( UART_USB,
       "> Salir de la red: AT+CWQAP\r\n" );
 
    delay(100);
