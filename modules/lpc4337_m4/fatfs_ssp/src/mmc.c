@@ -34,8 +34,8 @@
 #define CS_LOW()    Chip_GPIO_SetPinOutLow(LPC_GPIO_PORT, 3, 0)
 #define CS_HIGH()   Chip_GPIO_SetPinOutHigh(LPC_GPIO_PORT, 3, 0)
 
-#define	FCLK_SLOW()					/* Set slow clock (100k-400k) */
-#define	FCLK_FAST()					/* Set fast clock (depends on the CSD) */
+#define	FCLK_SLOW()   Chip_SSP_SetBitRate(LPC_SSP1, 10000);	/* Set slow clock (100k-400k) */
+#define	FCLK_FAST()   Chip_SSP_SetBitRate(LPC_SSP1, 400000);	/* Set fast clock (depends on the CSD) */
 
 
 /*--------------------------------------------------------------------------
@@ -321,16 +321,29 @@ DSTATUS disk_initialize (
 )
 {
 	BYTE n, cmd, ty, ocr[4];
+	BYTE ret = 0;
+	uint32_t delay;
 
 	if (drv) return STA_NOINIT;			/* Supports only single drive */
 	if (Stat & STA_NODISK) return Stat;	/* No card in the socket */
 
+	CS_HIGH();
 	power_on();							/* Force socket power on */
 	FCLK_SLOW();
-	for (n = 10; n; n--) rcvr_spi();	/* 80 dummy clocks */
+	deselect();
+	for (n = 30; n; n--) rcvr_spi();	/* 80 dummy clocks */
 
 	ty = 0;
-	if (send_cmd(CMD0, 0) == 1) {			/* Enter Idle state */
+
+	CS_LOW();
+	n = 10;
+        while(n-- && ret != 1)
+	{
+		ret = send_cmd(CMD0, 0);
+		delay = 1000000;
+		while(delay--);
+	}
+	if (ret == 1) {			/* Enter Idle state */
 		Timer1 = 100;						/* Initialization timeout of 1000 msec */
 		if (send_cmd(CMD8, 0x1AA) == 1) {	/* SDHC */
 			for (n = 0; n < 4; n++) ocr[n] = rcvr_spi();		/* Get trailing return value of R7 resp */
