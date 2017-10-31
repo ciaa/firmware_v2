@@ -108,8 +108,8 @@
 
 /*==================[internal data declaration]==============================*/
 
-static char StdioStubBuffer [STDIO_BUFFER_MAX_SIZE];
-static int StdioStubBufferIndex = 0;
+static char StdioBuffer [STDIO_BUFFER_MAX_SIZE];
+static int StdioBufferIndex = 0;
 
 extern int errno;
 
@@ -298,11 +298,11 @@ int _write(int file, char *ptr, int len) {
 	case STDOUT_FILENO: /*stdout*/
 		for (n = 0; n < len; n++) {
 			//Si llega al maximo tamanio pone el terminador nulo.
-			if (StdioStubBufferIndex < STDIO_BUFFER_MAX_SIZE){
-				StdioStubBuffer[StdioStubBufferIndex] = *ptr;
-				StdioStubBufferIndex++;
+			if (StdioBufferIndex < STDIO_BUFFER_MAX_SIZE){
+				StdioBuffer[StdioBufferIndex] = *ptr;
+				StdioBufferIndex++;
 			} else {
-				StdioStubBuffer[StdioStubBufferIndex] = '\0';
+				StdioBuffer[StdioBufferIndex] = '\0';
 			}
 			//#if (!defined(lpc11u68))
 			//			Chip_UART_SendBlocking(MYSTDOUT, ptr, 1);
@@ -334,7 +334,7 @@ int _write(int file, char *ptr, int len) {
  * @return un puntero al primer elemento del arreglo formateado.
  */
 char * stdioBufferRead (void){
-	return StdioStubBuffer;
+	return StdioBuffer;
 }
 
 /**
@@ -389,8 +389,8 @@ bool_t	stdioBufferConfig (stdioBufferConfig_t config){
 	bool_t state = FALSE;
 	if (config == STDIO_BUFFER_INIT){
 		//Resetea el indice del arreglo a formatear
-		StdioStubBufferIndex = 0;
-		bzero(StdioStubBuffer, STDIO_BUFFER_MAX_SIZE);
+		StdioBufferIndex = 0;
+		bzero(StdioBuffer, STDIO_BUFFER_MAX_SIZE);
 		state = TRUE;
 	}
 	return state;

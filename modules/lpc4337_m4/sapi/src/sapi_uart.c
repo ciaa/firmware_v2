@@ -1,4 +1,6 @@
-/* Copyright 2016, Eric Pernia.
+/* Copyright 2017, Agustin Bassi.
+ * Copyright 2016, Eric Pernia.
+ *
  * All rights reserved.
  *
  * This file is part of CIAA Firmware.
@@ -44,7 +46,6 @@
 #define UART_485_LPC  LPC_USART0  /* UART0 (RS485/Profibus) */
 #define UART_USB_LPC  LPC_USART2  /* UART2 (USB-UART) */
 #define UART_232_LPC  LPC_USART3  /* UART3 (RS232) */
-//#define UART_GPIO_LPC LPC_UART1   /* LPC_UART1 (GPIO) */
 
 /*==================[typedef]================================================*/
 
@@ -171,14 +172,7 @@ void uartConfig( uartMap_t uart, uint32_t baudRate ){
       Chip_SCU_PinMux(2, 4, MD_PLN|MD_EZI|MD_ZI, FUNC2); /* P2_4,FUNC2: UART3_RXD */
    break;
    case UART_485:
-		// COPIADO DE LAS CONFIGURACIONES ANTERIORES
-	    Chip_UART_Init(UART_485_LPC);
-		Chip_UART_SetBaud(UART_485_LPC, baudRate);  /* Set Baud rate */
-		Chip_UART_SetupFIFOS(UART_485_LPC, UART_FCR_FIFO_EN | UART_FCR_TRG_LEV0); /* Modify FCR (FIFO Control Register)*/
-		Chip_UART_TXEnable(UART_485_LPC); /* Enable UART Transmission */
 
-		Chip_SCU_PinMux(6, 4, MD_PDN, FUNC2);              /* GPIO1 80 P6_4 GPIO3[3] CTIN_6  U0_TXD EMC_CAS R R R R */
-		Chip_SCU_PinMux(6, 5, MD_PLN|MD_EZI|MD_ZI, FUNC2); /* GPIO2 82 P6_5 GPIO3[4] CTOUT_6 U0_RXD EMC_RAS R R R R */
    break;
    }
 }
@@ -189,29 +183,24 @@ bool_t uartReadByte( uartMap_t uart, uint8_t* receivedByte ){
    bool_t retVal = TRUE;
 
    switch(uart){
-   case UART_USB:
-      if ( Chip_UART_ReadLineStatus(UART_USB_LPC) & UART_LSR_RDR ) {
-         *receivedByte = Chip_UART_ReadByte(UART_USB_LPC);
-      } else{
-         retVal = FALSE;
-      }
-   break;
-   case UART_232:
-      if ( Chip_UART_ReadLineStatus(UART_232_LPC) & UART_LSR_RDR ) {
-         *receivedByte = Chip_UART_ReadByte(UART_232_LPC);
-      } else{
-         retVal = FALSE;
-      }
-   break;
-   case UART_485:
-	if ( Chip_UART_ReadLineStatus(UART_485_LPC) & UART_LSR_RDR ) {
-		*receivedByte = Chip_UART_ReadByte(UART_485_LPC);
-	} else{
-		retVal = FALSE;
-	}
-   break;
-   }
+		case UART_USB:
+		  if ( Chip_UART_ReadLineStatus(UART_USB_LPC) & UART_LSR_RDR ) {
+			 *receivedByte = Chip_UART_ReadByte(UART_USB_LPC);
+		  } else{
+			 retVal = FALSE;
+		  }
+		break;
+		case UART_232:
+		  if ( Chip_UART_ReadLineStatus(UART_232_LPC) & UART_LSR_RDR ) {
+			 *receivedByte = Chip_UART_ReadByte(UART_232_LPC);
+		  } else{
+			 retVal = FALSE;
+		  }
+		break;
+		case UART_485:
 
+		break;
+   }
    return retVal;
 }
 
@@ -228,8 +217,7 @@ void uartWriteByte( uartMap_t uart, uint8_t byte ){
       Chip_UART_SendByte(UART_232_LPC, byte);
    break;
    case UART_485:
-	  while ((Chip_UART_ReadLineStatus(UART_485_LPC) & UART_LSR_THRE) == 0) {}   // Wait for space in FIFO
-	  Chip_UART_SendByte(UART_485_LPC, byte);
+
    break;
    }
 }
@@ -245,14 +233,12 @@ void uartWriteString( uartMap_t uart, char* str ){
 void uartPrintf (uartMap_t uart, const char *fmt, ...){
 int c, flag = 0, next_int;
 double next_float;
-//char next_string;
 char *next_string;
 va_list arg_addr;
 
 	//Obtiene la lista de argumentos
 	va_start(arg_addr, fmt);
 	//Resetea el indice del arreglo a formatear
-//	StdioStubs_ArrayFormattedIndex = 0;
 	stdioBufferConfig(STDIO_BUFFER_INIT);
 	//Mientras el char a formatear no sea caracter nulo...
 	while ( (c=*fmt++) != '\0' ){
@@ -269,7 +255,6 @@ va_list arg_addr;
 				printf("%lf", next_float);
 				flag = 0;
 			} else if (c == 's') {
-//				next_string = va_arg(arg_addr, int);
 				next_string = va_arg(arg_addr, char*);
 				printf("%s", next_string);
 				flag = 0;
@@ -287,10 +272,6 @@ __attribute__ ((section(".after_vectors")))
 
 /* 0x28 0x000000A0 - Handler for ISR UART0 (IRQ 24) */
 void UART0_IRQHandler(void){
-}
-
-/* 0x28 0x000000A0 - Handler for ISR UART0 (IRQ 24) */
-void UART1_IRQHandler(void){
 }
 
 /* 0x2a 0x000000A8 - Handler for ISR UART2 (IRQ 26) */
