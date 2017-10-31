@@ -48,7 +48,7 @@
 
 # sapi_examples
 
-PROJECT = sapi_examples/edu-ciaa-nxp/gpio_01_switches_leds
+#PROJECT = sapi_examples/edu-ciaa-nxp/gpio_01_switches_leds
 #PROJECT = sapi_examples/edu-ciaa-nxp/gpio_02_blinky
 #PROJECT = sapi_examples/edu-ciaa-nxp/gpio_03_blinky_switch
 #PROJECT = sapi_examples/edu-ciaa-nxp/gpio_04_led_sequences
@@ -58,6 +58,8 @@ PROJECT = sapi_examples/edu-ciaa-nxp/gpio_01_switches_leds
 #PROJECT = sapi_examples/edu-ciaa-nxp/uart_02_receive_string_blocking
 #PROJECT = sapi_examples/edu-ciaa-nxp/uart_03_receive_string
 #PROJECT = sapi_examples/edu-ciaa-nxp/uart_04_bridge_esp8266
+#PROJECT = sapi_examples/edu-ciaa-nxp/stdio_printf_and_buffer
+PROJECT = sapi_examples/edu-ciaa-nxp/cycles_counter_demo
 
 #PROJECT = sapi_examples/edu-ciaa-nxp/adc_dac_01
 
