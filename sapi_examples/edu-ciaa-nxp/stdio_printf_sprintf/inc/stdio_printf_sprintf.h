@@ -33,35 +33,30 @@
 
 /* Date: 2017-30-10 */
 
-#ifndef _SAPI_STDIO_BUFFER_H_
-#define _SAPI_STDIO_BUFFER_H_
+#ifndef _STDIO_PRINTF_SPRINTF_H_
+#define _STDIO_PRINTF_SPRINTF_H_
 
 /*==================[inclusions]=============================================*/
 
-#include <stdarg.h>
+/*==================[cplusplus]==============================================*/
 
-#include "sapi_datatypes.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*==================[macros]=================================================*/
 
-/** Maximo tamanio del buffer a formatear bajo el estilo printf (con argumentos). */
-#define STDIO_BUFFER_MAX_SIZE	200
-
 /*==================[typedef]================================================*/
 
-typedef enum stdioBufferConfig {
-	STDIO_BUFFER_INIT
-} stdioBufferConfig_t;
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/
 
-bool_t	stdioBufferConfig 	(stdioBufferConfig_t config);
+/*==================[cplusplus]==============================================*/
 
-char * 	stdioBufferRead 	(void);
-
-void 	stdioBufferWrite	(const char *fmt, ...);
+#ifdef __cplusplus
+}
+#endif
 
 /*==================[end of file]============================================*/
-
-#endif /* #ifndef _SAPI_STDIO_BUFFER_H_ */
+#endif /* #ifndef _STDIO_PRINTF_SPRINTF_H_ */

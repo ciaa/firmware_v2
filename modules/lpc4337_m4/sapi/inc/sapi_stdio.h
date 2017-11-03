@@ -33,47 +33,27 @@
 
 /* Date: 2017-30-10 */
 
-#ifndef SAPI_LOG_H_
-#define SAPI_LOG_H_
+#ifndef _SAPI_STDIO_H_
+#define _SAPI_STDIO_H_
 
 /*==================[inclusions]=============================================*/
 
 #include "sapi.h"
 
-
-/*==================[cplusplus]==============================================*/
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/*==================[macros and definitions]=================================*/
+/*==================[macros]=================================================*/
 
 /*==================[typedef]================================================*/
-
-typedef enum{
-   LOG_ERROR,
-   LOG_WARNING,
-   LOG_NORMAL,
-   LOG_DEBUG,
-   LOG_INVALID
-} LogLevel_t;
 
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/
 
-bool_t 	logConfig	( LogLevel_t logLevel, uartMap_t logUart, uint32_t baudRate );
+bool_t stdioConfig  (uartMap_t uartPrintf);
 
-void 	logWrite	( LogLevel_t logLevel, const char * functionCalling, const char *fmt, ... );
+int    stdioPrintf  (uartMap_t uartPrintf, const char *format, ...);
 
-void 	logRead		(char * arrayToSaveLastLog);
-
-/*==================[cplusplus]==============================================*/
-
-#ifdef __cplusplus
-}
-#endif
+int    stdioSprintf (char *out, const char *format, ...);
 
 /*==================[end of file]============================================*/
-#endif /* #ifndef SAPI_LOG_H_ */
+
+#endif /* #ifndef _SAPI_STDIO_H_ */

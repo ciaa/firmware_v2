@@ -66,6 +66,7 @@
 #include "sapi_circularBuffer.h"
 #include "sapi_pwm.h"               // Use SCT and GPIO module
 
+#include "sapi_stdio.h"
 #include "sapi_stdioBuffer.h"
 #include "sapi_log.h"
 
