@@ -41,7 +41,6 @@
 #include "sapi_delay.h"
 #include "sapi_datatypes.h"
 #include "sapi_peripheral_map.h"
-#include "sapi_stdioBuffer.h"
 
 /*==================[cplusplus]==============================================*/
 
@@ -86,8 +85,6 @@ bool_t uartReadByte( uartMap_t uart, uint8_t* receivedByte );
 void uartWriteByte( uartMap_t uart, uint8_t byte );
 
 void uartWriteString( uartMap_t uart, char* str );
-
-void uartPrintf (uartMap_t uart, const char *fmt, ...);
 
 /*==================[ISR external functions declaration]======================*/
 

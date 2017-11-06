@@ -56,7 +56,7 @@
 int main(void){
 bool_t cyclesCondition = FALSE;
 uint32_t cyclesElapsed = 0;
-float msElapsed = 0, usElapsed = 0;
+uint32_t msElapsed = 0, usElapsed = 0;
 
    /* ------------- INICIALIZACIONES ------------- */
 
@@ -82,7 +82,7 @@ float msElapsed = 0, usElapsed = 0;
 		   // Convierte el valor de ciclos en micro segundos
 		   usElapsed = cyclesCounterToUs(cyclesElapsed);
 		   // Imprime por pantalla el valor de los ciclos y los micro segundos transcurridos.
-		   uartPrintf(UART_USB, "Los ciclos en esperar 3 ms son: %d. En micro segundos %f\n\r", cyclesElapsed, usElapsed);
+		   stdioPrintf(UART_USB, "Los ciclos en esperar 3 ms son: %d. En micro segundos (aprox) %d\n\r", cyclesElapsed, usElapsed);
 	   } else {
 		   // Espera un tiempo aleatorio
 		   delay(141);
@@ -91,7 +91,7 @@ float msElapsed = 0, usElapsed = 0;
 		   // Convierte el valor de ciclos en mili segundos
 		   msElapsed = cyclesCounterToMs(cyclesElapsed);
 		   // Imprime por pantalla el valor de los ciclos y los mili segundos transcurridos.
-		   uartPrintf(UART_USB, "Los ciclos en esperar 141 ms son: %d. En mili segundos %f\n\n\r", cyclesElapsed, msElapsed);
+		   stdioPrintf(UART_USB, "Los ciclos en esperar 141 ms son: %d. En mili segundos (aprox) %d\n\n\r", cyclesElapsed, msElapsed);
 	   }
 	   cyclesCondition = !cyclesCondition;
 	   gpioToggle(LEDB);

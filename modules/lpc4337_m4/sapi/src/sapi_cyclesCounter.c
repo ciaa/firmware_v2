@@ -101,7 +101,7 @@ void 		cyclesCounterReset	( void ){
  */
 float	cyclesCounterToUs	(uint32_t cycles){
 float valueInMicroSeconds = 0;
-	valueInMicroSeconds = cycles/(ClockSpeed/1000000);
+	valueInMicroSeconds = (float)cycles/(ClockSpeed/1000000);
 	return valueInMicroSeconds;
 }
 
@@ -115,7 +115,7 @@ float valueInMicroSeconds = 0;
 float	cyclesCounterToMs	(uint32_t cycles){
 	float valueInMilliSeconds = 0;
 
-	valueInMilliSeconds = cycles/(ClockSpeed/1000);
+	valueInMilliSeconds = (float)cycles/(ClockSpeed/1000);
 
 	return valueInMilliSeconds;
 }

@@ -1,9 +1,7 @@
-/* Copyright 2017, Agustin Bassi.
- * Copyright 2016, Eric Pernia.
- *
+/* Copyright 2015-2017, Eric Pernia.
  * All rights reserved.
  *
- * This file is part of CIAA Firmware.
+ * This file is part sAPI library for microcontrollers.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -228,42 +226,6 @@ void uartWriteString( uartMap_t uart, char* str ){
 	  uartWriteByte( uart, (uint8_t)*str );
 	  str++;
    }
-}
-
-void uartPrintf (uartMap_t uart, const char *fmt, ...){
-int c, flag = 0, next_int;
-double next_float;
-char *next_string;
-va_list arg_addr;
-
-	//Obtiene la lista de argumentos
-	va_start(arg_addr, fmt);
-	//Resetea el indice del arreglo a formatear
-	stdioBufferConfig(STDIO_BUFFER_INIT);
-	//Mientras el char a formatear no sea caracter nulo...
-	while ( (c=*fmt++) != '\0' ){
-		if (c == '%'){
-			flag += 1;
-		}
-		if (flag == 1){
-			if (c == 'd'){
-				next_int = va_arg(arg_addr, int);
-				printf("%d", next_int);
-				flag = 0;
-			} else if (c == 'f') {
-				next_float = va_arg(arg_addr, double);
-				printf("%lf", next_float);
-				flag = 0;
-			} else if (c == 's') {
-				next_string = va_arg(arg_addr, char*);
-				printf("%s", next_string);
-				flag = 0;
-			}
-		} else {
-			printf("%c", c);
-		}
-	}
-	uartWriteString(uart, stdioBufferRead());
 }
 
 /*==================[ISR external functions definition]======================*/
