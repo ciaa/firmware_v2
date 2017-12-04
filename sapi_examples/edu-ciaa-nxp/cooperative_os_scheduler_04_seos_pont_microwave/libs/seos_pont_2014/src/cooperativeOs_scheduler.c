@@ -36,7 +36,7 @@
 
 /*==================[inclusions]=============================================*/
 
-#include "../../../../cooperative_os_scheduler_04_seos_pont_microwave/libs/seos_pont_2014/inc/cooperativeOs_scheduler.h"   // <= own header
+#include "cooperativeOs_scheduler.h"   // <= own header
 
 #include "sapi.h"                      // <= sAPI header
 
