@@ -1,4 +1,4 @@
-/* Copyright 2015-2017, Eric Pernia.
+/* Copyright 2017, Agustin Bassi.
  * All rights reserved.
  *
  * This file is part sAPI library for microcontrollers.
@@ -29,54 +29,40 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
+ *
+    Copyright 2001 Georges Menie
+    https://www.menie.org/georges/embedded/small_printf_source_code.html
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+	putchar is the only external dependency for this file,
+	if you have a working putchar, just remove the following
+	define. If the function should be called something else,
+	replace outbyte(c) by your own function call.
  */
 
-/* Date: 2015-09-23 */
+/*
+ * Date: 2017-11-23
+ */
 
-#ifndef _SAPI_H_
-#define _SAPI_H_
+#ifndef _MAIN_H_
+#define _MAIN_H_
 
-/*==================[inclusions]=============================================*/
+/*==================[inclusiones]============================================*/
 
-#include "sapi_datatypes.h"
-#include "sapi_peripheral_map.h"
-
-//#include "sapi_isr_vector.h"
-
-
-// Peripheral Drivers
-#include "sapi_board.h"
-#include "sapi_tick.h"
-#include "sapi_gpio.h"
-#include "sapi_uart.h"
-#include "sapi_adc.h"
-#include "sapi_dac.h"
-#include "sapi_i2c.h"
-#include "sapi_rtc.h"
-#include "sapi_sleep.h"
-#include "sapi_cyclesCounter.h"
-
-// High Level drivers
-#include "sapi_convert.h"           //
-#include "sapi_print.h"             // Use UART module
-#include "sapi_debugPrint.h"        // Use Print module
-#include "sapi_consolePrint.h"      // Use Print module
-
-#include "sapi_delay.h"             // Use Tick module
-#include "sapi_circularBuffer.h"
-#include "sapi_pwm.h"               // Use SCT and GPIO module
-
-#include "sapi_stdio.h"
-
-// External Peripheral Drivers
-#include "sapi_7_segment_display.h" // Use GPIO and Delay modules
-#include "sapi_keypad.h"            // Use GPIO and Delay modules
-#include "sapi_servo.h"             // Use Timer and GPIO modules
-#include "sapi_hmc5883l.h"          // Use I2C module
-#include "sapi_rgb.h"
-#include "sapi_esp8266.h"
-
-/*==================[cplusplus]==============================================*/
+/*==================[c++]====================================================*/
 
 #ifdef __cplusplus
 extern "C" {
@@ -84,17 +70,16 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
-/*==================[typedef]================================================*/
+/*==================[tipos de datos declarados por el usuario]===============*/
 
-/*==================[external data declaration]==============================*/
+/*==================[declaraciones de datos externos]========================*/
 
-/*==================[external functions declaration]=========================*/
+/*==================[declaraciones de funciones externas]====================*/
 
-/*==================[cplusplus]==============================================*/
-
+/*==================[c++]====================================================*/
 #ifdef __cplusplus
 }
 #endif
 
 /*==================[end of file]============================================*/
-#endif /* #ifndef _SAPI_H_ */
+#endif /* _MAIN_H_ */

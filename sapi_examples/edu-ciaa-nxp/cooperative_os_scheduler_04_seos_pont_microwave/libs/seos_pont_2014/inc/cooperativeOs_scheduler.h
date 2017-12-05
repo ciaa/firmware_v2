@@ -1,4 +1,5 @@
-/* Copyright 2016, Eric Pernia.
+/* Copyright 2013, Michael J. Pont.
+ * Copyright 2016, Eric Pernia.
  * All rights reserved.
  *
  * This file is part sAPI library for microcontrollers.
@@ -31,16 +32,14 @@
  *
  */
 
-/* Date: 2016-02-26 */
+/* Date: 2016-08-16 */
 
-#ifndef _SAPI_UART_H_
-#define _SAPI_UART_H_
+#ifndef _COOPERATIVE_OS_SCHEDULER_H_
+#define _COOPERATIVE_OS_SCHEDULER_H_
 
 /*==================[inclusions]=============================================*/
 
-#include "sapi_delay.h"
-#include "sapi_datatypes.h"
-#include "sapi_peripheral_map.h"
+#include "sapi.h"         /* <= sAPI header */
 
 /*==================[cplusplus]==============================================*/
 
@@ -50,50 +49,47 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
+/* The maximum number of tasks required at any one time during the execution
+   of the program. MUST BE ADJUSTED FOR EACH NEW PROJECT */
+#ifndef SCHEDULER_MAX_TASKS
+   #define SCHEDULER_MAX_TASKS   (10)
+#endif
+
 /*==================[typedef]================================================*/
 
-typedef enum{
-   UART_RECEIVE_STRING_CONFIG,
-   UART_RECEIVE_STRING_RECEIVING,
-   UART_RECEIVE_STRING_RECEIVED_OK,
-   UART_RECEIVE_STRING_TIMEOUT
-} waitForReceiveStringOrTimeoutState_t;
-
+/* Store in DATA area, if possible, for rapid access.
+   Total memory per task is 7 bytes. */
 typedef struct{
-   waitForReceiveStringOrTimeoutState_t state;
-   char*    string;
-   uint16_t stringSize;
-   uint16_t stringIndex;
-   tick_t   timeout;
-   delay_t  delay;
-} waitForReceiveStringOrTimeout_t;
+   // Pointer to the task (must be a 'void (void)' function)
+   sAPI_FuncPtr_t pTask;  // void (* pTask)(void);
+   // Delay (ticks) until the function will (next) be run
+   // - see schedulerAddTask() for further details
+   int32_t delay;
+   // Interval (ticks) between subsequent runs.
+   // - see schedulerAddTask() for further details
+   int32_t period;
+   // Incremented (by scheduler) when task is due to execute
+   int32_t runMe;
+} sTask_t;
 
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/
 
-waitForReceiveStringOrTimeoutState_t waitForReceiveStringOrTimeout(
-   uartMap_t uart, waitForReceiveStringOrTimeout_t* instance );
+// FUNCION que contiene el despachador de tareas.
+void schedulerDispatchTasks( void );
 
-bool_t waitForReceiveStringOrTimeoutBlocking(
-   uartMap_t uart, char* string, uint16_t stringSize, tick_t timeout );
+// FUNCION que añade una tarea al planificador.
+int32_t schedulerAddTask( sAPI_FuncPtr_t pFunction, //void (* pFunction)(void),
+                          const int32_t DELAY,
+                          const int32_t PERIOD
+                        );
 
-void uartConfig( uartMap_t uart, uint32_t baudRate );
+// FUNCION que remueve una tarea del planificador.
+int8_t schedulerDeleteTask( int32_t taskIndex );
 
-bool_t uartReadByte( uartMap_t uart, uint8_t* receivedByte );
-
-void uartWriteByte( uartMap_t uart, uint8_t byte );
-
-void uartWriteString( uartMap_t uart, char* str );
-
-/*==================[ISR external functions declaration]======================*/
-
-/* 0x28 0x000000A0 - Handler for ISR UART0 (IRQ 24) */
-void UART0_IRQHandler(void);
-/* 0x2a 0x000000A8 - Handler for ISR UART2 (IRQ 26) */
-void UART2_IRQHandler(void);
-/* 0x2b 0x000000AC - Handler for ISR UART3 (IRQ 27) */
-void UART3_IRQHandler(void);
+// FUNCION que reporta el estado del sistema.
+void schedulerReportStatus( void );
 
 /*==================[cplusplus]==============================================*/
 
@@ -102,4 +98,4 @@ void UART3_IRQHandler(void);
 #endif
 
 /*==================[end of file]============================================*/
-#endif /* _SAPI_UART_H_ */
+#endif /* #ifndef _COOPERATIVE_OS_SCHEDULER_H_ */

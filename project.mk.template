@@ -48,7 +48,7 @@
 
 # sapi_examples
 
-PROJECT = sapi_examples/edu-ciaa-nxp/gpio_01_switches_leds
+#PROJECT = sapi_examples/edu-ciaa-nxp/gpio_01_switches_leds
 #PROJECT = sapi_examples/edu-ciaa-nxp/gpio_02_blinky
 #PROJECT = sapi_examples/edu-ciaa-nxp/gpio_03_blinky_switch
 #PROJECT = sapi_examples/edu-ciaa-nxp/gpio_04_led_sequences
@@ -58,6 +58,10 @@ PROJECT = sapi_examples/edu-ciaa-nxp/gpio_01_switches_leds
 #PROJECT = sapi_examples/edu-ciaa-nxp/uart_02_receive_string_blocking
 #PROJECT = sapi_examples/edu-ciaa-nxp/uart_03_receive_string
 #PROJECT = sapi_examples/edu-ciaa-nxp/uart_04_bridge_esp8266
+#PROJECT = sapi_examples/edu-ciaa-nxp/uart_05_esp8266_http_server
+#PROJECT = sapi_examples/edu-ciaa-nxp/stdio_01_printf_sprintf
+
+#PROJECT = sapi_examples/edu-ciaa-nxp/clock_01_cycles_counter_demo
 
 #PROJECT = sapi_examples/edu-ciaa-nxp/adc_dac_01
 
@@ -65,6 +69,7 @@ PROJECT = sapi_examples/edu-ciaa-nxp/gpio_01_switches_leds
 #PROJECT = sapi_examples/edu-ciaa-nxp/rtc_01
 
 #PROJECT = sapi_examples/edu-ciaa-nxp/pwm_01
+#PROJECT = sapi_examples/edu-ciaa-nxp/pwm_02_rgb_controller_uart
 #PROJECT = sapi_examples/edu-ciaa-nxp/servo_01
 
 #PROJECT = sapi_examples/edu-ciaa-nxp/i2c_01_hmc5883l
@@ -74,6 +79,7 @@ PROJECT = sapi_examples/edu-ciaa-nxp/gpio_01_switches_leds
 #PROJECT = sapi_examples/edu-ciaa-nxp/cooperative_os_scheduler_01_seos
 #PROJECT = sapi_examples/edu-ciaa-nxp/cooperative_os_scheduler_02_seos_background_foreground
 #PROJECT = sapi_examples/edu-ciaa-nxp/cooperative_os_scheduler_03_seos_Pont2014
+#PROJECT = sapi_examples/edu-ciaa-nxp/cooperative_os_scheduler_03_seos_pont_microwave
 
 #PROJECT = sapi_examples/edu-ciaa-nxp/freeOSEK_01_blinky
 

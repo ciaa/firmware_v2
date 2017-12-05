@@ -1,7 +1,7 @@
-/* Copyright 2016, Eric Pernia.
+/* Copyright 2015-2017, Eric Pernia.
  * All rights reserved.
  *
- * This file is part of CIAA Firmware.
+ * This file is part sAPI library for microcontrollers.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -41,9 +41,9 @@
 
 /*==================[macros]=================================================*/
 
-#define UART_485_LPC LPC_USART0  /* UART0 (RS485/Profibus) */
-#define UART_USB_LPC LPC_USART2  /* UART2 (USB-UART) */
-#define UART_232_LPC LPC_USART3  /* UART3 (RS232) */
+#define UART_485_LPC  LPC_USART0  /* UART0 (RS485/Profibus) */
+#define UART_USB_LPC  LPC_USART2  /* UART2 (USB-UART) */
+#define UART_232_LPC  LPC_USART3  /* UART3 (RS232) */
 
 /*==================[typedef]================================================*/
 
@@ -181,24 +181,24 @@ bool_t uartReadByte( uartMap_t uart, uint8_t* receivedByte ){
    bool_t retVal = TRUE;
 
    switch(uart){
-   case UART_USB:
-      if ( Chip_UART_ReadLineStatus(UART_USB_LPC) & UART_LSR_RDR ) {
-         *receivedByte = Chip_UART_ReadByte(UART_USB_LPC);
-      } else{
-         retVal = FALSE;
-      }
-   break;
-   case UART_232:
-      if ( Chip_UART_ReadLineStatus(UART_232_LPC) & UART_LSR_RDR ) {
-         *receivedByte = Chip_UART_ReadByte(UART_232_LPC);
-      } else{
-         retVal = FALSE;
-      }
-   break;
-   case UART_485:
-   break;
-   }
+		case UART_USB:
+		  if ( Chip_UART_ReadLineStatus(UART_USB_LPC) & UART_LSR_RDR ) {
+			 *receivedByte = Chip_UART_ReadByte(UART_USB_LPC);
+		  } else{
+			 retVal = FALSE;
+		  }
+		break;
+		case UART_232:
+		  if ( Chip_UART_ReadLineStatus(UART_232_LPC) & UART_LSR_RDR ) {
+			 *receivedByte = Chip_UART_ReadByte(UART_232_LPC);
+		  } else{
+			 retVal = FALSE;
+		  }
+		break;
+		case UART_485:
 
+		break;
+   }
    return retVal;
 }
 
@@ -215,6 +215,7 @@ void uartWriteByte( uartMap_t uart, uint8_t byte ){
       Chip_UART_SendByte(UART_232_LPC, byte);
    break;
    case UART_485:
+
    break;
    }
 }

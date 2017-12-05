@@ -1,4 +1,4 @@
-/* Copyright 2016, Eric Pernia.
+/* Copyright 2017, Agustin Bassi.
  * All rights reserved.
  *
  * This file is part sAPI library for microcontrollers.
@@ -28,19 +28,18 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
  */
 
-/* Date: 2016-02-26 */
+/*
+ * Date: 2017-11-01
+ */
 
-#ifndef _SAPI_UART_H_
-#define _SAPI_UART_H_
+#ifndef _SAPI_RGB_H_
+#define _SAPI_RGB_H_
 
 /*==================[inclusions]=============================================*/
 
-#include "sapi_delay.h"
-#include "sapi_datatypes.h"
-#include "sapi_peripheral_map.h"
+#include "sapi.h"
 
 /*==================[cplusplus]==============================================*/
 
@@ -50,50 +49,54 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
+#define MAX_AMOUNT_OF_RGB_LEDS 9
+
 /*==================[typedef]================================================*/
 
-typedef enum{
-   UART_RECEIVE_STRING_CONFIG,
-   UART_RECEIVE_STRING_RECEIVING,
-   UART_RECEIVE_STRING_RECEIVED_OK,
-   UART_RECEIVE_STRING_TIMEOUT
-} waitForReceiveStringOrTimeoutState_t;
+// Colores predefinidos
+typedef enum Color {
+	BLACK,
+	WHITE,
+	VIOLET,
+	RED,
+	CYAN,
+	BLUE,
+	YELLOW,
+	GREEN
+} Color_t;
 
-typedef struct{
-   waitForReceiveStringOrTimeoutState_t state;
-   char*    string;
-   uint16_t stringSize;
-   uint16_t stringIndex;
-   tick_t   timeout;
-   delay_t  delay;
-} waitForReceiveStringOrTimeout_t;
+typedef enum LedRgbMap {
+	RGB_1,
+	RGB_2,
+	RGB_3,
+	RGB_4,
+	RGB_5,
+	RGB_6,
+	RGB_7,
+	RGB_8,
+	RGB_9,
+} LedRgbMap_t;
 
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/
 
-waitForReceiveStringOrTimeoutState_t waitForReceiveStringOrTimeout(
-   uartMap_t uart, waitForReceiveStringOrTimeout_t* instance );
+/** Configura los pines que se van a manejar como salidas PWM por soft. */
+bool_t 	rgbConfig 		(LedRgbMap_t rgbLed, uint8_t pinRed, uint8_t pinGreen, uint8_t pinBlue);
+/** Manda por los pines PWM uno de los posibles colores definidos en color_t*/
+void 	rgbWriteColor 	(LedRgbMap_t rgbLed, Color_t color);
+/** Manda una configuracion individual de cada canal. */
+void 	rgbWriteRaw 	(LedRgbMap_t rgbLed, int8_t dutyRed, int8_t dutyGreen, int8_t dutyBlue);
+/** Setea el brillo sin cambiar el color (multiplica por una constante). */
+void 	rgbWriteBright 	(LedRgbMap_t rgbLed, uint32_t bright);
 
-bool_t waitForReceiveStringOrTimeoutBlocking(
-   uartMap_t uart, char* string, uint16_t stringSize, tick_t timeout );
+uint8_t rgbReadDutyRed	(LedRgbMap_t rgbLed);
 
-void uartConfig( uartMap_t uart, uint32_t baudRate );
+uint8_t rgbReadDutyGreen(LedRgbMap_t rgbLed);
 
-bool_t uartReadByte( uartMap_t uart, uint8_t* receivedByte );
+uint8_t rgbReadDutyBlue	(LedRgbMap_t rgbLed);
 
-void uartWriteByte( uartMap_t uart, uint8_t byte );
-
-void uartWriteString( uartMap_t uart, char* str );
-
-/*==================[ISR external functions declaration]======================*/
-
-/* 0x28 0x000000A0 - Handler for ISR UART0 (IRQ 24) */
-void UART0_IRQHandler(void);
-/* 0x2a 0x000000A8 - Handler for ISR UART2 (IRQ 26) */
-void UART2_IRQHandler(void);
-/* 0x2b 0x000000AC - Handler for ISR UART3 (IRQ 27) */
-void UART3_IRQHandler(void);
+void	rgbToggleLed	(LedRgbMap_t rgbLed);
 
 /*==================[cplusplus]==============================================*/
 
@@ -102,4 +105,4 @@ void UART3_IRQHandler(void);
 #endif
 
 /*==================[end of file]============================================*/
-#endif /* _SAPI_UART_H_ */
+#endif /* #ifndef _SAPI_RGB_H_ */
