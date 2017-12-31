@@ -114,13 +114,13 @@ bool_t uint64ToString( uint64_t value, char* result, uint8_t base ){
 }
 
 char* uintToAsciiHex( uint64_t value, uint8_t bitSize ){
-   
+
    static char result[17];
    uint8_t i = 0;
    uint8_t vectorNumHex[] = "0123456789ABCDEF";
-   
+
    result[bitSize/4] = 0;
-   
+
    for( i=0; i<bitSize/4; i++ ){
       result[(bitSize/4)-i-1] = vectorNumHex[ (uint8_t)(( value & (((uint64_t)0x0F)<<(4*i)) ) >> (4*i)) ];
    }

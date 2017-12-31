@@ -30,7 +30,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  */
- 
+
 /* Date: 2016-06-05 */
 
 /*==================[inclusions]=============================================*/
@@ -51,7 +51,7 @@
 
 /*==================[external functions definition]==========================*/
 
-/* 
+/*
  * Null Function Pointer definition
  * --------------------------------------
  * param:  void * - Not used
@@ -69,21 +69,21 @@ bool_t sAPI_NullFuncPtr(void *ptr){
 // Función para no tener NULL pointer
    void dummy(void){
    }
- 
+
 // Definición de un tipo con typedef.
    typedef void (*voidFunctionPointer_t)(void);
- 
+
 // Definición de una variable con el tipo de typedef, incializo en dummy (NULL)
    voidFunctionPointer_t voidFunctionPointer[2] = {dummy, dummy};
 
 // Ejecuto la funcion
    (* voidFunctionPointer[0] )();
    (* voidFunctionPointer[1] )();
-      
+
 // Asigno una funcion a cada posición del vector
    voidFunctionPointer[0] = ledB;
    voidFunctionPointer[1] = led1;
-*/      
+*/
 
 
 /** @} doxygen end group definition */

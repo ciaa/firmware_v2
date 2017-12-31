@@ -33,6 +33,9 @@
 
 /* Date: 2017-30-10 */
 
+// More information at: 
+// https://groups.google.com/forum/#!msg/embebidos32/tPntHHUSnyE/S3CDyCwXsaMJ
+
 #ifndef _SAPI_CYCLES_COUNTER_H_
 #define _SAPI_CYCLES_COUNTER_H_
 
@@ -58,15 +61,15 @@ extern "C" {
 
 /*==================[external functions definition]==========================*/
 
-bool_t 		cyclesCounterConfig	( uint32_t clockSpeed );
+bool_t cyclesCounterConfig( uint32_t clockSpeed );
 
-uint32_t 	cyclesCounterRead	( void );
+uint32_t cyclesCounterRead( void );
 
-void 		cyclesCounterReset	( void );
+void cyclesCounterReset( void );
 
-float		cyclesCounterToUs	(uint32_t cycles);
+float cyclesCounterToUs( uint32_t cycles );
 
-float		cyclesCounterToMs	(uint32_t cycles);
+float cyclesCounterToMs( uint32_t cycles );
 
 /*==================[cplusplus]==============================================*/
 

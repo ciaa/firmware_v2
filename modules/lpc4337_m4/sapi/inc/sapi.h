@@ -43,38 +43,41 @@
 
 //#include "sapi_isr_vector.h"
 
-
 // Peripheral Drivers
-#include "sapi_board.h"
-#include "sapi_tick.h"
-#include "sapi_gpio.h"
-#include "sapi_uart.h"
-#include "sapi_adc.h"
-#include "sapi_dac.h"
-#include "sapi_i2c.h"
-#include "sapi_rtc.h"
-#include "sapi_sleep.h"
-#include "sapi_cyclesCounter.h"
+
+#include "sapi_board.h"             // Use clock peripheral
+#include "sapi_tick.h"              // Use Systick peripheral
+#include "sapi_gpio.h"              // Use GPIO peripherals
+#include "sapi_uart.h"              // Use UART peripherals
+#include "sapi_adc.h"               // Use ADC0 peripheral
+#include "sapi_dac.h"               // Use DAC peripheral
+#include "sapi_i2c.h"               // Use I2C0 peripheral
+#include "sapi_rtc.h"               // Use RTC peripheral
+#include "sapi_sleep.h"             // Use ASM instructions
+#include "sapi_cyclesCounter.h"     // Use Debug Registers
 
 // High Level drivers
-#include "sapi_convert.h"           //
-#include "sapi_print.h"             // Use UART module
-#include "sapi_debugPrint.h"        // Use Print module
-#include "sapi_consolePrint.h"      // Use Print module
 
-#include "sapi_delay.h"             // Use Tick module
+#include "sapi_stdio.h"             // Use sapi_uart module
+
+#include "sapi_print.h"             // Use sapi_uart module
+#include "sapi_debugPrint.h"        // Use sapi_print module
+#include "sapi_consolePrint.h"      // Use sapi_print module
+
+#include "sapi_convert.h"
+
+#include "sapi_delay.h"             // Use sapi_tick module
+#include "sapi_pwm.h"               // Use sapi_sct and sapi_gpio modules
 #include "sapi_circularBuffer.h"
-#include "sapi_pwm.h"               // Use SCT and GPIO module
-
-#include "sapi_stdio.h"
 
 // External Peripheral Drivers
-#include "sapi_7_segment_display.h" // Use GPIO and Delay modules
-#include "sapi_keypad.h"            // Use GPIO and Delay modules
-#include "sapi_servo.h"             // Use Timer and GPIO modules
-#include "sapi_hmc5883l.h"          // Use I2C module
-#include "sapi_rgb.h"
-#include "sapi_esp8266.h"
+
+#include "sapi_7_segment_display.h" // Use sapi_gpio and sapi_delay modules
+#include "sapi_keypad.h"            // Use sapi_gpio and sapi_delay modules
+#include "sapi_servo.h"             // Use sapi_timer and sapi_gpio modules
+#include "sapi_hmc5883l.h"          // Use sapi_i2c module
+#include "sapi_esp8266.h"           // Use sapi_uart module
+#include "sapi_rgb.h"               // Use TIMER peripheral
 
 /*==================[cplusplus]==============================================*/
 

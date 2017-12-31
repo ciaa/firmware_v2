@@ -1,5 +1,5 @@
-/* Copyright 2017, Pablo Gomez - Agustin Bassi.
- * Copyright 2016, Marcelo.
+/* Copyright 2016, Marcelo Vieytes.
+ * Copyright 2017, Pablo Gomez, Agustin Bassi.
  * All rights reserved.
  *
  * This file is part sAPI library for microcontrollers.

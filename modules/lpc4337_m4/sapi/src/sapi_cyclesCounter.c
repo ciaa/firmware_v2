@@ -33,6 +33,9 @@
 
 /* Date: 2017-30-10 */
 
+// More information at: 
+// https://groups.google.com/forum/#!msg/embebidos32/tPntHHUSnyE/S3CDyCwXsaMJ
+
 /*==================[inclusions]=============================================*/
 
 #include "sapi_cyclesCounter.h"
@@ -64,20 +67,20 @@ static uint32_t ClockSpeed = EDU_CIAA_NXP_CLOCK_SPEED;
  * Funcion para configurar los registros para contar ciclos de clock.
  * @return TRUE si esta OK, FALSE en caso de error.
  */
-bool_t 		cyclesCounterConfig	( uint32_t clockSpeed ){
-	//Asigna  a la variable local ClockSpeed el valor recibido como argumento.
-	ClockSpeed = clockSpeed;
-	//Iniciar el contador de ciclos de clock.
-	*DWT_CTRL  |= 1;
-	return TRUE;
+bool_t cyclesCounterConfig( uint32_t clockSpeed ){
+   //Asigna  a la variable local ClockSpeed el valor recibido como argumento.
+   ClockSpeed = clockSpeed;
+   //Iniciar el contador de ciclos de clock.
+   *DWT_CTRL  |= 1;
+   return TRUE;
 }
 
 /**
  * Funcion para leer el registro con la cuenta de ciclos de clock.
  * @return el valor del contador de ciclos de clock.
  */
-uint32_t 	cyclesCounterRead	( void ){
-	return *DWT_CYCCNT;
+uint32_t cyclesCounterRead( void ){
+   return *DWT_CYCCNT;
 }
 
 /**
@@ -87,9 +90,9 @@ uint32_t 	cyclesCounterRead	( void ){
  * se debe llamar a la funcion cyclesCounterRead(). Asi se
  * obtendra la cantidad de ciclos que pasaron.
  */
-void 		cyclesCounterReset	( void ){
-	//resetea el contador de ciclos de clock
-	*DWT_CYCCNT = 0;
+void cyclesCounterReset( void ){
+   //resetea el contador de ciclos de clock
+   *DWT_CYCCNT = 0;
 }
 
 /**
@@ -99,10 +102,10 @@ void 		cyclesCounterReset	( void ){
  * @param cycles la cantidad de ciclos.
  * @return el valor convertido a micro segundos.
  */
-float	cyclesCounterToUs	(uint32_t cycles){
-float valueInMicroSeconds = 0;
-	valueInMicroSeconds = (float)cycles/(ClockSpeed/1000000);
-	return valueInMicroSeconds;
+float	cyclesCounterToUs( uint32_t cycles ){
+   float valueInMicroSeconds = 0;
+   valueInMicroSeconds = (float)cycles/(ClockSpeed/1000000);
+   return valueInMicroSeconds;
 }
 
 /**
@@ -112,12 +115,10 @@ float valueInMicroSeconds = 0;
  * @param cycles la cantidad de ciclos.
  * @return el valor convertido a mili segundos.
  */
-float	cyclesCounterToMs	(uint32_t cycles){
-	float valueInMilliSeconds = 0;
-
-	valueInMilliSeconds = (float)cycles/(ClockSpeed/1000);
-
-	return valueInMilliSeconds;
+float	cyclesCounterToMs( uint32_t cycles ){
+   float valueInMilliSeconds = 0;
+   valueInMilliSeconds = (float)cycles/(ClockSpeed/1000);
+   return valueInMilliSeconds;
 }
 
 /*==================[end of file]============================================*/
