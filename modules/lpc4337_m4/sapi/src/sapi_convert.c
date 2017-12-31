@@ -128,4 +128,13 @@ char* uintToAsciiHex( uint64_t value, uint8_t bitSize ){
    return result;
 }
 
+char* intToString( int64_t value ){
+
+   char result[20];
+
+   int64ToString( value, result, 10 );
+
+   return result;
+}
+
 /*==================[end of file]============================================*/

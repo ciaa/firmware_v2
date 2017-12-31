@@ -59,6 +59,12 @@ typedef struct{
    int8_t pin;
 } pinConfigLpc4337_t;
 
+typedef struct{
+   uint8_t lpcScuPort;
+   uint8_t lpcScuPin;
+   uint8_t lpcScuFunc;
+}lpc4337ScuPin_t;
+
 /* ------ End Pin Config Structs NXP LPC4337 ------ */
 
 
@@ -114,8 +120,16 @@ typedef enum{
 } dacMap_t;
 
 /* Defined for sapi_uart.h */
+// Note that:
+// - If use UART_GPIO you can't use UART_485 and vice versa.
+// - If use UART_USB you can't use UART_ENET and vice versa.
 typedef enum{
-   UART_USB, UART_232, UART_485
+   UART_GPIO = 0, // Hardware UART0 via GPIO1(TX), GPIO2(RX) pins on header P0
+   UART_485  = 1, // Hardware UART0 via RS_485 A, B and GND Borns
+   //UART_1  = 2, // Hardware UART1 not routed
+   UART_USB  = 3, // Hardware UART2 via USB DEBUG port
+   UART_ENET = 4, // Hardware UART2 via ENET_RXD0(TX), ENET_CRS_DV(RX) pins on header P0
+   UART_232  = 5  // Hardware UART3 via 232_RX and 232_tx pins on header P1
 } uartMap_t;
 
 /*Defined for sapi_timer.h*/

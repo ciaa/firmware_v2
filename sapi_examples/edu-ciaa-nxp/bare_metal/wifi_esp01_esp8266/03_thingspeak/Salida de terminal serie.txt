@@ -1,0 +1,175 @@
+>>>> UART_USB configurada como salida de debug.
+>>>> UART_ESP (donde se conecta el ESP01), 
+>>>> configurada como salida de consola.
+
+>>>> Chequear si se encuentra el modulo Wi-Fi.
+>>>>    Enviando "AT"...
+>>>>    Modulo ESP01 Wi-Fi detectado.
+
+>>>> Consultando las redes Wi-Fi disponibles.
+>>>>    Enviando "AT+CWLAP"...
+
+
+OK
+AT+CWLAP
+
++CWLAP:(4,"Telecentro-4836",-90,"8c:10:d4:88:0c:a6",1,-14)
++CWLAP:(3,"Miriam",-88,"c4:e9:84:ff:66:80",1,-12)
++CWLAP:(4,"Speedy-67D264",-85,"e0:41:36:67:d2:66",6,-7)
++CWLAP:(4,"Speedy-Fibra-53",-85,"08:6a:0a:ed:e4:16",6,-19)
++CWLAP:(4,"Telecentro-87f0",-94,"8c:10:d4:90:87:f6",6,-21)
++CWLAP:(3,"dd-wrt repetidor2",-50,"02:1a:70:d1:1e:09",6,31)
++CWLAP:(4,"casaEric",-61,"08:6a:0a:a9:aa:d0",6,-24)
++CWLAP:(4,"Telecentro-f188",-91,"8c:10:d4:88:f1:8e",9,-7)
++CWLAP:(4,"Telecentro-73d8",-93,"8c:10:d4:89:73:de",11,-16)
++CWLAP:(2,"Telecentro-0c16",-79,"38:60:77:0b:f6:95",11,0)
++CWLAP:(4,"WIFI-INVITADOS",-94,"26:7f:20:08:07:c7",6,-32)
++CWLAP:(4,"ANOXIDE",-91,"24:7f:20:08:06:c6",6,-32)
+
+OK
+>>>> Conectando a la red Wi-Fi: "casaEric"...
+WIFI CONNECTED
+WIFI GOT IP
+
+OK
+>>>> ===========================================================
+>>>> Enviar dato: "GET /update?key=7E7IOJ276BSDLOBA&1=0"
+>>>> al servidor "api.thingspeak.com", puerto "80"...
+>>>> Conectando al servidor "api.thingspeak.com", puerto "80"...
+>>>> AT+CIPSTART="TCP","api.thingspeak.com",80
+
+AT+CIPSTART="TCP","api.thingspeak.com",80
+
+CONNECT
+
+OK
+>>>> Envio datos TCP/IP al servidor...
+>>>> AT+CIPSEND=38
+
+AT+CIPSEND=38
+
+
+OK
+> 
+Recv 38 bytes
+
+SEND OK
+GET /update?key=7E7IOJ276BSDLOBA&1=0
+
+
+ERROR
+
++IPD,2:93CLOSED
+>>>> ===========================================================
+>>>> Enviar dato: "GET /update?key=7E7IOJ276BSDLOBA&1=1"
+>>>> al servidor "api.thingspeak.com", puerto "80"...
+>>>> Conectando al servidor "api.thingspeak.com", puerto "80"...
+>>>> AT+CIPSTART="TCP","api.thingspeak.com",80
+
+AT+CIPSTART="TCP","api.thingspeak.com",80
+
+CONNECT
+
+OK
+>>>> Envio datos TCP/IP al servidor...
+>>>> AT+CIPSEND=38
+
+AT+CIPSEND=38
+
+
+OK
+> 
+Recv 38 bytes
+
+SEND OK
+GET /update?key=7E7IOJ276BSDLOBA&1=1
+
+
+ERROR
+
++IPD,2:94CLOSED
+>>>> ===========================================================
+>>>> Enviar dato: "GET /update?key=7E7IOJ276BSDLOBA&1=2"
+>>>> al servidor "api.thingspeak.com", puerto "80"...
+>>>> Conectando al servidor "api.thingspeak.com", puerto "80"...
+>>>> AT+CIPSTART="TCP","api.thingspeak.com",80
+
+AT+CIPSTART="TCP","api.thingspeak.com",80
+
+CONNECT
+
+OK
+>>>> Envio datos TCP/IP al servidor...
+>>>> AT+CIPSEND=38
+
+AT+CIPSEND=38
+
+
+OK
+> 
+Recv 38 bytes
+
+SEND OK
+GET /update?key=7E7IOJ276BSDLOBA&1=2
+
+
+ERROR
+
++IPD,2:95CLOSED
+>>>> ===========================================================
+>>>> Enviar dato: "GET /update?key=7E7IOJ276BSDLOBA&1=3"
+>>>> al servidor "api.thingspeak.com", puerto "80"...
+>>>> Conectando al servidor "api.thingspeak.com", puerto "80"...
+>>>> AT+CIPSTART="TCP","api.thingspeak.com",80
+
+AT+CIPSTART="TCP","api.thingspeak.com",80
+
+CONNECT
+
+OK
+>>>> Envio datos TCP/IP al servidor...
+>>>> AT+CIPSEND=38
+
+AT+CIPSEND=38
+
+
+OK
+> 
+Recv 38 bytes
+
+SEND OK
+GET /update?key=7E7IOJ276BSDLOBA&1=3
+
+
+ERROR
+
++IPD,2:96CLOSED
+>>>> ===========================================================
+>>>> Enviar dato: "GET /update?key=7E7IOJ276BSDLOBA&1=4"
+>>>> al servidor "api.thingspeak.com", puerto "80"...
+>>>> Conectando al servidor "api.thingspeak.com", puerto "80"...
+>>>> AT+CIPSTART="TCP","api.thingspeak.com",80
+
+AT+CIPSTART="TCP","api.thingspeak.com",80
+
+CONNECT
+
+OK
+>>>> Envio datos TCP/IP al servidor...
+>>>> AT+CIPSEND=38
+
+AT+CIPSEND=38
+
+
+OK
+> 
+Recv 38 bytes
+
+SEND OK
+GET /update?key=7E7IOJ276BSDLOBA&1=4
+
+
+ERROR
+
++IPD,2:97CLOSED
+

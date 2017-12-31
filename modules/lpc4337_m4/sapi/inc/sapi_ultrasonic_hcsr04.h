@@ -1,4 +1,4 @@
-/* Copyright 2017, Agustin Bassi.
+/* Copyright 2017, Danilo Zecchin.
  * All rights reserved.
  *
  * This file is part sAPI library for microcontrollers.
@@ -31,18 +31,16 @@
  *
  */
 
-/* Date: 2017-30-10 */
+/*
+ * Ultrasonic sensor HC-SR04 API
+ * Date: 2017-11-17
+ */
 
-// More information at: 
-// https://groups.google.com/forum/#!msg/embebidos32/tPntHHUSnyE/S3CDyCwXsaMJ
-
-#ifndef _SAPI_CYCLES_COUNTER_H_
-#define _SAPI_CYCLES_COUNTER_H_
+#ifndef _SAPI_ULTRASONICSENSOR_H_
+#define _SAPI_ULTRASONICSENSOR_H_
 
 /*==================[inclusions]=============================================*/
-
 #include "sapi_datatypes.h"
-
 /*==================[cplusplus]==============================================*/
 
 #ifdef __cplusplus
@@ -51,26 +49,47 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
-// TODO: Check CPU core speed using SystemCoreClock
-#define EDU_CIAA_NXP_CLOCK_SPEED	204000000
-
 /*==================[typedef]================================================*/
+
+typedef enum {
+	ULTRASONIC_SENSOR_0, ULTRASONIC_SENSOR_1, ULTRASONIC_SENSOR_2
+} ultrasonicSensorMap_t;
+
+typedef enum {
+	ULTRASONIC_SENSOR_ENABLE, ULTRASONIC_SENSOR_DISABLE
+} ultrasonicSensorConfig_t;
+
+typedef enum {
+	CM, INCH
+} unitMap_t;
 
 /*==================[external data declaration]==============================*/
 
-/*==================[ISR external functions definition]======================*/
+/*==================[external functions declaration]=========================*/
 
-/*==================[external functions definition]==========================*/
+/*
+ * @Brief   Configure an ultrasonic sensor
+ * @param   aSensor:   sensor number (0 to 2)
+ * @param   aConfig:   enable or disable sensor
+ * @return   nothing
+ */
+void ultrasonicSensorConfig(ultrasonicSensorMap_t aSensor, ultrasonicSensorConfig_t aConfig);
 
-bool_t cyclesCounterConfig( uint32_t clockSpeed );
+/*
+ * @Brief   retrieves sensor actual distance in the specified unit
+ * @param   aSensor:	sensor number (0 to 2)
+ * @param   anUnit:		returned value unit (centimeters, inch, etc)
+ * @return  float value with measured distance
+ */
+float ultrasonicSensorGetDistance(ultrasonicSensorMap_t aSensor, unitMap_t anUnit);
 
-uint32_t cyclesCounterRead( void );
-
-void cyclesCounterReset( void );
-
-float cyclesCounterToUs( uint32_t cycles );
-
-float cyclesCounterToMs( uint32_t cycles );
+/*==================[ISR external functions declaration]=====================*/
+/*
+ * @Brief:   GPIO Echo interrupt handler for each sensor
+ */
+void GPIO0_IRQHandler(void);
+void GPIO1_IRQHandler(void);
+void GPIO2_IRQHandler(void);
 
 /*==================[cplusplus]==============================================*/
 
@@ -78,5 +97,4 @@ float cyclesCounterToMs( uint32_t cycles );
 }
 #endif
 
-/*==================[end of file]============================================*/
-#endif /* #ifndef _SAPI_CYCLES_COUNTER_H_ */
+#endif /* _SAPI_ULTRASONICSENSOR_H_ */

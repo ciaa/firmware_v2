@@ -1,4 +1,4 @@
-/* Copyright 2016, Eric Pernia.
+/* Copyright 2015-2017, Eric Pernia.
  * All rights reserved.
  *
  * This file is part sAPI library for microcontrollers.
@@ -56,6 +56,7 @@ typedef enum{
    UART_RECEIVE_STRING_CONFIG,
    UART_RECEIVE_STRING_RECEIVING,
    UART_RECEIVE_STRING_RECEIVED_OK,
+   UART_RECEIVE_STRING_FULL_BUFFER,
    UART_RECEIVE_STRING_TIMEOUT
 } waitForReceiveStringOrTimeoutState_t;
 
@@ -72,17 +73,79 @@ typedef struct{
 
 /*==================[external functions declaration]=========================*/
 
+// Check for Receive a given pattern
+
 waitForReceiveStringOrTimeoutState_t waitForReceiveStringOrTimeout(
    uartMap_t uart, waitForReceiveStringOrTimeout_t* instance );
+
+// Recibe bytes hasta que llegue el string patron que se le manda en el
+// parametro string, stringSize es la cantidad de caracteres del string.
+// Devuelve TRUE cuando recibio la cadena patron, si paso el tiempo timeout
+// en milisegundos antes de recibir el patron devuelve FALSE.
+// No almacena los datos recibidos!! Simplemente espera a recibir cierto patron.
 
 bool_t waitForReceiveStringOrTimeoutBlocking(
    uartMap_t uart, char* string, uint16_t stringSize, tick_t timeout );
 
+
+// Store bytes until receive a given pattern
+
+waitForReceiveStringOrTimeoutState_t receiveBytesUntilReceiveStringOrTimeout(
+   uartMap_t uart, waitForReceiveStringOrTimeout_t* instance,
+   char* receiveBuffer, uint32_t* receiveBufferSize );
+
+// Guarda todos los bytes que va recibiendo hasta que llegue el string
+// patron que se le manda en el parametro string, stringSize es la cantidad
+// de caracteres del string.
+// receiveBuffer es donde va almacenando los caracteres recibidos y
+// receiveBufferSize es el tamaño de buffer receiveBuffer.
+// Devuelve TRUE cuando recibio la cadena patron, si paso el tiempo timeout
+// en milisegundos antes de recibir el patron devuelve FALSE.
+
+bool_t receiveBytesUntilReceiveStringOrTimeoutBlocking(
+   uartMap_t uart, char* string, uint16_t stringSize,
+   char* receiveBuffer, uint32_t* receiveBufferSize,
+   tick_t timeout );
+
+//-------------------------------------------------------------
+
+// UART RX Interrupt Enable/Disable
+void uartRxInterruptSet( uartMap_t uart, bool_t enable );
+// UART TX Interrupt Enable/Disable
+void uartTxInterruptSet( uartMap_t uart, bool_t enable );
+
+// UART RX Interrupt set callback function that is excecuted when event ocurrs
+void uartRxInterruptCallbackSet( 
+   uartMap_t uart,                  // UART
+   callBackFuncPtr_t rxIsrCallback  // pointer to function
+);
+// UART TX Interrupt set callback function that is excecuted when event ocurrs
+void uartTxInterruptCallbackSet( 
+   uartMap_t uart,                  // UART
+   callBackFuncPtr_t txIsrCallback  // pointer to function
+);
+
+//-------------------------------------------------------------
+
+// Return TRUE if have unread data in RX FIFO
+bool_t uartRxReady( uartMap_t uart );
+// Return TRUE if have space in TX FIFO
+bool_t uartTxReady( uartMap_t uart );
+// Read from RX FIFO
+uint8_t uartRxRead( uartMap_t uart );
+// Write in TX FIFO
+void uartTxWrite( uartMap_t uart, uint8_t value );
+
+//-------------------------------------------------------------
+// UART Initialization
 void uartConfig( uartMap_t uart, uint32_t baudRate );
 
+// Read 1 byte from RX FIFO, check first if exist aviable data
 bool_t uartReadByte( uartMap_t uart, uint8_t* receivedByte );
-void uartWriteByte( uartMap_t uart, uint8_t byte );
+// Blocking Write 1 byte to TX FIFO
+void uartWriteByte( uartMap_t uart, uint8_t value );
 
+// Blocking Send a string
 void uartWriteString( uartMap_t uart, char* str );
 
 /*==================[ISR external functions declaration]======================*/
@@ -92,7 +155,7 @@ void UART0_IRQHandler(void);
 /* 0x2a 0x000000A8 - Handler for ISR UART2 (IRQ 26) */
 void UART2_IRQHandler(void);
 /* 0x2b 0x000000AC - Handler for ISR UART3 (IRQ 27) */
-void UART3_IRQHandler(void);
+//void UART3_IRQHandler(void);
 
 /*==================[cplusplus]==============================================*/
 

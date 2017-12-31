@@ -1,5 +1,5 @@
-/* Copyright 2016, Alejandro Permingeat
- * Copyright 2016, Eric Pernia.
+/* Copyright 2017, Rodrigo Furlani
+ * Copyright 2017, Alejandro Permingeat
  * All rights reserved.
  *
  * This file is part sAPI library for microcontrollers.
@@ -32,76 +32,61 @@
  *
  */
 
-/* Date: 2015-06-27 */
+/* Date: 2017-11-14 */
 
-#include "sapi_hmc5883l.h"         /* <= sAPI HMC5883L header */
+#include "sapi_magnetometer_qmc5883l.h"         /* <= sAPI QMC5883L header */
 #include "sapi_i2c.h"         	   /* <= sAPI I2C header */
 
-bool_t hmc5883lIsAlive( void ){
 
-   uint8_t idRegister[3];
+bool_t qmc5883lPrepareDefaultConfig( QMC5883L_config_t * config ){
+   
+   config->samples = QMC5883L_DEFAULT_sample;
+   config->gain = QMC5883L_DEFAULT_gain;
+   config->rate = QMC5883L_DEFAULT_rate;
 
-   // i2cRead( I2C0, HMC5883L_ADD, HMC5883L_REG_ID_REG_A, &idRegister, 3 );
-
-   if( (HMC5883L_VALUE_ID_REG_A == idRegister[0]) &&
-       (HMC5883L_VALUE_ID_REG_B == idRegister[1]) &&
-       (HMC5883L_VALUE_ID_REG_C == idRegister[2])
-     ){
-      return (TRUE);
-   }
-   else{
-      return (FALSE);
-   }
-}
-
-bool_t hmc5883lPrepareDefaultConfig( HMC5883L_config_t * config ){
-
-   config->gain = HMC5883L_DEFAULT_gain;
-   config->meassurement = HMC5883L_DEFAULT_messurement;
-   config->rate = HMC5883L_DEFAULT_rate;
-   config->samples = HMC5883L_DEFAULT_sample;
-   config->mode = HMC5883L_DEFAULT_mode;
+   config->mode = QMC5883L_DEFAULT_mode;
 
    return (TRUE);
 }
 
 
-bool_t hmc5883lConfig( HMC5883L_config_t config ){
+bool_t qmc5883lConfig( QMC5883L_config_t config ){
 
-   uint8_t registerA, registerB, registerMode;
+   uint8_t register1, register2, registerMode;
 
    uint8_t transmitDataBuffer[2];
+   
+    register1 = 0;
+    
+   /*OSR bit 7 and bit 6 */
+   register1 |= ((uint8_t)config.samples) << 6;
+   
+   /*RNG bit 5 and bit 4*/
+   register1 |= ((uint8_t)config.gain) << 4;
 
-   registerA = config.samples;
-   registerA = registerA<<3;
-   registerA |= config.rate;
-   registerA = registerA<<2;
-   registerA |= config.meassurement;
+   /*ODR bit 3 and bit 2*/
+   register1 |= ((uint8_t)config.rate) << 2;
 
-   registerB = config.gain;
-   registerB = registerB << 5;
-
-   registerMode = config.mode;
+    /*MODE bit 1 and bit 0*/
+   register1 |= config.mode;
 
    i2cConfig( I2C0, 100000 );
 
-   transmitDataBuffer[0] = HMC5883L_REG_CONFIG_A;
-   transmitDataBuffer[1] = registerA;
-   i2cWrite( I2C0, HMC5883L_ADD, transmitDataBuffer, 2, TRUE );
+   transmitDataBuffer[0] = QMC5883L_SET_RESET_PERIOD;
+   transmitDataBuffer[1] = 1; /* value recomeended in datasheet for this register*/
+   i2cWrite( I2C0, QMC5883L_ADD, transmitDataBuffer, 2, TRUE );
 
-   transmitDataBuffer[0] = HMC5883L_REG_CONFIG_B;
-   transmitDataBuffer[1] = registerB;
-   i2cWrite( I2C0, HMC5883L_ADD, transmitDataBuffer, 2, TRUE );
+   transmitDataBuffer[0] = QMC5883L_REG_CTRL_1;
+   transmitDataBuffer[1] = register1;
+   i2cWrite( I2C0, QMC5883L_ADD, transmitDataBuffer, 2, TRUE );
 
-   transmitDataBuffer[0] = HMC5883L_REG_MODE;
-   transmitDataBuffer[1] = registerMode;
-   i2cWrite( I2C0, HMC5883L_ADD, transmitDataBuffer, 2, TRUE );
-
-   return ( hmc5883lIsAlive() );
+    /** TODO: Implement the configuration of register QMC5883L_REG_CTRL_2: possition 0x0A*/
+    
+   return ( TRUE);
 }
 
 
-bool_t hmc5883lRead( int16_t * x, int16_t * y, int16_t * z ){
+bool_t qmc5883lRead( int16_t * x, int16_t * y, int16_t * z ){
 
    bool_t result = TRUE;
 
@@ -111,35 +96,37 @@ bool_t hmc5883lRead( int16_t * x, int16_t * y, int16_t * z ){
 
    uint8_t dataToReadBuffer;
 
-   dataToReadBuffer = HMC5883L_REG_X_MSB;
-   i2cRead( I2C0, HMC5883L_ADD,
-            &dataToReadBuffer, 1, TRUE,
-            &x_MSB, 1, TRUE );
 
-   dataToReadBuffer = HMC5883L_REG_X_LSB;
-   i2cRead( I2C0, HMC5883L_ADD,
+   dataToReadBuffer = QMC5883L_REG_X_LSB;
+   i2cRead( I2C0, QMC5883L_ADD,
             &dataToReadBuffer, 1, TRUE,
             &x_LSB, 1, TRUE );
 
-   dataToReadBuffer = HMC5883L_REG_Y_MSB;
-   i2cRead( I2C0, HMC5883L_ADD,
+   dataToReadBuffer = QMC5883L_REG_X_MSB;
+   i2cRead( I2C0, QMC5883L_ADD,
             &dataToReadBuffer, 1, TRUE,
-            &y_MSB, 1, TRUE );
+            &x_MSB, 1, TRUE );
 
-   dataToReadBuffer = HMC5883L_REG_Y_LSB;
-   i2cRead( I2C0, HMC5883L_ADD,
+   dataToReadBuffer = QMC5883L_REG_Y_LSB;
+   i2cRead( I2C0, QMC5883L_ADD,
             &dataToReadBuffer, 1, TRUE,
             &y_LSB, 1, TRUE );
 
-   dataToReadBuffer = HMC5883L_REG_Z_MSB;
-   i2cRead( I2C0, HMC5883L_ADD,
+   dataToReadBuffer = QMC5883L_REG_Y_MSB;
+   i2cRead( I2C0, QMC5883L_ADD,
             &dataToReadBuffer, 1, TRUE,
-            &z_MSB, 1, TRUE );
+            &y_MSB, 1, TRUE );
 
-   dataToReadBuffer = HMC5883L_REG_Z_LSB;
-   i2cRead( I2C0, HMC5883L_ADD,
+
+   dataToReadBuffer = QMC5883L_REG_Z_LSB;
+   i2cRead( I2C0, QMC5883L_ADD,
             &dataToReadBuffer, 1, TRUE,
             &z_LSB, 1, TRUE );
+
+   dataToReadBuffer = QMC5883L_REG_Z_MSB;
+   i2cRead( I2C0, QMC5883L_ADD,
+            &dataToReadBuffer, 1, TRUE,
+            &z_MSB, 1, TRUE );
 
    *x = x_MSB;
    *x = (*x << 8)|x_LSB;

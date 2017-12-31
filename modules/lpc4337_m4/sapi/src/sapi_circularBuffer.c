@@ -32,7 +32,7 @@
 
 /*==================[inclusions]=============================================*/
 
-#include "sapi_circularBuffer.h"   /* <= own header */
+#include "sapi_circularBuffer.h"   // <= own header
 
 /*==================[macros and definitions]=================================*/
 
@@ -41,6 +41,9 @@
 /*==================[internal functions declaration]=========================*/
 
 /*==================[internal data definition]===============================*/
+
+static bool_t isSetEmptyBufferCallback = FALSE;
+static bool_t isSetFullBufferCallback  = FALSE;
 
 /*==================[external data definition]===============================*/
 
@@ -93,7 +96,7 @@ void circularBuffer_Config(
 }
 
 
-void circularBufferSetEmptyBufferCallback(
+void circularBufferEmptyBufferCallbackSet(
    circularBuffer_t* buffer,              // buffer structure
    callBackFuncPtr_t emptyBufferCallback  // pointer to emptyBuffer function
                                          ){
@@ -101,17 +104,19 @@ void circularBufferSetEmptyBufferCallback(
    // Empty buffer callback
    if( emptyBufferCallback != 0 ){
       buffer->emptyBufferCallback = emptyBufferCallback;
+      isSetEmptyBufferCallback = TRUE;
    }
 }
 
 
-void circularBufferSetFullBufferCallback(
+void circularBufferFullBufferCallbackSet(
    circularBuffer_t* buffer,              // buffer structure
    callBackFuncPtr_t fullBufferCalback    // pointer to fullBuffer function
                                         ){
    // Full buffer callback
    if( fullBufferCalback != 0 ){
       buffer->fullBufferCalback = fullBufferCalback;
+      isSetFullBufferCallback = TRUE;
    }
 }
 
@@ -128,7 +133,7 @@ circularBufferStatus_t circularBufferRead( circularBuffer_t* buffer,
 	   buffer->status = CIRCULAR_BUFFER_EMPTY;
 
 	   // Execute emptyBufferCallback
-	   if( buffer->emptyBufferCallback ){
+	   if( isSetEmptyBufferCallback ){
 		   (* (buffer->emptyBufferCallback) )();
 	   }
 
@@ -162,7 +167,7 @@ circularBufferStatus_t circularBufferWrite( circularBuffer_t* buffer,
 	   buffer->status = CIRCULAR_BUFFER_FULL;
 
 	   // Execute fullBufferCalback
-	   if( buffer->fullBufferCalback ){
+	   if( isSetFullBufferCallback ){
 		   (* (buffer->fullBufferCalback) )();
 	   }
 

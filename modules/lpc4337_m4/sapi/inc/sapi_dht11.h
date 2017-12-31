@@ -1,4 +1,4 @@
-/* Copyright 2017, Agustin Bassi.
+/* Copyright 2017, Sebastian Pablo Bedin <sebabedin@gmail.com>
  * All rights reserved.
  *
  * This file is part sAPI library for microcontrollers.
@@ -31,52 +31,16 @@
  *
  */
 
-/* Date: 2017-30-10 */
+/* Date: 2017-11-23 */
 
-// More information at: 
-// https://groups.google.com/forum/#!msg/embebidos32/tPntHHUSnyE/S3CDyCwXsaMJ
+#ifndef _DHT11_H_
+#define _DHT11_H_
 
-#ifndef _SAPI_CYCLES_COUNTER_H_
-#define _SAPI_CYCLES_COUNTER_H_
+#include "sapi.h"
 
-/*==================[inclusions]=============================================*/
+#define DHT11_GPIO	(GPIO3)
 
-#include "sapi_datatypes.h"
+void 	dht11Config		(void);
+bool_t 	dht11Read		(float *phum, float *ptemp);
 
-/*==================[cplusplus]==============================================*/
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/*==================[macros]=================================================*/
-
-// TODO: Check CPU core speed using SystemCoreClock
-#define EDU_CIAA_NXP_CLOCK_SPEED	204000000
-
-/*==================[typedef]================================================*/
-
-/*==================[external data declaration]==============================*/
-
-/*==================[ISR external functions definition]======================*/
-
-/*==================[external functions definition]==========================*/
-
-bool_t cyclesCounterConfig( uint32_t clockSpeed );
-
-uint32_t cyclesCounterRead( void );
-
-void cyclesCounterReset( void );
-
-float cyclesCounterToUs( uint32_t cycles );
-
-float cyclesCounterToMs( uint32_t cycles );
-
-/*==================[cplusplus]==============================================*/
-
-#ifdef __cplusplus
-}
-#endif
-
-/*==================[end of file]============================================*/
-#endif /* #ifndef _SAPI_CYCLES_COUNTER_H_ */
+#endif /* _DHT11_H_ */

@@ -37,6 +37,7 @@
 
 #include "sapi_delay.h"
 #include "sapi_tick.h"
+#include "sapi_cyclesCounter.h"
 
 /*==================[macros and definitions]=================================*/
 
@@ -81,7 +82,17 @@ void delayInaccurateUs(tick_t delay_us) {
 void delay(tick_t duration){
     tick_t startTime = tickRead();
     while ( (tick_t)(tickRead() - startTime) < duration/tickRateMS );
- }
+}
+
+void delayUs(tick_t delay_us){
+
+   volatile float timeElapsedUs = 0;
+   volatile uint32_t startCycles = cyclesCounterRead();
+
+   while( ((tick_t)timeElapsedUs) < delay_us ){
+	   timeElapsedUs = cyclesCounterToUs( cyclesCounterRead() - startCycles );
+   }
+}
 
 
 /* ---- Non Blocking Delay ---- */

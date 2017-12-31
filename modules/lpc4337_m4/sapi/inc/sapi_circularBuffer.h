@@ -35,7 +35,8 @@
 
 /*==================[inclusions]=============================================*/
 
-#include <stdint.h>
+//#include <stdint.h>
+#include "sapi_datatypes.h"        // data types
 
 /*==================[cplusplus]==============================================*/
 
@@ -45,18 +46,26 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
-#define CIRCULAR_BUFFER_SET_SIZE(val)   ((val)+1)
-
-#define circularBufferNew( buffName, elementSize, amountOfElements );   circularBuffer_t buffName;\
+#define circularBufferNew( buffName, elementSize, amountOfElements )   circularBuffer_t buffName; \
    uint8_t buffName##_BufferMemory[ ((amountOfElements) + 1) * (elementSize) ];
+
+/*
+#define circularBufferNew( buffName, elementsSize, amountOfElements )   uint8_t buffName##_BufferMemory[ ((amountOfElements) + 1) * (elementsSize) ]; \
+   circularBuffer_t buffName = { .memoryAddress    = (buffName##_BufferMemory), \
+                                 .amountOfElements = ((amountOfElements) + 1),  \
+                                 .elementSize      = (elementsSize),            \
+                                 .readIndex        = 0,                         \
+                                 .writeIndex       = 0,                         \
+                                 .status           = CIRCULAR_BUFFER_EMPTY      \
+   }
+ */
+
 
 #define circularBufferUse( buffName );   extern circularBuffer_t buffName;
 
 #define circularBufferConfig( buffName, elementSize, amountOfElements );   circularBuffer_Config( &(buffName), buffName##_BufferMemory, amountOfElements, elementSize );
 
 /*==================[typedef]================================================*/
-
-typedef void (*callBackFuncPtr_t)(void);
 
 typedef enum {
 	CIRCULAR_BUFFER_NORMAL,
@@ -87,12 +96,12 @@ void circularBuffer_Config(
    uint32_t elementSize         // each element size in bytes
                          );
 
-void circularBufferSetEmptyBufferCallback(
+void circularBufferEmptyBufferCallbackSet(
    circularBuffer_t* buffer,              // buffer structure
    callBackFuncPtr_t emptyBufferCallback  // pointer to emptyBuffer function
                                          );
 
-void circularBufferSetFullBufferCallback(
+void circularBufferFullBufferCallbackSet(
    circularBuffer_t* buffer,              // buffer structure
    callBackFuncPtr_t fullBufferCalback    // pointer to fullBuffer function
                                         );
@@ -109,9 +118,12 @@ circularBufferStatus_t circularBufferWrite( circularBuffer_t* buffer,
 
 /*==================[example]==============================================*/
 
-// Before main
 /*
-// EL BUFFER ES DE ITEMS DE A 1 BYTE
+#include "sapi.h"        // <= Biblioteca sAPI
+
+#ifndef UART_DEBUG
+   #define UART_DEBUG UART_USB
+#endif
 
 void emptyBuff( void ){
    uartWriteString( UART_DEBUG, "Buffer vacio.\r\n" );
@@ -121,53 +133,64 @@ void fullBuff( void ){
    uartWriteString( UART_DEBUG, "Buffer lleno.\r\n" );
 }
 
-// Before while(1)
+// FUNCION PRINCIPAL, PUNTO DE ENTRADA AL PROGRAMA LUEGO DE ENCENDIDO O RESET.
+int main( void ){
 
-static uint8_t txData = '1';
-static uint8_t rxData;
+   // ---------- CONFIGURACIONES ------------------------------
 
-# define MY_BUFF_SIZE   CIRCULAR_BUFFER_SET_SIZE(8) // Recordar ingresar tamaño requerido + 1, porque deja un lugar en la cola
+   // Inicializar y configurar la plataforma
+   boardConfig();
 
-uint8_t myBuffMemory[ MY_BUFF_SIZE ];
-circularBuffer_t myBuff;
+   // Inicializar UART_USB como salida de consola
+   consolePrintConfigUart( UART_DEBUG, 115200 );
 
-circularBufferConfig(
-         &(myBuff),
-         myBuffMemory,
-         MY_BUFF_SIZE,
-         emptyBuff, fullBuff
-      );
-*/
 
-// After while(1)
-/*
-if( uartReadByte( UART_DEBUG, &rxData ) ){
+   static uint8_t txData = '1';
+   static uint8_t rxData;
 
-   if( rxData == 'w' ){
-      if( circularBufferWrite( &myBuff, &txData ) == CIRCULAR_BUFFER_NORMAL ){
-         uartWriteString( UART_DEBUG, "guarde un " );
-         uartWriteByte( UART_DEBUG, txData );
-         uartWriteString( UART_DEBUG, " en el buffer.\r\n" );
-         txData++;
-      }
+   // myBuff, buffer name (strcture)
+   // 1, each element size in bytes
+   // 8, amount of elements in buffer
+   circularBufferNew( myBuff, 1, 8 );
+   circularBufferConfig( myBuff, 1, 8 );
 
+   circularBufferSetEmptyBufferCallback( &myBuff,     // buffer structure
+	                                     emptyBuff ); // pointer to emptyBuffer function
+
+   circularBufferSetFullBufferCallback( &myBuff,      // buffer structure
+		                                fullBuff );   // pointer to fullBuffer function
+
+   // ---------- REPETIR POR SIEMPRE --------------------------
+   while( TRUE )
+   {
+	   if( uartReadByte( UART_DEBUG, &rxData ) ){
+
+		  if( rxData == 'w' ){
+			 if( circularBufferWrite( &myBuff, &txData ) == CIRCULAR_BUFFER_NORMAL ){
+				uartWriteString( UART_DEBUG, "guarde un " );
+				uartWriteByte( UART_DEBUG, txData );
+				uartWriteString( UART_DEBUG, " en el buffer.\r\n" );
+				txData++;
+			 }
+
+		  }
+
+		  if( rxData == 'r' ){
+			 if( circularBufferRead( &myBuff, &rxData ) == CIRCULAR_BUFFER_NORMAL ){
+				uartWriteString( UART_DEBUG, "Lei un " );
+				uartWriteByte( UART_DEBUG, rxData );
+				uartWriteString( UART_DEBUG, " del buffer.\r\n" );
+			 }
+		  }
+	   }
+
+	   if(txData > '9')
+		  txData = '1';
    }
 
-   if( rxData == 'r' ){
-      if( circularBufferRead( &myBuff, &rxData ) == CIRCULAR_BUFFER_NORMAL ){
-         uartWriteString( UART_DEBUG, "Lei un " );
-         uartWriteByte( UART_DEBUG, rxData );
-         uartWriteString( UART_DEBUG, " del buffer.\r\n" );
-      }
-   }
+   return 0;
 }
-
-if(txData > '9')
-   txData = '1';
 */
-// -----------------------------------------
-
-
 
 // -----------------------------------------
 

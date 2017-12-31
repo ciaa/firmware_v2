@@ -94,6 +94,8 @@ void adcConfig( adcConfig_t config ){
 
          Chip_ADC_EnableChannel( LPC_ADC0, ADC_CH4, DISABLE );
          Chip_ADC_Int_SetChannelCmd( LPC_ADC0, ADC_CH4, DISABLE );
+
+         // Chip_SCU_ADC_Channel_Config( 0, 4 ); // Pablo Gomez
       }
       break;
 

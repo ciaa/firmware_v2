@@ -64,6 +64,7 @@ char * esp8266GetWifiName      ();
 char * esp8266GetWifiPass      ();
 uint8_t esp8266GetConnectionId ();
 
+void uart232Callback(void);
 
 /*==================[cplusplus]==============================================*/
 
