@@ -57,20 +57,12 @@ static bool_t dht11_TimeOutCheck(void) {
 }
 
 static bool_t dht11_StartRead(void) {
-	uint8_t 	state;
-	bool_t 		flag_loop_end;
-	bool_t 		flag_timeout;
-	bool_t 		flag_error;
-	uint32_t 	n_tick;
-	uint32_t 	n_bit;
-
-	flag_timeout 	= FALSE;
-	flag_error 		= FALSE;
-	flag_loop_end 	= FALSE;
-
-	n_bit 			= 0;
-	n_tick 			= 0;
-	state 			= dht11_state_start;
+	uint8_t  state          = dht11_state_start;
+	bool_t   flag_loop_end	= FALSE;
+	bool_t   flag_timeout   = FALSE;
+	bool_t   flag_error	   = FALSE;
+	uint32_t n_tick         = 0;
+	uint32_t n_bit          = 0;
 
 	dht11_GPIO_Low();
 	delay(20);

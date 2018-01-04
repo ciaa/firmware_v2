@@ -62,98 +62,110 @@ CONSOLE_PRINT_ENABLE
 
 // Caracter personalizado carita feliz :)
 const char smile[8] = {
-	0b00000000,
-	0b00001010,
-	0b00001010,
-	0b00001010,
-	0b00000000,
-	0b00010001,
-	0b00001110,
-	0b00000000,
+   0b00000000,
+   0b00001010,
+   0b00001010,
+   0b00001010,
+   0b00000000,
+   0b00010001,
+   0b00001110,
+   0b00000000,
 };
 
 // Caracter personalizado letra e
 const char e_char[8] = {
-	0b01110,
-	0b10000,
-	0b10000,
-	0b01100,
-	0b01000,
-	0b10000,
-	0b10001,
-	0b01110
+   0b01110,
+   0b10000,
+   0b10000,
+   0b01100,
+   0b01000,
+   0b10000,
+   0b10001,
+   0b01110
 };
 
 // Caracter personalizado letra r
 const char r_char[8] = {
-	0b00000,
-	0b00000,
-	0b00000,
-	0b01110,
-	0b01000,
-	0b01000,
-	0b01000,
-	0b01000
+   0b00000,
+   0b00000,
+   0b00000,
+   0b01110,
+   0b01000,
+   0b01000,
+   0b01000,
+   0b01000
 };
 
 // Caracter personalizado letra i
 const char i_char[8] = {
-	0b00000,
-	0b00100,
-	0b00000,
-	0b00100,
-	0b00100,
-	0b00100,
-	0b00100,
-	0b00110
+   0b00000,
+   0b00100,
+   0b00000,
+   0b00100,
+   0b00100,
+   0b00100,
+   0b00100,
+   0b00110
 };
 
 // Caracter personalizado letra c
 const char c_char[8] = {
-	0b00000,
-	0b00000,
-	0b00000,
-	0b00110,
-	0b01000,
-	0b01000,
-	0b01001,
-	0b00110
+   0b00000,
+   0b00000,
+   0b00000,
+   0b00110,
+   0b01000,
+   0b01000,
+   0b01001,
+   0b00110
 };
 
 //Temperatura - Termometro
 const char tempChar[8] = {
-	0b01110,
-	0b01010,
-	0b01010,
-	0b01110,
-	0b01110,
-	0b11111,
-	0b11111,
-	0b01110
+   0b01110,
+   0b01010,
+   0b01010,
+   0b01110,
+   0b01110,
+   0b10111,
+   0b11111,
+   0b01110
 };
 
 // Humedad - Gota
 const char humChar[8] = { 
-	0b00100,
-	0b00100,
-	0b01110,
-	0b10111,
-	0b10111,
-	0b10011,
-	0b01110,
-	0b00000
+   0b00100,
+   0b00100,
+   0b01110,
+   0b10111,
+   0b10111,
+   0b10011,
+   0b01110,
+   0b00000
 };
 
 // Viento
-const char vieChar[8] = { 
-	0b01000,
-	0b00100,
-	0b10010,
-	0b01001,
-	0b00100,
-	0b10010,
-	0b01000,
-	0b00100
+const char vieChar[8] = {
+   0b00111,
+   0b11100,
+   0b00000,
+   0b00111,
+   0b11100,
+   0b00000,
+   0b00111,
+   0b11100
+};
+
+// Simbolo grados
+const char graChar[8] = { 
+   0b01110,
+   0b01010,
+   0b01110,
+   0b00000,
+   0b00000,
+   0b00000,
+   0b00000,
+   0b00000
 };
 
 
@@ -168,25 +180,28 @@ int main( void ){
    // Inicializar UART_USB como salida de consola
    consolePrintConfigUart( UART_USB, 115200 );
 
+
    // Inicializar LCD de 16x2 (caracteres x lineas) con cada caracter de 5x2 pixeles
    lcdInit( 16, 2, 5, 8 );
 
    // Cargar el caracter a CGRAM
    // El primer parámetro es el código del caracter (0 a 7).
-   // El segundo es el puntero donde se guarda el bitmap (el array declarado anteriormente)
-   lcdCreateChar( 3, e_char );
-   lcdCreateChar( 4, r_char );
-   lcdCreateChar( 5, i_char );
-   lcdCreateChar( 6, c_char );
-   lcdCreateChar( 7, smile );
-
+   // El segundo es el puntero donde se guarda el bitmap (el array declarado
+   // anteriormente)
    lcdCreateChar( 0, tempChar );
    lcdCreateChar( 1, humChar );
    lcdCreateChar( 2, vieChar );
 
-   char tempString[] = "1014";
-   char humString[] = "0495";
-   char vieString[] = "0763";
+   lcdCreateChar( 3, e_char );
+   lcdCreateChar( 4, r_char );
+   lcdCreateChar( 5, i_char );
+   lcdCreateChar( 6, c_char );
+
+   lcdCreateChar( 7, graChar );
+
+   char tempString[] = "25";
+   char humString[] = "50";
+   char vieString[] = "10";
 
    // ---------- REPETIR POR SIEMPRE --------------------------
    while( TRUE )
@@ -195,21 +210,30 @@ int main( void ){
 
       lcdGoToXY( 1, 1 ); // Poner cursor en 1, 1
 
-      lcdSendStringRaw( "Temp" );
+      lcdSendStringRaw( "Tmp" );
       lcdData(0);
+
       lcdSendStringRaw( " Hum" );
       lcdData(1);
-      lcdSendStringRaw( "  Vie" );
+
+      lcdSendStringRaw( " Vie" );
       lcdData(2);
 
       lcdGoToXY( 1, 2 );  // Poner cursor en 1, 2
-      lcdSendStringRaw( tempString );
-      lcdGoToXY( 7, 2 );  // Poner cursor en 7, 2
-      lcdSendStringRaw( humString );
-      lcdGoToXY( 13, 2 ); // Poner cursor en 13, 2
-      lcdSendStringRaw( vieString );
 
-      delay(2000);
+      lcdSendStringRaw( tempString );
+      lcdData(7);
+      lcdSendStringRaw( "C" );
+
+      lcdGoToXY( 6, 2 );  // Poner cursor en 7, 2
+      lcdSendStringRaw( humString );
+      lcdSendStringRaw( "%" );
+
+      lcdGoToXY( 11, 2 ); // Poner cursor en 13, 2
+      lcdSendStringRaw( vieString );
+      lcdSendStringRaw( "km/h" );
+
+      delay(3000);
 
       lcdClear(); // Borrar la pantalla
       lcdGoToXY( 1, 1 ); // Poner cursor en 1, 1
@@ -217,7 +241,6 @@ int main( void ){
       lcdData(4);
       lcdData(5);
       lcdData(6);
-      lcdData(7);
 
       delay(2000);
 

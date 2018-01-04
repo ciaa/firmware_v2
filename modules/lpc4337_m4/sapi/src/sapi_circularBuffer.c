@@ -134,7 +134,7 @@ circularBufferStatus_t circularBufferRead( circularBuffer_t* buffer,
 
 	   // Execute emptyBufferCallback
 	   if( isSetEmptyBufferCallback ){
-		   (* (buffer->emptyBufferCallback) )();
+		   (* (buffer->emptyBufferCallback) )(0);
 	   }
 
 	} else {
@@ -168,7 +168,7 @@ circularBufferStatus_t circularBufferWrite( circularBuffer_t* buffer,
 
 	   // Execute fullBufferCalback
 	   if( isSetFullBufferCallback ){
-		   (* (buffer->fullBufferCalback) )();
+		   (* (buffer->fullBufferCalback) )(0);
 	   }
 
 	} else{

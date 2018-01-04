@@ -56,8 +56,6 @@ extern "C" {
 
 /*==================[typedef]================================================*/
 
-typedef void (*callBackFuncPtr_t)(void);
-
 typedef enum {
 	CIRCULAR_BUFFER_NORMAL,
 	CIRCULAR_BUFFER_EMPTY,

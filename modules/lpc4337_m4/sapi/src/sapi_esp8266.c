@@ -1,5 +1,6 @@
 /* Copyright 2016, Marcelo Vieytes.
- * Copyright 2017, Pablo Gomez, Agustin Bassi.
+ * Copyright 2017, Pablo Gomez - Agustin Bassi.
+ * Copyright 2017, Eric Pernia.
  * All rights reserved.
  *
  * This file is part sAPI library for microcontrollers.
@@ -37,62 +38,62 @@
 /*==================[inlcusiones]============================================*/
 
 #include "sapi_esp8266.h"
-#include "sapi.h"
 
+#include "sapi.h"
 #include <string.h>
 
 /*==================[definiciones y macros]==================================*/
 
 #define ESP8266_UART        UART_232
-#define ESP8266_BAUD_RATE	115200
-#define ESP8266_TMO			5000
-#define ESP8266_PAUSE		5000
-#define ESP8266_WAIT		1000
+#define ESP8266_BAUD_RATE   115200
+#define ESP8266_TMO         5000
+#define ESP8266_PAUSE       5000
+#define ESP8266_WAIT        1000
 
-#define MAX_COMMAND_LENGHT	40
-#define MAX_HTTP_WEB_LENGHT	3000
+#define MAX_COMMAND_LENGHT  40
+#define MAX_HTTP_WEB_LENGHT 10000
 
 typedef enum Esp8266State{
-	ESP_INIT,
-	ESP_SEND_AT,
-	ESP_WAIT_AT,
-	ESP_SEND_CWJAP_CONS,
-	ESP_WAIT_CWJAP_CONS_1,
-	ESP_WAIT_CWJAP_CONS_2,
-	ESP_SEND_CWMODE_SET,
-	ESP_WAIT_CWMODE_SET,
-	ESP_SEND_CWJAP_SET,
-	ESP_WAIT_CWJAP_SET_1,
-	ESP_WAIT_CWJAP_SET_2,
-	ESP_WAIT_CWJAP_SET_3,
-	ESP_CONNECTED,
-	ESP_SEND_START,
-	ESP_WAIT_START_1,
-	ESP_WAIT_START_2,
-	ESP_SEND_SEND,
-	ESP_WAIT_SEND,
-	ESP_SEND_DATA,
-	ESP_WAIT_DATA_1,
-	ESP_WAIT_DATA_2,
-	ESP_CIPMUX_SEND,
-	ESP_WAIT_CIPMUX,
-	ESP_SEND_CIPSERVER,
-	ESP_WAIT_CIPSERVER,
-	ESP_WAIT_GET,
-	ESP_SEND_CIPSTATUS,
-	ESP_WAIT_CIPSTATUS_3,
-	ESP_WAIT_GET_ID,
-	ESP_SEND_CIPSEND,
-	ESP_WAIT_CIPSEND,
-	ESP_SEND_HTTP,
-	ESP_WAIT_HTTP,
-	ESP_WAIT_CIPSTATUS_OK,
-	ESP_WAIT_CIPSTATUS,
-	ESP_SEND_CIPCLOSE,
-	ESP_WAIT_CIPCLOSE,
-	ESP_SEND_CIFSR,
-	ESP_WAIT_CIFSR,
-	ESP_LOAD_IP
+   ESP_INIT,
+   ESP_SEND_AT,
+   ESP_WAIT_AT,
+   ESP_SEND_CWJAP_CONS,
+   ESP_WAIT_CWJAP_CONS_1,
+   ESP_WAIT_CWJAP_CONS_2,
+   ESP_SEND_CWMODE_SET,
+   ESP_WAIT_CWMODE_SET,
+   ESP_SEND_CWJAP_SET,
+   ESP_WAIT_CWJAP_SET_1,
+   ESP_WAIT_CWJAP_SET_2,
+   ESP_WAIT_CWJAP_SET_3,
+   ESP_CONNECTED,
+   ESP_SEND_START,
+   ESP_WAIT_START_1,
+   ESP_WAIT_START_2,
+   ESP_SEND_SEND,
+   ESP_WAIT_SEND,
+   ESP_SEND_DATA,
+   ESP_WAIT_DATA_1,
+   ESP_WAIT_DATA_2,
+   ESP_CIPMUX_SEND,
+   ESP_WAIT_CIPMUX,
+   ESP_SEND_CIPSERVER,
+   ESP_WAIT_CIPSERVER,
+   ESP_WAIT_GET,
+   ESP_SEND_CIPSTATUS,
+   ESP_WAIT_CIPSTATUS_3,
+   ESP_WAIT_GET_ID,
+   ESP_SEND_CIPSEND,
+   ESP_WAIT_CIPSEND,
+   ESP_SEND_HTTP,
+   ESP_WAIT_HTTP,
+   ESP_WAIT_CIPSTATUS_OK,
+   ESP_WAIT_CIPSTATUS,
+   ESP_SEND_CIPCLOSE,
+   ESP_WAIT_CIPCLOSE,
+   ESP_SEND_CIFSR,
+   ESP_WAIT_CIFSR,
+   ESP_LOAD_IP
 
 } Esp8266Status_t;
 
@@ -100,46 +101,46 @@ typedef enum Esp8266State{
 
 //Nombres de los estados en forma de strings para imprimir por pantalla.
 static const char Esp8266StatusToString[][MAX_COMMAND_LENGHT] = {
-		"ESP_INIT",
-		"ESP_SEND_AT",
-		"ESP_WAIT_AT",
-		"ESP_SEND_CWJAP_CONS",
-		"ESP_WAIT_CWJAP_CONS_1",
-		"ESP_WAIT_CWJAP_CONS_2",
-		"ESP_SEND_CWMODE_SET",
-		"ESP_WAIT_CWMODE_SET",
-		"ESP_SEND_CWJAP_SET",
-		"ESP_WAIT_CWJAP_SET_1",
-		"ESP_WAIT_CWJAP_SET_2",
-		"ESP_WAIT_CWJAP_SET_3",
-		"ESP_CONNECTED",
-		"ESP_SEND_START",
-		"ESP_WAIT_START_1",
-		"ESP_WAIT_START_2",
-		"ESP_SEND_SEND",
-		"ESP_WAIT_SEND",
-		"ESP_SEND_DATA",
-		"ESP_WAIT_DATA_1",
-		"ESP_WAIT_DATA_2",
-		"ESP_CIPMUX_SEND",
-		"ESP_WAIT_CIPMUX",
-		"ESP_SEND_CIPSERVER",
-		"ESP_WAIT_CIPSERVER",
-		"ESP_WAIT_GET",
-		"ESP_SEND_CIPSTATUS",
-		"ESP_WAIT_CIPSTATUS_3",
-		"ESP_WAIT_GET_ID",
-		"ESP_SEND_CIPSEND",
-		"ESP_WAIT_CIPSEND",
-		"ESP_SEND_HTTP",
-		"ESP_WAIT_HTTP",
-		"ESP_WAIT_CIPSTATUS_OK",
-		"ESP_WAIT_CIPSTATUS",
-		"ESP_SEND_CIPCLOSE",
-		"ESP_WAIT_CIPCLOSE",
-		"ESP_SEND_CIFSR",
-		"ESP_WAIT_CIFSR",
-		"ESP_LOAD_IP"
+      "ESP_INIT",
+      "ESP_SEND_AT",
+      "ESP_WAIT_AT",
+      "ESP_SEND_CWJAP_CONS",
+      "ESP_WAIT_CWJAP_CONS_1",
+      "ESP_WAIT_CWJAP_CONS_2",
+      "ESP_SEND_CWMODE_SET",
+      "ESP_WAIT_CWMODE_SET",
+      "ESP_SEND_CWJAP_SET",
+      "ESP_WAIT_CWJAP_SET_1",
+      "ESP_WAIT_CWJAP_SET_2",
+      "ESP_WAIT_CWJAP_SET_3",
+      "ESP_CONNECTED",
+      "ESP_SEND_START",
+      "ESP_WAIT_START_1",
+      "ESP_WAIT_START_2",
+      "ESP_SEND_SEND",
+      "ESP_WAIT_SEND",
+      "ESP_SEND_DATA",
+      "ESP_WAIT_DATA_1",
+      "ESP_WAIT_DATA_2",
+      "ESP_CIPMUX_SEND",
+      "ESP_WAIT_CIPMUX",
+      "ESP_SEND_CIPSERVER",
+      "ESP_WAIT_CIPSERVER",
+      "ESP_WAIT_GET",
+      "ESP_SEND_CIPSTATUS",
+      "ESP_WAIT_CIPSTATUS_3",
+      "ESP_WAIT_GET_ID",
+      "ESP_SEND_CIPSEND",
+      "ESP_WAIT_CIPSEND",
+      "ESP_SEND_HTTP",
+      "ESP_WAIT_HTTP",
+      "ESP_WAIT_CIPSTATUS_OK",
+      "ESP_WAIT_CIPSTATUS",
+      "ESP_SEND_CIPCLOSE",
+      "ESP_WAIT_CIPCLOSE",
+      "ESP_SEND_CIFSR",
+      "ESP_WAIT_CIFSR",
+      "ESP_LOAD_IP"
 };
 // Respuestas del ESP8266
 static const char Response_OK[]        = "OK";
@@ -155,7 +156,7 @@ static const char Response_CIFSR[]     = "+CIFSR:STAIP,\"";
 static uint8_t      CurrentConnectionId;
 static char         WifiName [30] = "";
 static char         WifiPass [30] = "";
-static char	        WifiIp   [20];
+static char         WifiIp   [20];
 // Punteros a la pagina web a mostrar
 static char *       PointerOfHttpBody;
 static const char * PointerOfHttpHeader;
@@ -164,25 +165,65 @@ static const char * PointerOfHttpEnd;
 static const char * Esp8266ResponseToWait;
 static delay_t      Esp8266Delay;
 static uint8_t      Esp8266Status = ESP_INIT;
-static uartMap_t	Esp8266DebugUart = UART_485;
-static uint32_t	    Esp8266DebugBaudRate = 0;
+static uartMap_t  Esp8266DebugUart = UART_USB;
+static uint32_t       Esp8266DebugBaudRate = 115200;
 
 /*==================[definiciones de datos externos]=========================*/
 
 /*==================[declaraciones de funciones internas]====================*/
 
-static bool_t 	IsWaitedResponse            (void);
-static void 	SetEsp8622Status            (uint8_t statusToSend);
+static bool_t  IsWaitedResponse            (void);
+static void    SetEsp8622Status            (uint8_t statusToSend);
 static void     ExcecuteHttpServerFsm       (void);
 
 /*==================[declaraciones de funciones externas]====================*/
+
+
+
+#define UART_RX_BUFF_SIZE   512
+
+// rxBuff, buffer name (strcture)
+// 1, each element size in bytes
+// 128, amount of elements in buffer
+circularBufferNew( uartRxBuff, 1, UART_RX_BUFF_SIZE );
+
+void emptyBuff( void* ptr ){
+   //uartWriteString( ESP8266_UART, "\r\nBuffer vacio.\r\n" );
+}
+
+void fullBuff( void* ptr ){
+   uartWriteString( ESP8266_UART, "\r\nUart Buffer lleno. Error, se detiene el programa!!\r\n" );
+   while( TRUE ){
+      sleepUntilNextInterrupt();
+   }
+}
+
+void rxIsrHandler( void* ptr ){
+   uint8_t receivedByte = 0;
+   uartReadByte( ESP8266_UART, &receivedByte );
+   circularBufferWrite( &uartRxBuff, &receivedByte );
+}
+
+// Read 1 byte from Rx Buffer, check first if exist aviable data
+bool_t uartReadByteFromBuffer( uartMap_t uart, uint8_t* receivedByte ){
+   uint8_t byteFromBuffer = 0;
+   circularBufferStatus_t buffStatus = circularBufferRead( &uartRxBuff, &byteFromBuffer );
+   if( buffStatus == CIRCULAR_BUFFER_NORMAL ){
+      *receivedByte = byteFromBuffer;
+      return TRUE;
+   } else{
+      return FALSE;
+   }
+}
+
+
 
 /**
  * Funcion para obtener la direccion IP del modulo Esp8266
  * @return devuelve un puntero al arreglo local donde esta alojado el dato.
  */
 char * esp8266GetIpAddress    (){
-	return WifiIp;
+   return WifiIp;
 }
 
 /**
@@ -190,7 +231,7 @@ char * esp8266GetIpAddress    (){
  * @return devuelve un puntero al arreglo local donde esta alojado el dato.
  */
 char * esp8266GetWifiName     (){
-	return WifiName;
+   return WifiName;
 }
 
 /**
@@ -198,7 +239,7 @@ char * esp8266GetWifiName     (){
  * @return devuelve un puntero al arreglo local donde esta alojado el dato.
  */
 char * esp8266GetWifiPass     (){
-	return WifiPass;
+   return WifiPass;
 }
 
 /**
@@ -206,7 +247,7 @@ char * esp8266GetWifiPass     (){
  * @return un entero correspondiente a
  */
 uint8_t esp8266GetConnectionId (){
-	return CurrentConnectionId - '0';
+   return CurrentConnectionId - '0';
 }
 
 /**
@@ -222,19 +263,19 @@ uint8_t esp8266GetConnectionId (){
 bool_t esp8266ConfigHttpServer(char * wifiName, char * wifiPass, uartMap_t debugUart, uint32_t debugBaudRate){
 static bool_t parametersReceived = FALSE;
 
-	if (!parametersReceived){
-		strcpy(WifiName, wifiName);
-		strcpy(WifiPass, wifiPass);
-		SetEsp8622Status(ESP_INIT);
-		parametersReceived = TRUE;
-		if (debugBaudRate > 0){
-			Esp8266DebugUart     = debugUart;
-			Esp8266DebugBaudRate = debugBaudRate;
-		}
-	}
-	ExcecuteHttpServerFsm();
+   if (!parametersReceived){
+      strcpy(WifiName, wifiName);
+      strcpy(WifiPass, wifiPass);
+      SetEsp8622Status(ESP_INIT);
+      parametersReceived = TRUE;
+      if (debugBaudRate > 0){
+         Esp8266DebugUart     = debugUart;
+         Esp8266DebugBaudRate = debugBaudRate;
+      }
+   }
+   ExcecuteHttpServerFsm();
 
-	return (Esp8266Status == ESP_SEND_CIPSTATUS);
+   return (Esp8266Status == ESP_SEND_CIPSTATUS);
 }
 
 /**
@@ -245,8 +286,8 @@ static bool_t parametersReceived = FALSE;
  * @return TRUE si se recibio una peticion, FALSE caso contrario.
  */
 bool_t esp8266ReadHttpServer  (){
-	ExcecuteHttpServerFsm();
-	return (Esp8266Status == ESP_SEND_CIPSEND);
+   ExcecuteHttpServerFsm();
+   return (Esp8266Status == ESP_SEND_CIPSEND);
 }
 
 /**
@@ -265,15 +306,15 @@ bool_t esp8266ReadHttpServer  (){
  * @return TRUE si pudo mandar la web correctamente, FALSE caso contrario.
  */
 bool_t esp8266WriteHttpServer (const char * webHttpHeader, char * webHttpBody, const char * webHttpEnd){
-	//antes de enviar se asegura que haya datos pendientes para enviar
-	if (Esp8266Status == ESP_SEND_CIPSEND){
-		PointerOfHttpHeader = webHttpHeader;
-		PointerOfHttpBody   = webHttpBody;
-		PointerOfHttpEnd    = webHttpEnd;
-	}
-	ExcecuteHttpServerFsm();
+   //antes de enviar se asegura que haya datos pendientes para enviar
+   if (Esp8266Status == ESP_SEND_CIPSEND){
+      PointerOfHttpHeader = webHttpHeader;
+      PointerOfHttpBody   = webHttpBody;
+      PointerOfHttpEnd    = webHttpEnd;
+   }
+   ExcecuteHttpServerFsm();
 
-	return (Esp8266Status == ESP_SEND_CIPCLOSE);
+   return (Esp8266Status == ESP_SEND_CIPCLOSE);
 }
 
 /*==================[definiciones de funciones internas]=====================*/
@@ -285,328 +326,352 @@ bool_t esp8266WriteHttpServer (const char * webHttpHeader, char * webHttpBody, c
  * Automaticamente cambia de estados en funcion de los eventos que ocurran.
  */
 static void    ExcecuteHttpServerFsm   (void) {
-	uint16_t lenghtOfHttpLines;
-	static uint8_t byteReceived, auxIndex;
+   uint16_t lenghtOfHttpLines;
+   static uint8_t byteReceived, auxIndex;
 
-	switch (Esp8266Status) {
+   switch (Esp8266Status) {
 
-	case ESP_INIT:
-		uartConfig(ESP8266_UART, ESP8266_BAUD_RATE);
-		if (Esp8266DebugBaudRate > 0){
-			uartConfig(Esp8266DebugUart, Esp8266DebugBaudRate);
-		}
-		delayConfig(&Esp8266Delay, ESP8266_PAUSE);
-		SetEsp8622Status(ESP_SEND_AT);
-		break;
+   case ESP_INIT:
+      uartConfig(ESP8266_UART, ESP8266_BAUD_RATE);
+      if (Esp8266DebugBaudRate > 0){
+         uartConfig(Esp8266DebugUart, Esp8266DebugBaudRate);
+      }
 
-	case ESP_SEND_AT:
-		if (delayRead(&Esp8266Delay)) {
-			stdioPrintf(ESP8266_UART, "AT\r\n");
-			Esp8266ResponseToWait = Response_OK;
-			delayConfig(&Esp8266Delay, ESP8266_TMO);
-			SetEsp8622Status(ESP_WAIT_AT);
-		}
-		break;
+      // Prueba de respuesta del modulo
+      stdioPrintf( UART_USB, "\r\nRevisando comunicacion con ESP01...\r\n" );
+      stdioPrintf( ESP8266_UART, "AT\r\n" );
+      if( waitForReceiveStringOrTimeoutBlocking( ESP8266_UART, "AT\r\n", 4, 500 ) ){
+       stdioPrintf( Esp8266DebugUart,
+                 "Modulo conectado Ok.\r\nContinuando con la configuracion...\r\n" );
+      } else{
+       stdioPrintf( Esp8266DebugUart,
+                 "Modulo no encontrado. Revise las conexiones.\r\nSe termina el programa.\r\n" );
+       while(TRUE){
+         sleepUntilNextInterrupt();
+       }
+      }
 
-	case ESP_WAIT_AT:
-		if (IsWaitedResponse()) {
-			delayConfig(&Esp8266Delay, ESP8266_PAUSE);
-			SetEsp8622Status(ESP_SEND_CWJAP_CONS);
-		}
-		//Si no recibe OK vuelve a enviar AT
-		if (delayRead(&Esp8266Delay)) {
-			delayConfig(&Esp8266Delay, ESP8266_PAUSE);
-			SetEsp8622Status(ESP_SEND_AT);
-		}
-		break;
+      circularBufferConfig( uartRxBuff, 1, UART_RX_BUFF_SIZE );
+      circularBufferEmptyBufferCallbackSet( &uartRxBuff, // buffer structure
+                                           emptyBuff );  // pointer to emptyBuffer function
+      circularBufferFullBufferCallbackSet( &uartRxBuff,  // buffer structure
+                                           fullBuff );   // pointer to fullBuffer function
 
-	case ESP_SEND_CWJAP_CONS:
-		if (delayRead(&Esp8266Delay)) {
-			stdioPrintf(ESP8266_UART, "AT+CWJAP?\r\n");
-			Esp8266ResponseToWait = Response_CWJAP_OK;
-			delayConfig(&Esp8266Delay, ESP8266_TMO);
-			SetEsp8622Status(ESP_WAIT_CWJAP_CONS_1);
-		}
-		break;
+      uartRxInterruptCallbackSet( ESP8266_UART, rxIsrHandler );
+      uartRxInterruptSet( ESP8266_UART, ON );
 
-	case ESP_WAIT_CWJAP_CONS_1:
-		if (IsWaitedResponse()) {
-			Esp8266ResponseToWait = Response_OK;
-			SetEsp8622Status(ESP_WAIT_CWJAP_CONS_2);
-		}
-		if (delayRead(&Esp8266Delay)) {
-			delayConfig(&Esp8266Delay, ESP8266_PAUSE);
-			SetEsp8622Status(ESP_SEND_CWMODE_SET);
-		}
-		break;
+      delayConfig(&Esp8266Delay, ESP8266_PAUSE);
+      SetEsp8622Status(ESP_SEND_AT);
+      break;
 
-	case ESP_WAIT_CWJAP_CONS_2:
-		if (IsWaitedResponse()){
-			delayConfig(&Esp8266Delay, ESP8266_PAUSE);
-			SetEsp8622Status(ESP_CIPMUX_SEND);
-		}
-		if (delayRead(&Esp8266Delay)) {
-			delayConfig(&Esp8266Delay, ESP8266_PAUSE);
-			SetEsp8622Status(ESP_SEND_AT);
-		}
-		break;
+   case ESP_SEND_AT:
+      if (delayRead(&Esp8266Delay)) {
+         stdioPrintf(ESP8266_UART, "AT\r\n");
+         Esp8266ResponseToWait = Response_OK;
+         delayConfig(&Esp8266Delay, ESP8266_TMO);
+         SetEsp8622Status(ESP_WAIT_AT);
+      }
+      break;
 
-	case ESP_SEND_CWMODE_SET:
-		if (delayRead(&Esp8266Delay)) {
-			stdioPrintf(ESP8266_UART, "AT+CWMODE=3\r\n");
-			Esp8266ResponseToWait = Response_OK;
-			delayConfig(&Esp8266Delay, ESP8266_TMO);
-			SetEsp8622Status(ESP_WAIT_CWMODE_SET);
-		}
-		break;
+   case ESP_WAIT_AT:
+      if (IsWaitedResponse()) {
+         delayConfig(&Esp8266Delay, ESP8266_PAUSE);
+         SetEsp8622Status(ESP_SEND_CWJAP_CONS);
+      }
+      //Si no recibe OK vuelve a enviar AT
+      if (delayRead(&Esp8266Delay)) {
+         delayConfig(&Esp8266Delay, ESP8266_PAUSE);
+         SetEsp8622Status(ESP_SEND_AT);
+      }
+      break;
 
-	case ESP_WAIT_CWMODE_SET:
-		if (IsWaitedResponse()) {
-			delayConfig(&Esp8266Delay, ESP8266_PAUSE);
-			SetEsp8622Status(ESP_SEND_CWJAP_SET);
-		}
-		if (delayRead(&Esp8266Delay)) {
-			delayConfig(&Esp8266Delay, ESP8266_PAUSE);
-			SetEsp8622Status(ESP_SEND_AT);
-		}
-		break;
+   case ESP_SEND_CWJAP_CONS:
+      if (delayRead(&Esp8266Delay)) {
+         stdioPrintf(ESP8266_UART, "AT+CWJAP?\r\n");
+         Esp8266ResponseToWait = Response_CWJAP_OK;
+         delayConfig(&Esp8266Delay, ESP8266_TMO);
+         SetEsp8622Status(ESP_WAIT_CWJAP_CONS_1);
+      }
+      break;
 
-	case ESP_SEND_CWJAP_SET:
-		if (delayRead(&Esp8266Delay)) {
-			stdioPrintf(ESP8266_UART, "AT+CWJAP=\"%s\",\"%s\"", WifiName, WifiPass);
-			Esp8266ResponseToWait = Response_CWJAP_1;
-			delayConfig(&Esp8266Delay, ESP8266_TMO);
-			SetEsp8622Status(ESP_WAIT_CWJAP_SET_1);
-		}
-		break;
+   case ESP_WAIT_CWJAP_CONS_1:
+      if (IsWaitedResponse()) {
+         Esp8266ResponseToWait = Response_OK;
+         SetEsp8622Status(ESP_WAIT_CWJAP_CONS_2);
+      }
+      if (delayRead(&Esp8266Delay)) {
+         delayConfig(&Esp8266Delay, ESP8266_PAUSE);
+         SetEsp8622Status(ESP_SEND_CWMODE_SET);
+      }
+      break;
 
-	case ESP_WAIT_CWJAP_SET_1:
-		if (IsWaitedResponse()) {
-			Esp8266ResponseToWait = Response_CWJAP_2;
-			SetEsp8622Status(ESP_WAIT_CWJAP_SET_2);
-		}
-		if (delayRead(&Esp8266Delay)) {
-			delayConfig(&Esp8266Delay, ESP8266_PAUSE);
-			SetEsp8622Status(ESP_SEND_AT);
-		}
-		break;
+   case ESP_WAIT_CWJAP_CONS_2:
+      if (IsWaitedResponse()){
+         delayConfig(&Esp8266Delay, ESP8266_PAUSE);
+         SetEsp8622Status(ESP_CIPMUX_SEND);
+      }
+      if (delayRead(&Esp8266Delay)) {
+         delayConfig(&Esp8266Delay, ESP8266_PAUSE);
+         SetEsp8622Status(ESP_SEND_AT);
+      }
+      break;
 
-	case ESP_WAIT_CWJAP_SET_2:
-		if (IsWaitedResponse()) {
-			Esp8266ResponseToWait = Response_OK;
-			SetEsp8622Status(ESP_WAIT_CWJAP_SET_3);
-		}
-		if (delayRead(&Esp8266Delay)) {
-			delayConfig(&Esp8266Delay, ESP8266_PAUSE);
-			SetEsp8622Status(ESP_SEND_AT);
-		}
-		break;
+   case ESP_SEND_CWMODE_SET:
+      if (delayRead(&Esp8266Delay)) {
+         stdioPrintf(ESP8266_UART, "AT+CWMODE=3\r\n");
+         Esp8266ResponseToWait = Response_OK;
+         delayConfig(&Esp8266Delay, ESP8266_TMO);
+         SetEsp8622Status(ESP_WAIT_CWMODE_SET);
+      }
+      break;
 
-	case ESP_WAIT_CWJAP_SET_3:
-		if (IsWaitedResponse())
-			SetEsp8622Status(ESP_CIPMUX_SEND);
-		if (delayRead(&Esp8266Delay)) {
-			delayConfig(&Esp8266Delay, ESP8266_PAUSE);
-			SetEsp8622Status(ESP_SEND_AT);
-		}
-		break;
+   case ESP_WAIT_CWMODE_SET:
+      if (IsWaitedResponse()) {
+         delayConfig(&Esp8266Delay, ESP8266_PAUSE);
+         SetEsp8622Status(ESP_SEND_CWJAP_SET);
+      }
+      if (delayRead(&Esp8266Delay)) {
+         delayConfig(&Esp8266Delay, ESP8266_PAUSE);
+         SetEsp8622Status(ESP_SEND_AT);
+      }
+      break;
 
-	case ESP_CIPMUX_SEND:
-		if (delayRead(&Esp8266Delay)) {
-			stdioPrintf(ESP8266_UART, "AT+CIPMUX=1\r\n");
-			Esp8266ResponseToWait = Response_OK;
-			delayConfig(&Esp8266Delay, ESP8266_TMO);
-			SetEsp8622Status(ESP_WAIT_CIPMUX);
-			auxIndex=0;
-		}
-		break;
+   case ESP_SEND_CWJAP_SET:
+      if (delayRead(&Esp8266Delay)) {
+         stdioPrintf(ESP8266_UART, "AT+CWJAP=\"%s\",\"%s\"", WifiName, WifiPass);
+         Esp8266ResponseToWait = Response_CWJAP_1;
+         delayConfig(&Esp8266Delay, ESP8266_TMO);
+         SetEsp8622Status(ESP_WAIT_CWJAP_SET_1);
+      }
+      break;
 
-	case ESP_WAIT_CIPMUX:
-		if (IsWaitedResponse()) {
-			delayConfig(&Esp8266Delay, ESP8266_PAUSE);
-			SetEsp8622Status(ESP_SEND_CIPSERVER);
-		}
-		if (delayRead(&Esp8266Delay)) {
-			delayConfig(&Esp8266Delay, ESP8266_PAUSE);
-			// cierra todas las posibles conexioes
-			stdioPrintf(ESP8266_UART, "AT+CIPCLOSE=%d\r\n", auxIndex);
-			if (++auxIndex >= 4){
-				SetEsp8622Status(ESP_CIPMUX_SEND);
-			}
-		}
-		break;
+   case ESP_WAIT_CWJAP_SET_1:
+      if (IsWaitedResponse()) {
+         Esp8266ResponseToWait = Response_CWJAP_2;
+         SetEsp8622Status(ESP_WAIT_CWJAP_SET_2);
+      }
+      if (delayRead(&Esp8266Delay)) {
+         delayConfig(&Esp8266Delay, ESP8266_PAUSE);
+         SetEsp8622Status(ESP_SEND_AT);
+      }
+      break;
 
-	case ESP_SEND_CIPSERVER:
-		if (delayRead(&Esp8266Delay)) {
-			stdioPrintf(ESP8266_UART, "AT+CIPSERVER=1,80\r\n");
-			Esp8266ResponseToWait = Response_OK;
-			delayConfig(&Esp8266Delay, ESP8266_TMO);
-			SetEsp8622Status(ESP_WAIT_CIPSERVER);
-		}
-		break;
+   case ESP_WAIT_CWJAP_SET_2:
+      if (IsWaitedResponse()) {
+         Esp8266ResponseToWait = Response_OK;
+         SetEsp8622Status(ESP_WAIT_CWJAP_SET_3);
+      }
+      if (delayRead(&Esp8266Delay)) {
+         delayConfig(&Esp8266Delay, ESP8266_PAUSE);
+         SetEsp8622Status(ESP_SEND_AT);
+      }
+      break;
 
-	case ESP_WAIT_CIPSERVER:
-		if (IsWaitedResponse()) {
-			delayConfig(&Esp8266Delay, ESP8266_PAUSE);
-			SetEsp8622Status(ESP_SEND_CIFSR);
-		}
-		if (delayRead(&Esp8266Delay)) {
-			delayConfig(&Esp8266Delay, ESP8266_PAUSE);
-			SetEsp8622Status(ESP_SEND_AT);
-		}
-		break;
+   case ESP_WAIT_CWJAP_SET_3:
+      if (IsWaitedResponse())
+         SetEsp8622Status(ESP_CIPMUX_SEND);
+      if (delayRead(&Esp8266Delay)) {
+         delayConfig(&Esp8266Delay, ESP8266_PAUSE);
+         SetEsp8622Status(ESP_SEND_AT);
+      }
+      break;
 
-	case ESP_SEND_CIFSR:
-		if (delayRead(&Esp8266Delay)) {
-			stdioPrintf(ESP8266_UART, "AT+CIFSR\r\n");
-			Esp8266ResponseToWait = Response_CIFSR;
-			delayConfig(&Esp8266Delay, ESP8266_PAUSE);
-			SetEsp8622Status(ESP_WAIT_CIFSR);
-		}
-		break;
+   case ESP_CIPMUX_SEND:
+      if (delayRead(&Esp8266Delay)) {
+         stdioPrintf(ESP8266_UART, "AT+CIPMUX=1\r\n");
+         Esp8266ResponseToWait = Response_OK;
+         delayConfig(&Esp8266Delay, ESP8266_TMO);
+         SetEsp8622Status(ESP_WAIT_CIPMUX);
+         auxIndex=0;
+      }
+      break;
 
-	case ESP_WAIT_CIFSR:
-		if (IsWaitedResponse()) {
-			SetEsp8622Status(ESP_LOAD_IP);
-			auxIndex=0;
-		}
-		if (delayRead(&Esp8266Delay)) {
-			delayConfig(&Esp8266Delay, ESP8266_PAUSE);
-			SetEsp8622Status(ESP_SEND_CIFSR);
-		}
-		break;
+   case ESP_WAIT_CIPMUX:
+      if (IsWaitedResponse()) {
+         delayConfig(&Esp8266Delay, ESP8266_PAUSE);
+         SetEsp8622Status(ESP_SEND_CIPSERVER);
+      }
+      if (delayRead(&Esp8266Delay)) {
+         delayConfig(&Esp8266Delay, ESP8266_PAUSE);
+         // cierra todas las posibles conexioes
+         stdioPrintf(ESP8266_UART, "AT+CIPCLOSE=%d\r\n", auxIndex);
+         if (++auxIndex >= 4){
+            SetEsp8622Status(ESP_CIPMUX_SEND);
+         }
+      }
+      break;
 
-		//Recibe byte a byte la direccion IP y la almacena en WifiIp
-	case ESP_LOAD_IP:
-		if (uartReadByte(ESP8266_UART, &byteReceived)) {
-			if (byteReceived != '"') {
-				WifiIp [auxIndex] = byteReceived;
-				auxIndex++;
-			} else {
-				WifiIp [auxIndex] = '\0';
-				SetEsp8622Status(ESP_SEND_CIPSTATUS);
-			}
-		}
-		break;
+   case ESP_SEND_CIPSERVER:
+      if (delayRead(&Esp8266Delay)) {
+         stdioPrintf(ESP8266_UART, "AT+CIPSERVER=1,80\r\n");
+         Esp8266ResponseToWait = Response_OK;
+         delayConfig(&Esp8266Delay, ESP8266_TMO);
+         SetEsp8622Status(ESP_WAIT_CIPSERVER);
+      }
+      break;
 
-		// En este estado el modulo ya esta configurado como servidor HTTP
-		// entonces cada vez que pasa el delay ESP8266_PAUSE mediante
-		// el compando CIP_STATUS le pregunta al moduloWifi si hay una nueva peticion
-	case ESP_SEND_CIPSTATUS:
-		if (delayRead(&Esp8266Delay)) {
-			stdioPrintf(ESP8266_UART, "AT+CIPSTATUS\r\n");
-			Esp8266ResponseToWait = Response_STATUS_3;
-			delayConfig(&Esp8266Delay, ESP8266_PAUSE);
-			SetEsp8622Status(ESP_WAIT_CIPSTATUS_3);
-		}
-		break;
+   case ESP_WAIT_CIPSERVER:
+      if (IsWaitedResponse()) {
+         delayConfig(&Esp8266Delay, ESP8266_PAUSE);
+         SetEsp8622Status(ESP_SEND_CIFSR);
+      }
+      if (delayRead(&Esp8266Delay)) {
+         delayConfig(&Esp8266Delay, ESP8266_PAUSE);
+         SetEsp8622Status(ESP_SEND_AT);
+      }
+      break;
 
-	case ESP_WAIT_CIPSTATUS_3:
-		if (IsWaitedResponse()) {
-			delayConfig(&Esp8266Delay, ESP8266_PAUSE);
-			Esp8266ResponseToWait = Response_CIPSTATUS;
-			SetEsp8622Status(ESP_WAIT_CIPSTATUS);
-		}
-		if (delayRead(&Esp8266Delay)) {
-			delayConfig(&Esp8266Delay, ESP8266_PAUSE);
-			SetEsp8622Status(ESP_SEND_CIPSTATUS);
-		}
-		break;
+   case ESP_SEND_CIFSR:
+      if (delayRead(&Esp8266Delay)) {
+         stdioPrintf(ESP8266_UART, "AT+CIFSR\r\n");
+         Esp8266ResponseToWait = Response_CIFSR;
+         delayConfig(&Esp8266Delay, ESP8266_PAUSE);
+         SetEsp8622Status(ESP_WAIT_CIFSR);
+      }
+      break;
 
-	case ESP_WAIT_CIPSTATUS:
-		if (IsWaitedResponse()){
-			SetEsp8622Status(ESP_WAIT_GET_ID);
-		}
-		if (delayRead(&Esp8266Delay)) {
-			delayConfig(&Esp8266Delay, ESP8266_PAUSE);
-			SetEsp8622Status(ESP_SEND_CIPSTATUS);
-		}
-		break;
+   case ESP_WAIT_CIFSR:
+      if (IsWaitedResponse()) {
+         SetEsp8622Status(ESP_LOAD_IP);
+         auxIndex=0;
+      }
+      if (delayRead(&Esp8266Delay)) {
+         delayConfig(&Esp8266Delay, ESP8266_PAUSE);
+         SetEsp8622Status(ESP_SEND_CIFSR);
+      }
+      break;
 
-	case ESP_WAIT_GET_ID:
-		if (uartReadByte(ESP8266_UART, &byteReceived)) {
-			CurrentConnectionId = byteReceived;
-			Esp8266ResponseToWait = Response_OK;
-			SetEsp8622Status(ESP_WAIT_CIPSTATUS_OK);
-			auxIndex = 0;
-		}
-		break;
+      //Recibe byte a byte la direccion IP y la almacena en WifiIp
+   case ESP_LOAD_IP:
+      if (uartReadByteFromBuffer(ESP8266_UART, &byteReceived)) {
+         if (byteReceived != '"') {
+            WifiIp [auxIndex] = byteReceived;
+            auxIndex++;
+         } else {
+            WifiIp [auxIndex] = '\0';
+            SetEsp8622Status(ESP_SEND_CIPSTATUS);
+         }
+      }
+      break;
 
-	case ESP_WAIT_CIPSTATUS_OK:
-		if (IsWaitedResponse()){
-			SetEsp8622Status(ESP_SEND_CIPSEND);
-		}
-		if (delayRead(&Esp8266Delay)) {
-			delayConfig(&Esp8266Delay, ESP8266_PAUSE);
-			SetEsp8622Status(ESP_SEND_CIPSTATUS);
-		}
-		break;
+      // En este estado el modulo ya esta configurado como servidor HTTP
+      // entonces cada vez que pasa el delay ESP8266_PAUSE mediante
+      // el compando CIP_STATUS le pregunta al moduloWifi si hay una nueva peticion
+   case ESP_SEND_CIPSTATUS:
+      if (delayRead(&Esp8266Delay)) {
+         stdioPrintf(ESP8266_UART, "AT+CIPSTATUS\r\n");
+         Esp8266ResponseToWait = Response_STATUS_3;
+         delayConfig(&Esp8266Delay, ESP8266_PAUSE);
+         SetEsp8622Status(ESP_WAIT_CIPSTATUS_3);
+      }
+      break;
 
-		//En este estado le dice al modulo cuantos bytes va a mandar
-		// El comando esta compuesto por el comando CIPSEND, mas el ID
-		// de la conexion abierta, mas la cantidad en ASCII de los bytes
-		// que tiene la pagina web (o al menos los bytes de la primer linea).
-	case ESP_SEND_CIPSEND:
+   case ESP_WAIT_CIPSTATUS_3:
+      if (IsWaitedResponse()) {
+         delayConfig(&Esp8266Delay, ESP8266_PAUSE);
+         Esp8266ResponseToWait = Response_CIPSTATUS;
+         SetEsp8622Status(ESP_WAIT_CIPSTATUS);
+      }
+      if (delayRead(&Esp8266Delay)) {
+         delayConfig(&Esp8266Delay, ESP8266_PAUSE);
+         SetEsp8622Status(ESP_SEND_CIPSTATUS);
+      }
+      break;
 
-		lenghtOfHttpLines = (strlen(PointerOfHttpHeader) + strlen(PointerOfHttpBody) + strlen(PointerOfHttpEnd));
-		// Si se pasa del maximo largo permitido lo avisa en la web
-		if (lenghtOfHttpLines >= MAX_HTTP_WEB_LENGHT){
-			stdioSprintf(PointerOfHttpBody, "ERROR: La longitud de datos HTTP supera el maximo permitido de %d bytes.", MAX_HTTP_WEB_LENGHT);
-			lenghtOfHttpLines = (strlen(PointerOfHttpHeader) + strlen(PointerOfHttpBody) + strlen(PointerOfHttpEnd));
-		}
-		stdioPrintf(ESP8266_UART, "AT+CIPSEND=%c,%d\r\n", CurrentConnectionId, lenghtOfHttpLines);
-		SetEsp8622Status(ESP_WAIT_CIPSEND);
-		Esp8266ResponseToWait = Response_OK;
-		break;
+   case ESP_WAIT_CIPSTATUS:
+      if (IsWaitedResponse()){
+         SetEsp8622Status(ESP_WAIT_GET_ID);
+      }
+      if (delayRead(&Esp8266Delay)) {
+         delayConfig(&Esp8266Delay, ESP8266_PAUSE);
+         SetEsp8622Status(ESP_SEND_CIPSTATUS);
+      }
+      break;
 
-	case ESP_WAIT_CIPSEND:
-		if (IsWaitedResponse()) {
-			delayConfig(&Esp8266Delay, ESP8266_PAUSE);
-			SetEsp8622Status(ESP_SEND_HTTP);
-		}
-		if (delayRead(&Esp8266Delay)) {
-			delayConfig(&Esp8266Delay, ESP8266_PAUSE);
-			SetEsp8622Status(ESP_SEND_CIPSTATUS);
-		}
-		break;
+   case ESP_WAIT_GET_ID:
+      if (uartReadByteFromBuffer(ESP8266_UART, &byteReceived)) {
+         CurrentConnectionId = byteReceived;
+         Esp8266ResponseToWait = Response_OK;
+         SetEsp8622Status(ESP_WAIT_CIPSTATUS_OK);
+         auxIndex = 0;
+      }
+      break;
 
-	case ESP_SEND_HTTP:
-		stdioPrintf(ESP8266_UART, "%s%s%s", PointerOfHttpHeader, PointerOfHttpBody, PointerOfHttpEnd);
-		SetEsp8622Status(ESP_WAIT_HTTP);
-		Esp8266ResponseToWait = Response_SEND_OK;
-		break;
+   case ESP_WAIT_CIPSTATUS_OK:
+      if (IsWaitedResponse()){
+         SetEsp8622Status(ESP_SEND_CIPSEND);
+      }
+      if (delayRead(&Esp8266Delay)) {
+         delayConfig(&Esp8266Delay, ESP8266_PAUSE);
+         SetEsp8622Status(ESP_SEND_CIPSTATUS);
+      }
+      break;
 
-	case ESP_WAIT_HTTP:
-		if (IsWaitedResponse()) {
-			delayConfig(&Esp8266Delay, ESP8266_PAUSE);
-			SetEsp8622Status(ESP_SEND_CIPCLOSE);
-		}
-		if (delayRead(&Esp8266Delay)) {
-			delayConfig(&Esp8266Delay, ESP8266_PAUSE);
-			SetEsp8622Status(ESP_SEND_CIPSEND);
-		}
-		break;
+      //En este estado le dice al modulo cuantos bytes va a mandar
+      // El comando esta compuesto por el comando CIPSEND, mas el ID
+      // de la conexion abierta, mas la cantidad en ASCII de los bytes
+      // que tiene la pagina web (o al menos los bytes de la primer linea).
+   case ESP_SEND_CIPSEND:
 
-	case ESP_SEND_CIPCLOSE:
-		if (delayRead(&Esp8266Delay)) {
-			stdioPrintf(ESP8266_UART, "AT+CIPCLOSE=%c\r\n", CurrentConnectionId);
-			Esp8266ResponseToWait  = Response_CIPCLOSE;
-			delayConfig(&Esp8266Delay, ESP8266_PAUSE);
-			SetEsp8622Status(ESP_WAIT_CIPCLOSE);
-		}
-		break;
+      lenghtOfHttpLines = (strlen(PointerOfHttpHeader) + strlen(PointerOfHttpBody) + strlen(PointerOfHttpEnd));
+      // Si se pasa del maximo largo permitido lo avisa en la web
+      if (lenghtOfHttpLines >= MAX_HTTP_WEB_LENGHT){
+         stdioSprintf(PointerOfHttpBody, "ERROR: La longitud de datos HTTP supera el maximo permitido de %d bytes.", MAX_HTTP_WEB_LENGHT);
+         lenghtOfHttpLines = (strlen(PointerOfHttpHeader) + strlen(PointerOfHttpBody) + strlen(PointerOfHttpEnd));
+      }
+      stdioPrintf(ESP8266_UART, "AT+CIPSEND=%c,%d\r\n", CurrentConnectionId, lenghtOfHttpLines);
+      SetEsp8622Status(ESP_WAIT_CIPSEND);
+      Esp8266ResponseToWait = Response_OK;
+      break;
 
-	case ESP_WAIT_CIPCLOSE:
-		if (IsWaitedResponse()) {
-			delayConfig(&Esp8266Delay, ESP8266_PAUSE);
-			SetEsp8622Status(ESP_SEND_CIPSTATUS);
-		}
-		if (delayRead(&Esp8266Delay)) {
-			delayConfig(&Esp8266Delay, ESP8266_PAUSE);
-			SetEsp8622Status(ESP_SEND_CIPSTATUS);
-		}
-		break;
-	}
+   case ESP_WAIT_CIPSEND:
+      if (IsWaitedResponse()) {
+         delayConfig(&Esp8266Delay, ESP8266_PAUSE);
+         SetEsp8622Status(ESP_SEND_HTTP);
+      }
+      if (delayRead(&Esp8266Delay)) {
+         delayConfig(&Esp8266Delay, ESP8266_PAUSE);
+         SetEsp8622Status(ESP_SEND_CIPSTATUS);
+      }
+      break;
+
+   case ESP_SEND_HTTP:
+      stdioPrintf(ESP8266_UART, "%s%s%s", PointerOfHttpHeader, PointerOfHttpBody, PointerOfHttpEnd);
+      SetEsp8622Status(ESP_WAIT_HTTP);
+      Esp8266ResponseToWait = Response_SEND_OK;
+      break;
+
+   case ESP_WAIT_HTTP:
+      if (IsWaitedResponse()) {
+         delayConfig(&Esp8266Delay, ESP8266_PAUSE);
+         SetEsp8622Status(ESP_SEND_CIPCLOSE);
+      }
+      if (delayRead(&Esp8266Delay)) {
+         delayConfig(&Esp8266Delay, ESP8266_PAUSE);
+         SetEsp8622Status(ESP_SEND_CIPSEND);
+      }
+      break;
+
+   case ESP_SEND_CIPCLOSE:
+      if (delayRead(&Esp8266Delay)) {
+         stdioPrintf(ESP8266_UART, "AT+CIPCLOSE=%c\r\n", CurrentConnectionId);
+         Esp8266ResponseToWait  = Response_CIPCLOSE;
+         delayConfig(&Esp8266Delay, ESP8266_PAUSE);
+         SetEsp8622Status(ESP_WAIT_CIPCLOSE);
+      }
+      break;
+
+   case ESP_WAIT_CIPCLOSE:
+      if (IsWaitedResponse()) {
+         delayConfig(&Esp8266Delay, ESP8266_PAUSE);
+         SetEsp8622Status(ESP_SEND_CIPSTATUS);
+      }
+      if (delayRead(&Esp8266Delay)) {
+         delayConfig(&Esp8266Delay, ESP8266_PAUSE);
+         SetEsp8622Status(ESP_SEND_CIPSTATUS);
+      }
+      break;
+   }
 }
 
 /**
@@ -616,29 +681,29 @@ static void    ExcecuteHttpServerFsm   (void) {
  * al modulo Esp8266 hasta encontrar el patron de datos necesario.
  * @return TRUE si es la respuesta esperada, FALSE caso contrario.
  */
-static bool_t  IsWaitedResponse        (void) {
+static bool_t IsWaitedResponse( void ) {
 static uint8_t index = 0;
 uint8_t byteReceived;
 bool_t moduleResponse = FALSE;
 
-	if (uartReadByte(ESP8266_UART, &byteReceived)) {
-		if (Esp8266DebugBaudRate > 0){
-			stdioPrintf(Esp8266DebugUart, "%c", byteReceived);
-		}
-		if (byteReceived == Esp8266ResponseToWait[index]) {
-			index++;
-			if (Esp8266ResponseToWait[index] == '\0') {
-				index = 0;
-				moduleResponse = TRUE;
-				if (Esp8266DebugBaudRate > 0){
-					stdioPrintf(Esp8266DebugUart, "\n\r", byteReceived);
-				}
-			}
-		} else {
-			index = 0;
-		}
-	}
-	return moduleResponse;
+   if (uartReadByteFromBuffer(ESP8266_UART, &byteReceived)) {
+      if (Esp8266DebugBaudRate > 0){
+         stdioPrintf(Esp8266DebugUart, "%c", byteReceived);
+      }
+      if (byteReceived == Esp8266ResponseToWait[index]) {
+         index++;
+         if (Esp8266ResponseToWait[index] == '\0') {
+            index = 0;
+            moduleResponse = TRUE;
+            if (Esp8266DebugBaudRate > 0){
+               stdioPrintf(Esp8266DebugUart, "\n\r", byteReceived);
+            }
+         }
+      } else {
+         index = 0;
+      }
+   }
+   return moduleResponse;
 }
 
 /**
@@ -646,10 +711,10 @@ bool_t moduleResponse = FALSE;
  * @param status Estado a setear.
  */
 static void    SetEsp8622Status        (Esp8266Status_t status) {
-	Esp8266Status = status;
-	if (Esp8266DebugBaudRate > 0){
-//		stdioPrintf(Esp8266DebugUart, "\n\rESP8266 State = %s\n\r", Esp8266StatusToString[status]);
-	}
+   Esp8266Status = status;
+   if (Esp8266DebugBaudRate > 0){
+//    stdioPrintf(Esp8266DebugUart, "\n\rESP8266 State = %s\n\r", Esp8266StatusToString[status]);
+   }
 }
 
 /*==================[fin del archivo]========================================*/

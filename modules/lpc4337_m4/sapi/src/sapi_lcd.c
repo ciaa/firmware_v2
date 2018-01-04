@@ -174,6 +174,7 @@ void lcdCreateChar( uint8_t charnum, const char* chardata )
 	for (i = 0; i < 8; i++){
 		lcdData( chardata[i] );
 	}
+   delay(1);
 }
 
 

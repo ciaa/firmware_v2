@@ -52,7 +52,7 @@ bool_t qmc5883lPrepareDefaultConfig( QMC5883L_config_t * config ){
 
 bool_t qmc5883lConfig( QMC5883L_config_t config ){
 
-   uint8_t register1, register2, registerMode;
+   uint8_t register1;//, register2, registerMode;
 
    uint8_t transmitDataBuffer[2];
    

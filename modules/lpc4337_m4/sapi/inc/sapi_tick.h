@@ -1,4 +1,4 @@
-/* Copyright 2015-2016, Eric Pernia.
+/* Copyright 2015-2017, Eric Pernia.
  * All rights reserved.
  *
  * This file is part sAPI library for microcontrollers.
@@ -48,6 +48,8 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
+#define tickConfig tickInit
+
 /*==================[typedef]================================================*/
 
 /*==================[external data declaration]==============================*/
@@ -56,15 +58,24 @@ extern "C" {
 
 /*==================[external functions definition]==========================*/
 
-bool_t tickConfig( tick_t tickRateMS, sAPI_FuncPtr_t tickHook );
+// Tick Initialization and rate configuration from 1 to 50 ms
+bool_t tickInit( tick_t tickRateMSvalue );
 
+// Read Tick Counter
 tick_t tickRead( void );
 
+// Write Tick Counter
 void tickWrite( tick_t ticks );
+
+// Tick interrupt callback
+bool_t tickCallbackSet( callBackFuncPtr_t tickCallback, void* tickCallbackParams );
+
+// Enable or disable the peripheral energy and clock
+void tickPowerSet( bool_t power );
 
 /*==================[ISR external functions declaration]======================*/
 
-/* SysTick Timer ISR Handler */
+// SysTick Timer ISR Handler
 void SysTick_Handler(void);
 
 /*==================[cplusplus]==============================================*/

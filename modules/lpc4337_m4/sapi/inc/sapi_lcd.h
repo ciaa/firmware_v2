@@ -64,11 +64,11 @@ extern "C" {
 #define LCD_HIGH_WAIT_US       100   // 100 us
 
 #define LCD_CMD_WAIT_US        45    // Wait time for every command 45 us, except:
-#define LCD_CLR_DISP_WAIT_MS   2     // - Clear Display 1.52 ms
-#define LCD_RET_HOME_WAIT_MS   2     // - Return Home  1.52 ms
-									 // - Read Busy flag and address 0 us
+#define LCD_CLR_DISP_WAIT_MS   3     // - Clear Display 1.52 ms
+#define LCD_RET_HOME_WAIT_MS   3     // - Return Home  1.52 ms
+                                     // - Read Busy flag and address 0 us
 
-#define LCD_STARTUP_WAIT_MS    3000  // 3000 ms
+#define LCD_STARTUP_WAIT_MS    1000  // 3000 ms
 
 // LCD delay HAL
 #define lcdDelay_ms(duration)       delay(duration)
@@ -81,21 +81,21 @@ extern "C" {
 
 // Enumeration defining the HD44780 commands
 enum enLcdCommands {
-	E_CLEAR_DISPLAY        = 0x01,
-	E_RETURN_HOME          = 0x02,
-	E_ENTRY_MODE_SET       = 0x04,
-	E_DISPLAY_ON_OFF_CTRL  = 0x08,
-	E_CURSOR_DISPLAY_SHIFT = 0x10,
-	E_FUNCTION_SET         = 0x20,
-	E_SET_CGRAM_ADDR       = 0x40,
-	E_SET_DDRAM_ADDR       = 0x80
+   E_CLEAR_DISPLAY        = 0x01,
+   E_RETURN_HOME          = 0x02,
+   E_ENTRY_MODE_SET       = 0x04,
+   E_DISPLAY_ON_OFF_CTRL  = 0x08,
+   E_CURSOR_DISPLAY_SHIFT = 0x10,
+   E_FUNCTION_SET         = 0x20,
+   E_SET_CGRAM_ADDR       = 0x40,
+   E_SET_DDRAM_ADDR       = 0x80
 };
 
 // This enumeration defines the available cursor modes
 enum enLCDCursorModes {
-	E_LCD_CURSOR_OFF      = 0x00,
-	E_LCD_CURSOR_ON       = 0x02,
-	E_LCD_CURSOR_ON_BLINK = 0x03
+   E_LCD_CURSOR_OFF      = 0x00,
+   E_LCD_CURSOR_ON       = 0x02,
+   E_LCD_CURSOR_ON_BLINK = 0x03
 };
 
 /*==================[external data declaration]==============================*/

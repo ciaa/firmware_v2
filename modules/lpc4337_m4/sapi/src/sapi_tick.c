@@ -50,67 +50,112 @@
 /* This global variable holds the tick count */
 volatile tick_t tickCounter;
 volatile tick_t tickRateMS;
-volatile sAPI_FuncPtr_t tickHookFunction = sAPI_NullFuncPtr;
+volatile callBackFuncPtr_t tickHookFunction = NULL;
+void* callBackFuncParams = NULL;
 
 /*==================[internal functions definition]==========================*/
 
 /*==================[external functions definition]==========================*/
 
-/* Tick rate configuration 1 to 50 ms */
-bool_t tickConfig( tick_t tickRateMSvalue, sAPI_FuncPtr_t tickHook ) {
+// Tick Initialization and rate configuration from 1 to 50 ms
+bool_t tickInit( tick_t tickRateMSvalue ) {
 
    bool_t ret_val = 1;
    tick_t tickRateHz = 0;
 
-   if( tickHook ){
-      tickHookFunction = tickHook;
-   }
-
-   if( (tickRateMSvalue >= 1) && (tickRateMSvalue <= 50) ){
-
-		tickRateMS = tickRateMSvalue;
-
-      /*
-      tickRateHz = 1000 => 1000 ticks per second =>  1 ms tick
-      tickRateHz =  200 =>  200 ticks per second =>  5 ms tick
-      tickRateHz =  100 =>  100 ticks per second => 10 ms tick
-      tickRateHz =   20 =>   20 ticks per second => 50 ms tick
-      */
-      tickRateHz = 1000 / tickRateMSvalue;
-
-      /* Init SysTick interrupt, tickRateHz ticks per second */
-      SysTick_Config( SystemCoreClock / tickRateHz);
-   }
-   else{
-      /* Error, tickRateMS variable not in range (1 <= tickRateMS <= 50) */
+   if( tickRateMSvalue == 0 ){
+      tickPowerSet( OFF );
       ret_val = 0;
-   }
+   } else{
+      if( (tickRateMSvalue >= 1) && (tickRateMSvalue <= 50) ){
 
+		   tickRateMS = tickRateMSvalue;
+
+         /*
+         tickRateHz = 1000 => 1000 ticks per second =>  1 ms tick
+         tickRateHz =  200 =>  200 ticks per second =>  5 ms tick
+         tickRateHz =  100 =>  100 ticks per second => 10 ms tick
+         tickRateHz =   20 =>   20 ticks per second => 50 ms tick
+         */
+         tickRateHz = 1000 / tickRateMSvalue;
+
+         // Init SysTick interrupt, tickRateHz ticks per second
+         SysTick_Config( SystemCoreClock / tickRateHz);
+         /*
+         if ( SysTick_Config( CMU_ClockFreqGet(cmuClock_CORE) / tickRateHz) ){
+		      //DEBUG_BREAK;
+            ret_val = 0;
+         }
+         */
+         
+         tickPowerSet( ON );
+      }
+      else{
+         // Error, tickRateMS variable not in range (1 <= tickRateMS <= 50)
+         ret_val = 0;
+      }
+   }
    return ret_val;
 }
 
-
-/* Read Tick Counter */
+// Read Tick Counter
 tick_t tickRead( void ) {
    return tickCounter;
 }
 
-
-/* Write Tick Counter */
+// Write Tick Counter
 void tickWrite( tick_t ticks ) {
    tickCounter = ticks;
+}
+
+// Tick interrupt callback
+bool_t tickCallbackSet( callBackFuncPtr_t tickCallback, void* tickCallbackParams ) {
+
+   bool_t retVal = TRUE;
+
+   if( tickCallback != NULL ){
+      tickHookFunction = tickCallback;
+   } else {
+      retVal = FALSE;
+   }
+
+   if( tickCallbackParams != NULL ){
+      callBackFuncParams = tickCallbackParams;
+   } else {
+      retVal &= FALSE;
+   }
+
+   return retVal;
+}
+
+// Enable or disable the peripheral energy and clock
+void tickPowerSet( bool_t power ){
+
+   if( power ){
+      // Enable SysTick IRQ and SysTick Timer
+      SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk |
+                      SysTick_CTRL_TICKINT_Msk   |
+                      SysTick_CTRL_ENABLE_Msk;
+   } else{
+      // Disable SysTick IRQ and SysTick Timer
+      SysTick->CTRL = 0x0000000;
+   }
 }
 
 /*==================[ISR external functions definition]======================*/
 
 //__attribute__ ((section(".after_vectors")))
 
-/* SysTick Timer ISR Handler */
+// SysTick Timer ISR Handler
 void SysTick_Handler(void) {
+
    tickCounter++;
 
-	/* Execute Tick Hook function */
-	(* tickHookFunction )( 0 );
+   if( (tickHookFunction != NULL) ){	   
+      // Execute Tick Hook function
+	   (* tickHookFunction )( callBackFuncParams );
+   }
+
 }
 
 /*==================[end of file]============================================*/

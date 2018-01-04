@@ -105,13 +105,13 @@ static void uartProcessIRQ( uartMap_t uart )
    {
       // Execute callback      
       if( ( uart == UART_GPIO ) && (rxIsrCallbackUART0 != 0) )
-         (*rxIsrCallbackUART0)();
+         (*rxIsrCallbackUART0)(0);
       
       if( ( uart == UART_USB )  && (rxIsrCallbackUART2 != 0) )
-         (*rxIsrCallbackUART2)();
+         (*rxIsrCallbackUART2)(0);
       
       if( ( uart == UART_232 )  && (rxIsrCallbackUART3 != 0) )
-         (*rxIsrCallbackUART3)();
+         (*rxIsrCallbackUART3)(0);
    }
    
    // Tx Interrupt
@@ -120,13 +120,13 @@ static void uartProcessIRQ( uartMap_t uart )
 
       // Execute callback      
       if( ( uart == UART_GPIO ) && (txIsrCallbackUART0 != 0) )
-         (*txIsrCallbackUART0)();
+         (*txIsrCallbackUART0)(0);
       
       if( ( uart == UART_USB )  && (txIsrCallbackUART2 != 0) )
-         (*txIsrCallbackUART2)();
+         (*txIsrCallbackUART2)(0);
       
       if( ( uart == UART_232 )  && (txIsrCallbackUART3 != 0) )
-         (*txIsrCallbackUART3)();
+         (*txIsrCallbackUART3)(0);
    }
 }
 

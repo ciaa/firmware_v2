@@ -100,7 +100,7 @@ typedef bool_t (*sAPI_FuncPtr_t)(void *);
  * param:  void
  * return: void
  */
-typedef void (*callBackFuncPtr_t)(void);
+typedef void (*callBackFuncPtr_t)(void *);
 
 /*==================[external data declaration]==============================*/
 

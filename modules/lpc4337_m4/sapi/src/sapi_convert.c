@@ -130,7 +130,9 @@ char* uintToAsciiHex( uint64_t value, uint8_t bitSize ){
 
 char* intToString( int64_t value ){
 
-   char result[20];
+   static char result[20];
+   
+   result[0] = 0;
 
    int64ToString( value, result, 10 );
 

@@ -53,8 +53,8 @@
 #include "sapi_dac.h"                    // Use DAC peripheral
 #include "sapi_i2c.h"                    // Use I2C0 peripheral
 #include "sapi_rtc.h"                    // Use RTC peripheral
-#include "sapi_sleep.h"                  // Use ASM instructions
-#include "sapi_cyclesCounter.h"          // Use Debug Registers
+#include "sapi_sleep.h"                  // Use ARM ASM instructions
+#include "sapi_cyclesCounter.h"          // Use ARM Debug Registers
 
 // High Level drivers     
 
@@ -64,11 +64,11 @@
 #include "sapi_debugPrint.h"             // Use sapi_print module
 #include "sapi_consolePrint.h"           // Use sapi_print module
 
-#include "sapi_convert.h"     
+#include "sapi_convert.h"                // Use <string.h>
 
 #include "sapi_delay.h"                  // Use sapi_tick module
 #include "sapi_pwm.h"                    // Use sapi_sct and sapi_gpio modules
-#include "sapi_circularBuffer.h"
+#include "sapi_circularBuffer.h"         // It has no dependencies
 
 // External Peripheral Drivers
 
@@ -78,12 +78,11 @@
 #include "sapi_rgb.h"                    // Use TIMER peripheral
 #include "sapi_dht11.h"                  // Use sapi_gpio peripheral
 #include "sapi_esp8266.h"                // Use sapi_uart module
-#include "sapi_lcd.h"                    // Use sapi_gpio peripheral
-//#include "sapi_lcd_character_display.h"  // Use sapi_gpio peripheral
+#include "sapi_lcd.h"                    // Use sapi_gpio peripherals
 
-#include "sapi_ultrasonic_hcsr04.h"
+#include "sapi_ultrasonic_hcsr04.h"      //
 #include "sapi_magnetometer_hmc5883l.h"  // Use sapi_i2c module
-#include "sapi_magnetometer_qmc5883l.h"
+#include "sapi_magnetometer_qmc5883l.h"  // Use sapi_i2c module
 
 
 /*==================[cplusplus]==============================================*/

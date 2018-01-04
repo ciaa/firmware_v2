@@ -66,7 +66,7 @@ void boardConfig(void) {
    Board_Init(); // From Board module (modules/lpc4337_m4/board)
 
    // Inicializar el conteo de Ticks con resolución de 1ms, sin tickHook
-   tickConfig( 1, 0 );
+   tickConfig( 1 );
 
    // Inicializar GPIOs
    gpioConfig( 0, GPIO_ENABLE );
