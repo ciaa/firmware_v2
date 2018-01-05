@@ -41,7 +41,6 @@
 
 #include "sapi.h"                    // <= sAPI header
 
-
 /*==================[macros and definitions]=================================*/
 
 /*==================[internal data declaration]==============================*/
@@ -80,11 +79,10 @@ void schedulerInit( void ){
         (because the task array is empty) */
    errorCode = 0;
 
-   // Inicializar el conteo de Ticks con resolución de 1ms, sin tickHook
-   if( tickConfig( 1, 0 ) ){
+   // Inicializar el conteo de Ticks con resolucion de 1ms, sin tickHook
+   if( tickInit( 1 ) ){
 //      serialDebugPrintLnString( "Tick configurado a 1ms." );
    }
-
 }
 
 /*------------------------------------------------------------------*
@@ -94,7 +92,7 @@ determined by the timer settings in the 'init' function.
 This version is triggered by Timer 2 interrupts:
 timer is automatically reloaded.
 -*------------------------------------------------------------------*/
-bool_t schedulerUpdate( void *ptr ){
+void schedulerUpdate( void *ptr ){
 
    int32_t index;
    //serialDebugPrintLnString( "schedulerUpdate." );
@@ -117,7 +115,6 @@ bool_t schedulerUpdate( void *ptr ){
          }*/
       }
    }
-   return 0;
 }
 
 /*------------------------------------------------------------------*
@@ -130,21 +127,19 @@ NOTE: ONLY THE SCHEDULER INTERRUPT SHOULD BE ENABLED!!!
 void schedulerStart( tick_t tickRateMs ){
 
    /* Inicializar el conteo de Ticks con resolucion de tickRateMs ms (se
-      ejecuta periódicamente una interrupcón cada tickRateMs ms que
+      ejecuta periodicamente una interrupcon cada tickRateMs ms que
       incrementa un contador de Ticks obteniendose una base de tiempos).
-      Se agrega además como "tick hook" a la funcion encargada de planificar
+      Se agrega ademas como "tick hook" a la funcion encargada de planificar
       las tareas seosScheduleTasks().
-      El tick hook es simplemente una función que se ejecutará períodicamente
-      con cada interrupción de Tick, este nombre se refiere a una función
-      "enganchada" a una interrupción */
+      El tick hook es simplemente una funcion que se ejecutara periodicamente
+      con cada interrupcion de Tick, este nombre se refiere a una funcion
+      "enganchada" a una interrupcion */
 
-   // Inicializar el conteo de Ticks con resolución de 1ms, sin tickHook
-//   if( tickConfig( 1, 0 ) ){
-   // Inicializar el conteo de Ticks con resolución de 1ms, con tickHook
-   if( tickConfig( tickRateMs, schedulerUpdate ) ){
+   // Inicializar el conteo de Ticks con resolucion de 1ms, con tickHook
+   if( tickInit( 1 ) ){
 //      serialDebugPrintLnString( "Comienzo del planificador." );
+      tickCallbackSet( schedulerUpdate, NULL );
    }
-
 }
 
 /*==================[end of file]============================================*/

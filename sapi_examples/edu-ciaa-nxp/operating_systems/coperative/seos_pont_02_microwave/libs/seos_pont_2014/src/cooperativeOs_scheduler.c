@@ -37,7 +37,6 @@
 /*==================[inclusions]=============================================*/
 
 #include "cooperativeOs_scheduler.h"   // <= own header
-
 #include "sapi.h"                      // <= sAPI header
 
 /*==================[macros and definitions]=================================*/
@@ -84,7 +83,7 @@ void schedulerDispatchTasks( void ){
       if (schedulerTasks[index].runMe > 0){
 
          (*schedulerTasks[index].pTask)(0); // Run the task
-         schedulerTasks[index].runMe -= 1; // Reset/reduce runMe flag
+         schedulerTasks[index].runMe -= 1;  // Reset/reduce runMe flag
 
          // Periodic tasks will automatically run again
          // - if this is a 'one shot' task, remove it from the array
@@ -137,7 +136,7 @@ Task_ID = schedulerAddTask(Do_X,300,1000);
 Causes the function Do_X() to be executed regularly, every 1000 ticks.
 Task will be first executed at T = 300 ticks, then 1300, 2300, etc.
 -*------------------------------------------------------------------*/
-int32_t schedulerAddTask( sAPI_FuncPtr_t pFunction, //void (* pFunction)(void),
+int32_t schedulerAddTask( callBackFuncPtr_t pFunction, //void (* pFunction)(void),
                           const int32_t DELAY,
                           const int32_t PERIOD
                         ){

@@ -36,15 +36,17 @@
  * Date: 2016-04-26
  */
 
-/* Diagrama de conexion ESP8266
-  ┌--------------------------------┐
-  |  |       █████                 |
-  |  └-┐     █████      RX OO VCC  |
-  |  ┌-┘ |           GPIO0 OO RST  |
-  |  └-┐ |   █████   GPIO2 OO CH_PD|
-  |  ┌-┘ |   █████     GND OO TX   |
-  |  └---┴                         |
-  └--------------------------------┘
+/* 
+ESP01 (ESP8266) connections:
+
+   +--------------------------------------+
+   |  |          +----+                   |           
+   |  +--+  |    |    |      RX o o VCC   |
+   |     |  |    +----+   GPIO0 o o RST   |         
+   |  +--+  |    +----+   GPIO2 o o CH_PD |
+   |  |     |    |    |     GND o o TX    |
+   |  +-----+    +----+                   |
+   +--------------------------------------+
 
    VCC ESP8266 <--> +3.3V EDU-CIAA-NXP
    RST ESP8266 <--> (SIN CONEXION)
@@ -125,6 +127,8 @@ int main(void){
    uartConfig( UART_232, BAUD_RATE );
 
    uint8_t dato  = 0;
+   
+   imprimirMensajeDeBienvenida();
 
    /* ------------- REPETIR POR SIEMPRE ------------- */
    while(1) {

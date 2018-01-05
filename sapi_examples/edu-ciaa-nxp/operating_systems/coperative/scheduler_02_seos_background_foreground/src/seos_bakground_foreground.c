@@ -68,7 +68,7 @@ static tick_t task3RunFlag = 0;
 /* ----------- PLANIFICADOR y DESPACHADOR ----------- */
 
 /* FUNCION que contiene el planificador de tareas. */
-bool_t seosScheduleTasks(void *ptr){
+void seosScheduleTasks(void *ptr){
    
    /* Tarea planificada cada TASK1_PERIODICITY ms */
    if( task1Counter++ == TASK1_PERIODICITY ){
@@ -99,7 +99,6 @@ bool_t seosScheduleTasks(void *ptr){
       /* Resetea el contador de la tarea */
       task3Counter = 0;
    }
-   return 0;
 }
 
 /* FUNCION que contiene el despachador de tareas. */
@@ -140,14 +139,15 @@ void seosDispatchTask(void){
    el planificador de tareas. */
 void seosInterruptInit( tick_t tickRateMs ){
    /* Inicializar el conteo de Ticks con resolucion de tickRateMs ms (se 
-      ejecuta periódicamente una interrupcón cada tickRateMs ms que 
+      ejecuta periodicamente una interrupcion cada tickRateMs ms que 
       incrementa un contador de Ticks obteniendose una base de tiempos).
-      Se agrega además como "tick hook" a la funcion encargada de planificar 
+      Se agrega ademas como "tick hook" a la funcion encargada de planificar 
       las tareas seosScheduleTasks(). 
-      El tick hook es simplemente una función que se ejecutará períodicamente 
-      con cada interrupción de Tick, este nombre se refiere a una función 
-      "enganchada" a una interrupción */
-   tickConfig( tickRateMs, seosScheduleTasks );
+      El tick hook es simplemente una funcion que se ejecutara periodicamente 
+      con cada interrupcion de Tick, este nombre se refiere a una funcion 
+      "enganchada" a una interrupcion */
+   tickInit( 1 );
+   tickCallbackSet( seosScheduleTasks, NULL );
 }
 
 /*==================[end of file]============================================*/

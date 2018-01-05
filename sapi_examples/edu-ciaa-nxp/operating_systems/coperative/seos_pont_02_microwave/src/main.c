@@ -112,28 +112,28 @@ static void	EjecutarMefDebounceParametric	( EstadoMefDebounce_t * estadoMefDebou
 
 /*==================[declaraciones de funciones externas]====================*/
 
-bool_t 	TareaTec1				( void* ptr );
-bool_t 	TareaTec2				( void* ptr );
-bool_t 	TareaTec3				( void* ptr );
-bool_t 	TareaTec4				( void* ptr );
-bool_t 	TareaRealizarCoccion	( void* ptr );
-bool_t 	TareaMostrarTiempo		( void* ptr );
+void TareaTec1( void* ptr );
+void TareaTec2( void* ptr );
+void TareaTec3( void* ptr );
+void TareaTec4( void* ptr );
+void TareaRealizarCoccion( void* ptr );
+void TareaMostrarTiempo( void* ptr );
 
 /*==================[funcion principal]======================================*/
 
 /**
  * @brief Descripcion del funcionamiento del microondas con SO Pont.
  *
- * - Las teclas TEC1, TEC2 y TEC3 ingresan un tiempo de cocci�n del
+ * - Las teclas TEC1, TEC2 y TEC3 ingresan un tiempo de coccion del
  *   microondas de 20, 40 y 60 segundos respectivamente.
  * - La tecla TEC4 confirma el comienzo del funcionamiento del microondas.
-	 Mientras est� funcionando el microondas se debe:
+	 Mientras esta funcionando el microondas se debe:
 		- Encender el motor del microondas mediante el LEDB.
 		- Encender la luz del microondas mediante el LED1.
-		- Mostrar en la UART USB el tiempo restante para terminar la cocci�n.
-		- Decrementar el valor del tiempo de cocci�n.
-	 Cuando pas� el tiempo (se lleg� a 0) se debe prender la alarma
-	 mediante el LED3 avisando al usuario que la cocci�n est� realizada.
+		- Mostrar en la UART USB el tiempo restante para terminar la coccion.
+		- Decrementar el valor del tiempo de coccion.
+	 Cuando paso el tiempo (se llego a 0) se debe prender la alarma
+	 mediante el LED3 avisando al usuario que la coccion esta realizada.
 */
 
 int main( void ){
@@ -142,10 +142,10 @@ int main( void ){
 	// Inicializar y configurar la plataforma
 	boardConfig();
 
-	uartConfig(UART_USB, 115200);
+	uartConfig( UART_USB, 115200 );
 
 	// FUNCION que inicializa el planificador de tareas
-	schedulerInit();
+   schedulerInit();
 
 	schedulerAddTask( TareaTec1, 0, 40 );
 	schedulerAddTask( TareaTec2, 10, 40 );
@@ -170,7 +170,7 @@ int main( void ){
  * @param estadoMefDebounce estado anterior de la tecla
  * @param teclaToRead tecla a leer
  */
-static void	EjecutarMefDebounceParametric	( EstadoMefDebounce_t * estadoMefDebounce, uint8_t teclaToRead){
+static void	EjecutarMefDebounceParametric( EstadoMefDebounce_t * estadoMefDebounce, uint8_t teclaToRead){
 	switch(*estadoMefDebounce) {
 		case BUTTON_UP:
 			if( !gpioRead(teclaToRead) ){
@@ -204,39 +204,32 @@ static void	EjecutarMefDebounceParametric	( EstadoMefDebounce_t * estadoMefDebou
 
 /*==================[definiciones de funciones externas]=====================*/
 
-bool_t TareaTec1( void* ptr ){
-static EstadoMefDebounce_t estadoDebounce = BUTTON_UP;
-
+void TareaTec1( void* ptr ){
+   static EstadoMefDebounce_t estadoDebounce = BUTTON_UP;
 	EjecutarMefDebounceParametric(&estadoDebounce, TEC_20_SEG);
 	if (estadoDebounce == BUTTON_DOWN){
 		TiempoCoccion = TIEMPO_COCCION_1;
 	}
-	return 0;
 }
 
-bool_t TareaTec2( void* ptr ){
-static EstadoMefDebounce_t estadoDebouce = BUTTON_UP;
-
+void TareaTec2( void* ptr ){
+   static EstadoMefDebounce_t estadoDebouce = BUTTON_UP;
 	EjecutarMefDebounceParametric(&estadoDebouce, TEC_40_SEG);
 	if (estadoDebouce == BUTTON_DOWN){
 		TiempoCoccion = TIEMPO_COCCION_2;
 	}
-	return 0;
 }
 
-bool_t TareaTec3( void* ptr ){
-static EstadoMefDebounce_t estadoDebounce = BUTTON_UP;
-
+void TareaTec3( void* ptr ){
+   static EstadoMefDebounce_t estadoDebounce = BUTTON_UP;
 	EjecutarMefDebounceParametric(&estadoDebounce, TEC_60_SEG);
 	if (estadoDebounce == BUTTON_DOWN){
 		TiempoCoccion = TIEMPO_COCCION_3;
 	}
-	return 0;
 }
 
-bool_t TareaTec4( void* ptr ){
-static EstadoMefDebounce_t estadoDebounce = BUTTON_UP;
-
+void TareaTec4( void* ptr ){
+   static EstadoMefDebounce_t estadoDebounce = BUTTON_UP;
 	EjecutarMefDebounceParametric(&estadoDebounce, TEC_COMENZAR);
 	if (estadoDebounce == BUTTON_DOWN){
 		FlagFuncionamiento = TRUE;
@@ -244,11 +237,9 @@ static EstadoMefDebounce_t estadoDebounce = BUTTON_UP;
 		gpioWrite(LUZ, TRUE);
 		gpioWrite(ALARMA, FALSE);
 	}
-	return 0;
 }
 
-bool_t TareaRealizarCoccion( void* ptr ){
-
+void TareaRealizarCoccion( void* ptr ){
 	if (FlagFuncionamiento == TRUE){
 		if (--TiempoCoccion == 0){
 			gpioWrite(MOTOR, FALSE);
@@ -260,16 +251,14 @@ bool_t TareaRealizarCoccion( void* ptr ){
 			FlagFuncionamiento = FALSE;
 		}
 	}
-	return 0;
 }
 
-bool_t TareaMostrarTiempo( void* ptr ){
+void TareaMostrarTiempo( void* ptr ){
 	if (FlagFuncionamiento == TRUE && TiempoCoccion >=0){
 		consolePrintString("Tiempo restante: ");
 		consolePrintInt(TiempoCoccion);
 		consolePrintString("\n\r");
 	}
-	return 0;
 }
 
 

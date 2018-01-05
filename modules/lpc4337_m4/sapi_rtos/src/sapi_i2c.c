@@ -46,7 +46,7 @@
 
 #include "sapi_i2c.h"
 #include "sapi_gpio.h"
-//#include "sapi_delay.h"
+#include "sapi_delay.h"
 
 /*==================[macros and definitions]=================================*/
 

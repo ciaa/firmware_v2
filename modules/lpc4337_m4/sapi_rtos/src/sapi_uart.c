@@ -1,7 +1,9 @@
-/* Copyright 2016, Eric Pernia.
+/* Copyright 2014, Pablo Ridolfi (UTN-FRBA).
+ * Copyright 2014, Juan Cecconi.
+ * Copyright 2015-2017, Eric Pernia.
  * All rights reserved.
  *
- * This file is part of CIAA Firmware.
+ * This file is part sAPI library for microcontrollers.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,15 +38,57 @@
 /*==================[inclusions]=============================================*/
 
 #include "sapi_uart.h"
+
 #include "string.h"
+#include "sapi_circularBuffer.h"
 
 /*==================[macros]=================================================*/
 
-#define UART_485_LPC LPC_USART0  /* UART0 (RS485/Profibus) */
-#define UART_USB_LPC LPC_USART2  /* UART2 (USB-UART) */
-#define UART_232_LPC LPC_USART3  /* UART3 (RS232) */
-
 /*==================[typedef]================================================*/
+
+typedef struct{
+   LPC_USART_T*      uartAddr;
+   lpc4337ScuPin_t   txPin;
+   lpc4337ScuPin_t   rxPin;
+   IRQn_Type         uartIrqAddr;
+} uartLpcConfig_t;
+
+/*==================[internal data declaration]==============================*/
+
+static volatile callBackFuncPtr_t rxIsrCallbackUART0 = 0;
+static volatile callBackFuncPtr_t rxIsrCallbackUART2 = 0;
+static volatile callBackFuncPtr_t rxIsrCallbackUART3 = 0;
+
+static volatile callBackFuncPtr_t txIsrCallbackUART0 = 0;
+static volatile callBackFuncPtr_t txIsrCallbackUART2 = 0;
+static volatile callBackFuncPtr_t txIsrCallbackUART3 = 0;
+
+static const uartLpcConfig_t lpcUarts[] = {
+// { uartAddr, { txPort, txpin, txfunc }, { rxPort, rxpin, rxfunc }, uartIrqAddr  },
+   // UART_GPIO (GPIO1 = U0_TXD, GPIO2 = U0_RXD)
+   { LPC_USART0, { 6, 4, FUNC2 }, { 6, 5, FUNC2 }, USART0_IRQn }, // 0
+   // UART_485 (RS485/Profibus)
+   { LPC_USART0, { 9, 5, FUNC7 }, { 9, 6, FUNC7 }, USART0_IRQn }, // 1
+   // UART not routed
+   {  LPC_UART1, { 0, 0, 0     }, { 0, 0, 0     }, UART1_IRQn  }, // 2
+   // UART_USB
+   { LPC_USART2, { 7, 1, FUNC6 }, { 7, 2, FUNC6 }, USART2_IRQn }, // 3
+   // UART_ENET
+   { LPC_USART2, { 1,15, FUNC1 }, { 1,16, FUNC1 }, USART2_IRQn }, // 4
+   // UART_232
+   { LPC_USART3, { 2, 3, FUNC2 }, { 2, 4, FUNC2 }, USART3_IRQn }  // 5   
+};
+
+static const lpc4337ScuPin_t lpcUart485DirPin = {
+   6, 2, FUNC2
+};
+
+
+
+/*
+   callBackFuncPtr_t txIsrCallback;
+   callBackFuncPtr_t rxIsrCallback;
+*/
 
 /*==================[internal functions declaration]=========================*/
 
@@ -54,87 +98,321 @@
 
 /*==================[external functions declaration]=========================*/
 
-void uartConfig( uartMap_t uart, uint32_t baudRate ){
-   switch(uart){
-   case UART_USB:
-      Chip_UART_Init(UART_USB_LPC);
-      Chip_UART_SetBaud(UART_USB_LPC, baudRate);  /* Set Baud rate */
-      Chip_UART_SetupFIFOS(UART_USB_LPC, UART_FCR_FIFO_EN | UART_FCR_TRG_LEV0); /* Modify FCR (FIFO Control Register)*/
-      Chip_UART_TXEnable(UART_USB_LPC); /* Enable UART Transmission */
-      Chip_SCU_PinMux(7, 1, MD_PDN, FUNC6);              /* P7_1,FUNC6: UART2_TXD */
-      Chip_SCU_PinMux(7, 2, MD_PLN|MD_EZI|MD_ZI, FUNC6); /* P7_2,FUNC6: UART2_RXD */
+// Check for Receive a given pattern
 
-      //Enable UART Rx Interrupt
-      //   Chip_UART_IntEnable(UART_USB_LPC,UART_IER_RBRINT );   //Receiver Buffer Register Interrupt
-      // Enable UART line status interrupt
-      //   Chip_UART_IntEnable(UART_USB_LPC,UART_IER_RLSINT ); //LPC43xx User manual page 1118
-      //   NVIC_SetPriority(USART2_IRQn, 6);
-      // Enable Interrupt for UART channel
-      //   NVIC_EnableIRQ(USART2_IRQn);
-   break;
-   case UART_232:
-      Chip_UART_Init(UART_232_LPC);
-      Chip_UART_SetBaud(UART_232_LPC, baudRate);  /* Set Baud rate */
-      Chip_UART_SetupFIFOS(UART_232_LPC, UART_FCR_FIFO_EN | UART_FCR_TRG_LEV0); /* Modify FCR (FIFO Control Register)*/
-      Chip_UART_TXEnable(UART_232_LPC); /* Enable UART Transmission */
-      Chip_SCU_PinMux(2, 3, MD_PDN, FUNC2);              /* P2_3,FUNC2: UART3_TXD */
-      Chip_SCU_PinMux(2, 4, MD_PLN|MD_EZI|MD_ZI, FUNC2); /* P2_4,FUNC2: UART3_RXD */
-   break;
-   case UART_485:
+waitForReceiveStringOrTimeoutState_t waitForReceiveStringOrTimeout(
+   uartMap_t uart, waitForReceiveStringOrTimeout_t* instance ){
 
-   break;
+   uint8_t receiveByte;
+   //char receiveBuffer[100];
+
+   switch( instance->state ){
+
+      case UART_RECEIVE_STRING_CONFIG:
+
+         delayConfig( &(instance->delay), instance->timeout );
+
+         instance->stringIndex = 0;
+
+         instance->state = UART_RECEIVE_STRING_RECEIVING;
+
+      break;
+
+      case UART_RECEIVE_STRING_RECEIVING:
+
+         if( uartReadByte( uart, &receiveByte ) ){
+
+            //uartWriteByte( UART_DEBUG, receiveByte ); // TODO: DEBUG
+/*            if( (instance->stringIndex) <= 100 ){
+               receiveBuffer[instance->stringIndex] = receiveByte;
+            }
+*/
+            if( (instance->string)[(instance->stringIndex)] == receiveByte ){
+
+               (instance->stringIndex)++;
+
+               if( (instance->stringIndex) == (instance->stringSize - 1) ){
+                  instance->state = UART_RECEIVE_STRING_RECEIVED_OK;
+
+//                  receiveBuffer[instance->stringIndex] = '\0';
+
+                  //uartWriteString( UART_DEBUG, receiveBuffer ); // TODO: DEBUG
+                  //uartWriteString( UART_DEBUG, "\r\n" );        // TODO: DEBUG
+               }
+
+            }
+
+         }
+
+         if( delayRead( &(instance->delay) ) ){
+            instance->state = UART_RECEIVE_STRING_TIMEOUT;
+            //uartWriteString( UART_DEBUG, "\r\n" ); // TODO: DEBUG
+         }
+
+      break;
+
+      case UART_RECEIVE_STRING_RECEIVED_OK:
+         instance->state = UART_RECEIVE_STRING_CONFIG;
+      break;
+
+      case UART_RECEIVE_STRING_TIMEOUT:
+         instance->state = UART_RECEIVE_STRING_CONFIG;
+      break;
+
+      default:
+         instance->state = UART_RECEIVE_STRING_CONFIG;
+      break;
    }
+
+   return instance->state;
 }
 
+// Recibe bytes hasta que llegue el string patron que se le manda en el
+// parametro string, stringSize es la cantidad de caracteres del string.
+// Devuelve TRUE cuando recibio la cadena patron, si paso el tiempo timeout
+// en milisegundos antes de recibir el patron devuelve FALSE.
+// No almacena los datos recibidos!! Simplemente espera a recibir cierto patron.
+bool_t waitForReceiveStringOrTimeoutBlocking(
+   uartMap_t uart, char* string, uint16_t stringSize, tick_t timeout ){
 
-bool_t uartReadByte( uartMap_t uart, uint8_t* receivedByte ){
+   bool_t retVal = TRUE; // True if OK
 
-   bool_t retVal = TRUE;
+   waitForReceiveStringOrTimeout_t waitText;
+   waitForReceiveStringOrTimeoutState_t waitTextState;
 
-   switch(uart){
-   case UART_USB:
-      if ( Chip_UART_ReadLineStatus(UART_USB_LPC) & UART_LSR_RDR ) {
-         *receivedByte = Chip_UART_ReadByte(UART_USB_LPC);
-      } else{
-         retVal = FALSE;
-      }
-   break;
-   case UART_232:
-      if ( Chip_UART_ReadLineStatus(UART_232_LPC) & UART_LSR_RDR ) {
-         *receivedByte = Chip_UART_ReadByte(UART_232_LPC);
-      } else{
-         retVal = FALSE;
-      }
-   break;
-   case UART_485:
-   break;
+   waitTextState = UART_RECEIVE_STRING_CONFIG;
+
+   waitText.state = UART_RECEIVE_STRING_CONFIG;
+   waitText.string =  string;
+   waitText.stringSize = stringSize;
+   waitText.timeout = timeout;
+
+   while( waitTextState != UART_RECEIVE_STRING_RECEIVED_OK &&
+          waitTextState != UART_RECEIVE_STRING_TIMEOUT ){
+      waitTextState = waitForReceiveStringOrTimeout( uart, &waitText );
+   }
+
+   if( waitTextState == UART_RECEIVE_STRING_TIMEOUT ){
+      retVal = FALSE;
    }
 
    return retVal;
 }
 
 
-void uartWriteByte( uartMap_t uart, uint8_t byte ){
+// Store bytes until receive a given pattern
+waitForReceiveStringOrTimeoutState_t receiveBytesUntilReceiveStringOrTimeout(
+   uartMap_t uart, waitForReceiveStringOrTimeout_t* instance,
+   char* receiveBuffer, uint32_t* receiveBufferSize ){
 
-   switch(uart){
-   case UART_USB:
-      while ((Chip_UART_ReadLineStatus(UART_USB_LPC) & UART_LSR_THRE) == 0) {}   // Wait for space in FIFO
-      Chip_UART_SendByte(UART_USB_LPC, byte);
-   break;
-   case UART_232:
-      while ((Chip_UART_ReadLineStatus(UART_232_LPC) & UART_LSR_THRE) == 0) {}   // Wait for space in FIFO
-      Chip_UART_SendByte(UART_232_LPC, byte);
-   break;
-   case UART_485:
-   break;
+   uint8_t receiveByte;
+   static uint32_t i = 0;
+   //uint32_t j = 0;
+   //uint32_t savedReceiveBufferSize = *receiveBufferSize;
+
+   switch( instance->state ){
+
+      case UART_RECEIVE_STRING_CONFIG:
+
+         delayConfig( &(instance->delay), instance->timeout );
+
+         instance->stringIndex = 0;
+         i = 0;
+
+         instance->state = UART_RECEIVE_STRING_RECEIVING;
+
+      break;
+
+      case UART_RECEIVE_STRING_RECEIVING:
+
+         if( uartReadByte( uart, &receiveByte ) ){
+
+            //uartWriteByte( UART_DEBUG, receiveByte ); // TODO: DEBUG
+            if( i < *receiveBufferSize ){
+               receiveBuffer[i] = receiveByte;
+               i++;
+            } else{
+               instance->state = UART_RECEIVE_STRING_FULL_BUFFER;
+               *receiveBufferSize = i;
+               i = 0;
+               return instance->state;
+            }
+
+            if( (instance->string)[(instance->stringIndex)] == receiveByte ){
+
+               (instance->stringIndex)++;
+
+               if( (instance->stringIndex) == (instance->stringSize - 1) ){
+                  instance->state = UART_RECEIVE_STRING_RECEIVED_OK;
+                  *receiveBufferSize = i;
+                  /*
+                  // TODO: For debug purposes
+                  for( j=0; j<i; j++ ){
+                     uartWriteByte( UART_DEBUG, receiveBuffer[j] );
+                  }
+                  uartWriteString( UART_DEBUG, "\r\n" );
+                  */
+                  i = 0;
+               }
+
+            }
+
+         }
+
+         if( delayRead( &(instance->delay) ) ){
+            instance->state = UART_RECEIVE_STRING_TIMEOUT;
+            //uartWriteString( UART_DEBUG, "\r\n" ); // TODO: DEBUG
+            *receiveBufferSize = i;
+            i = 0;
+         }
+
+      break;
+
+      case UART_RECEIVE_STRING_RECEIVED_OK:
+         instance->state = UART_RECEIVE_STRING_CONFIG;
+      break;
+
+      case UART_RECEIVE_STRING_TIMEOUT:
+         instance->state = UART_RECEIVE_STRING_CONFIG;
+      break;
+
+      case UART_RECEIVE_STRING_FULL_BUFFER:
+         instance->state = UART_RECEIVE_STRING_CONFIG;
+      break;
+
+      default:
+         instance->state = UART_RECEIVE_STRING_CONFIG;
+      break;
+   }
+
+   return instance->state;
+}
+
+// Guarda todos los bytes que va recibiendo hasta que llegue el string
+// patron que se le manda en el parametro string, stringSize es la cantidad
+// de caracteres del string.
+// receiveBuffer es donde va almacenando los caracteres recibidos y
+// receiveBufferSize es el tamaño de buffer receiveBuffer.
+// Devuelve TRUE cuando recibio la cadena patron, si paso el tiempo timeout
+// en milisegundos antes de recibir el patron devuelve FALSE.
+bool_t receiveBytesUntilReceiveStringOrTimeoutBlocking(
+   uartMap_t uart, char* string, uint16_t stringSize,
+   char* receiveBuffer, uint32_t* receiveBufferSize,
+   tick_t timeout ){
+
+   bool_t retVal = TRUE; // True if OK
+
+   waitForReceiveStringOrTimeout_t waitText;
+   waitForReceiveStringOrTimeoutState_t waitTextState;
+
+   waitTextState = UART_RECEIVE_STRING_CONFIG;
+
+   waitText.state = UART_RECEIVE_STRING_CONFIG;
+   waitText.string =  string;
+   waitText.stringSize = stringSize;
+   waitText.timeout = timeout;
+
+   while( waitTextState != UART_RECEIVE_STRING_RECEIVED_OK &&
+          waitTextState != UART_RECEIVE_STRING_TIMEOUT ){
+      waitTextState = receiveBytesUntilReceiveStringOrTimeout(
+                         uart, &waitText,
+                         receiveBuffer, receiveBufferSize );
+   }
+
+   if( waitTextState == UART_RECEIVE_STRING_TIMEOUT ){
+      retVal = FALSE;
+   }
+
+   return retVal;
+}
+
+//-------------------------------------------------------------
+
+// Return TRUE if have unread data in RX FIFO
+bool_t uartRxReady( uartMap_t uart ){
+   return Chip_UART_ReadLineStatus( lpcUarts[uart].uartAddr ) & UART_LSR_RDR;
+}
+// Return TRUE if have space in TX FIFO
+bool_t uartTxReady( uartMap_t uart ){
+   return Chip_UART_ReadLineStatus( lpcUarts[uart].uartAddr ) & UART_LSR_THRE; 
+}
+// Read from RX FIFO
+uint8_t uartRxRead( uartMap_t uart ){
+   return Chip_UART_ReadByte( lpcUarts[uart].uartAddr );
+}
+// Write in TX FIFO
+void uartTxWrite( uartMap_t uart, uint8_t value ){
+   Chip_UART_SendByte( lpcUarts[uart].uartAddr, value );
+}
+
+//-------------------------------------------------------------
+
+// UART Initialization
+void uartConfig( uartMap_t uart, uint32_t baudRate ){
+   // Initialize UART
+   Chip_UART_Init( lpcUarts[uart].uartAddr );
+   // Set Baud rate
+   Chip_UART_SetBaud( lpcUarts[uart].uartAddr, baudRate );
+   // Restart FIFOS using FCR (FIFO Control Register).
+   // Set Enable, Reset content, set trigger level
+   Chip_UART_SetupFIFOS( lpcUarts[uart].uartAddr, 
+                         UART_FCR_FIFO_EN | 
+                         UART_FCR_TX_RS   | 
+                         UART_FCR_RX_RS   | 
+                         UART_FCR_TRG_LEV0 );
+   // Dummy read
+   Chip_UART_ReadByte( lpcUarts[uart].uartAddr );
+   // Enable UART Transmission
+   Chip_UART_TXEnable( lpcUarts[uart].uartAddr );
+   // Configure SCU UARTn_TXD pin
+   Chip_SCU_PinMux( lpcUarts[uart].txPin.lpcScuPort, 
+                    lpcUarts[uart].txPin.lpcScuPin, 
+                    MD_PDN,
+                    lpcUarts[uart].txPin.lpcScuFunc );
+   // Configure SCU UARTn_RXD pin
+   Chip_SCU_PinMux( lpcUarts[uart].rxPin.lpcScuPort, 
+                    lpcUarts[uart].rxPin.lpcScuPin, 
+                    MD_PLN | MD_EZI | MD_ZI,
+                    lpcUarts[uart].rxPin.lpcScuFunc );
+   
+   // Specific configurations for RS485
+   if( uart == UART_485 ){
+      // Specific RS485 Flags
+      Chip_UART_SetRS485Flags( LPC_USART0,
+                               UART_RS485CTRL_DCTRL_EN | 
+                               UART_RS485CTRL_OINV_1     );
+      // UARTn_DIR extra pin for RS485
+      Chip_SCU_PinMux( lpcUart485DirPin.lpcScuPort, 
+                       lpcUart485DirPin.lpcScuPin, 
+                       MD_PDN, 
+                       lpcUart485DirPin.lpcScuFunc );
    }
 }
 
+// Read 1 byte from RX FIFO, check first if exist aviable data
+bool_t uartReadByte( uartMap_t uart, uint8_t* receivedByte ){
+   bool_t retVal = TRUE;
+   if ( uartRxReady(uart) ){
+      *receivedByte = uartRxRead(uart);
+   } else{
+      retVal = FALSE;
+   }
+   return retVal;
+}
 
+// Blocking Write 1 byte to TX FIFO
+void uartWriteByte( uartMap_t uart, uint8_t value ){
+   // Wait for space in FIFO (blocking)
+   while( uartTxReady( uart ) == FALSE );
+   // Send byte
+   uartTxWrite( uart, value );
+}
+
+// Blocking Send a string
 void uartWriteString( uartMap_t uart, char* str ){
-   while(*str != 0){
-	  uartWriteByte( uart, (uint8_t)*str );
-	  str++;
+   while( *str != 0 ){
+      uartWriteByte( uart, (uint8_t)*str );
+      str++;
    }
 }
 

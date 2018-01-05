@@ -57,11 +57,11 @@
 /*==================[external functions definition]==========================*/
 
 bool_t spiConfig( spiMap_t spi ){
-   
+
    bool_t retVal = TRUE;
-   
+
    if( spi == SPI0 ){
-      
+
   		/* Set up clock and power for SSP1 module */
 		// Configure SSP SSP1 pins
 		Chip_SCU_PinMuxSet(0xf, 4, (SCU_MODE_PULLUP | SCU_MODE_FUNC0)); // CLK0
@@ -70,23 +70,23 @@ bool_t spiConfig( spiMap_t spi ){
 
 		Chip_SCU_PinMuxSet(0x6, 1, (SCU_MODE_PULLUP | SCU_MODE_FUNC0)); // CS1 configured as GPIO
 		Chip_GPIO_SetPinDIROutput(LPC_GPIO_PORT, 3, 0);
-      
+
       // Initialize SSP Peripheral
       Chip_SSP_Init( LPC_SSP1 );
       Chip_SSP_Enable( LPC_SSP1 );
-      
+
    } else{
       retVal = FALSE;
    }
-   
+
    return retVal;
 }
 
 
 bool_t spiRead( spiMap_t spi, uint8_t* buffer, uint32_t bufferSize ){
-   
+
    bool_t retVal = TRUE;
-   
+
    Chip_SSP_DATA_SETUP_T xferConfig;
 
 	xferConfig.tx_data = NULL;
@@ -100,15 +100,15 @@ bool_t spiRead( spiMap_t spi, uint8_t* buffer, uint32_t bufferSize ){
    } else{
       retVal = FALSE;
    }
-   
-   return retVal;	
+
+   return retVal;
 }
 
 
 bool_t spiWrite( spiMap_t spi, uint8_t* buffer, uint32_t bufferSize){
-   
+
    bool_t retVal = TRUE;
-   
+
    Chip_SSP_DATA_SETUP_T xferConfig;
 
 	xferConfig.tx_data = buffer;
@@ -122,7 +122,7 @@ bool_t spiWrite( spiMap_t spi, uint8_t* buffer, uint32_t bufferSize){
    } else{
       retVal = FALSE;
    }
-   
+
    return retVal;
 }
 

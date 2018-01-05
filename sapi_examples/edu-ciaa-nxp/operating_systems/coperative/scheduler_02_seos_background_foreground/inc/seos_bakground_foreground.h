@@ -55,10 +55,10 @@ extern "C" {
 /*==================[external functions declaration]=========================*/
 
 /* FUNCION que contiene el planificador de tareas. */
-bool_t seosScheduleTasks(void *ptr);
+void seosScheduleTasks( void *ptr );
 
 /* FUNCION que contiene el despachador de tareas. */
-void seosDispatchTask(void);
+void seosDispatchTask( void );
 
 /* FUNCION que inicializa la interrupcion que ejecuta
    el planificador de tareas. */

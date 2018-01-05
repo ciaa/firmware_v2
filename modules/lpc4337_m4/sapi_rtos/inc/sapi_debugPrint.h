@@ -54,7 +54,7 @@ void debugPrintlnHex( uint64_t number, uint8_t bitSize );
 #if( DEBUG_PRINT == ON )
 
    // Initialize
-   #define DEBUG_PRINT_ENABLE                      static print_t debugPrint
+   #define DEBUG_PRINT_ENABLE                       static print_t debugPrint;
    #define debugPrintSetUart(uart);                 printSetUart(&(debugPrint),(uart));
    #define debugPrintConfigUart(uart,baudRate);     printConfigUart(&(debugPrint),(uart),(baudRate));
 

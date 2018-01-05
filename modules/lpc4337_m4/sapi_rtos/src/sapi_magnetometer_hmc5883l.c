@@ -34,7 +34,7 @@
 
 /* Date: 2015-06-27 */
 
-#include "sapi_hmc5883l.h"         /* <= sAPI HMC5883L header */
+#include "sapi_magnetometer_hmc5883l.h"         /* <= sAPI HMC5883L header */
 #include "sapi_i2c.h"         	   /* <= sAPI I2C header */
 
 bool_t hmc5883lIsAlive( void ){

@@ -22,9 +22,9 @@
 
 /*==================[declaraciones de funciones externas]====================*/
 
-bool_t tarea1( void* ptr );
-bool_t tarea2( void* ptr );
-bool_t tarea3( void* ptr );
+void tarea1( void* ptr );
+void tarea2( void* ptr );
+void tarea3( void* ptr );
 
 /*==================[funcion principal]======================================*/
 
@@ -77,17 +77,17 @@ int main( void ){
 
 /*==================[definiciones de funciones externas]=====================*/
 
-bool_t tarea1( void* ptr ){
+void tarea1( void* ptr ){
    gpioToggle( LEDB );
    return 0;
 }
 
-bool_t tarea2( void* ptr ){
+void tarea2( void* ptr ){
    gpioToggle( LED1 );
    return 0;
 }
 
-bool_t tarea3( void* ptr ){
+void tarea3( void* ptr ){
    gpioToggle( LED2 );
    return 0;
 }

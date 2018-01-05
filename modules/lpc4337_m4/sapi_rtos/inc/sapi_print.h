@@ -95,7 +95,7 @@ void printHex( uint64_t number, uint8_t bitSize );
 
 #define printlnUIntFormat(printer,number,format);   printUIntFormat((printer),(number),(format));\
                                                     printEnter((printer));
-                                            
+
 #define printlnHex(printer,number,bitSize);         printHex((printer),(number),(bitSize));\
                                                     printEnter((printer));
 

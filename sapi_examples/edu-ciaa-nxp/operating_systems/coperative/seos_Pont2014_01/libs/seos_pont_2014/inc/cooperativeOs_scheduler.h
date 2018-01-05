@@ -61,7 +61,7 @@ extern "C" {
    Total memory per task is 7 bytes. */
 typedef struct{
    // Pointer to the task (must be a 'void (void)' function)
-   sAPI_FuncPtr_t pTask;  // void (* pTask)(void);
+   callBackFuncPtr_t pTask;  // void (* pTask)(void);
    // Delay (ticks) until the function will (next) be run
    // - see schedulerAddTask() for further details
    int32_t delay;
@@ -79,8 +79,8 @@ typedef struct{
 // FUNCION que contiene el despachador de tareas.
 void schedulerDispatchTasks( void );
 
-// FUNCION que aÃ±ade una tarea al planificador.
-int32_t schedulerAddTask( sAPI_FuncPtr_t pFunction, //void (* pFunction)(void),
+// FUNCION que añade una tarea al planificador.
+int32_t schedulerAddTask( callBackFuncPtr_t pFunction, //void (* pFunction)(void),
                           const int32_t DELAY,
                           const int32_t PERIOD
                         );

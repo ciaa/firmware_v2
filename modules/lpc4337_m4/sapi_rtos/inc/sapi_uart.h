@@ -1,4 +1,4 @@
-/* Copyright 2016, Eric Pernia.
+/* Copyright 2015-2017, Eric Pernia.
  * All rights reserved.
  *
  * This file is part sAPI library for microcontrollers.
@@ -38,7 +38,7 @@
 
 /*==================[inclusions]=============================================*/
 
-//#include "sapi_delay.h"
+#include "sapi_delay.h"
 #include "sapi_datatypes.h"
 #include "sapi_peripheral_map.h"
 
@@ -52,15 +52,84 @@ extern "C" {
 
 /*==================[typedef]================================================*/
 
+typedef enum{
+   UART_RECEIVE_STRING_CONFIG,
+   UART_RECEIVE_STRING_RECEIVING,
+   UART_RECEIVE_STRING_RECEIVED_OK,
+   UART_RECEIVE_STRING_FULL_BUFFER,
+   UART_RECEIVE_STRING_TIMEOUT
+} waitForReceiveStringOrTimeoutState_t;
+
+typedef struct{
+   waitForReceiveStringOrTimeoutState_t state;
+   char*    string;
+   uint16_t stringSize;
+   uint16_t stringIndex;
+   tick_t   timeout;
+   delay_t  delay;
+} waitForReceiveStringOrTimeout_t;
+
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/
 
+// Check for Receive a given pattern
+
+waitForReceiveStringOrTimeoutState_t waitForReceiveStringOrTimeout(
+   uartMap_t uart, waitForReceiveStringOrTimeout_t* instance );
+
+// Recibe bytes hasta que llegue el string patron que se le manda en el
+// parametro string, stringSize es la cantidad de caracteres del string.
+// Devuelve TRUE cuando recibio la cadena patron, si paso el tiempo timeout
+// en milisegundos antes de recibir el patron devuelve FALSE.
+// No almacena los datos recibidos!! Simplemente espera a recibir cierto patron.
+
+bool_t waitForReceiveStringOrTimeoutBlocking(
+   uartMap_t uart, char* string, uint16_t stringSize, tick_t timeout );
+
+
+// Store bytes until receive a given pattern
+
+waitForReceiveStringOrTimeoutState_t receiveBytesUntilReceiveStringOrTimeout(
+   uartMap_t uart, waitForReceiveStringOrTimeout_t* instance,
+   char* receiveBuffer, uint32_t* receiveBufferSize );
+
+// Guarda todos los bytes que va recibiendo hasta que llegue el string
+// patron que se le manda en el parametro string, stringSize es la cantidad
+// de caracteres del string.
+// receiveBuffer es donde va almacenando los caracteres recibidos y
+// receiveBufferSize es el tamaño de buffer receiveBuffer.
+// Devuelve TRUE cuando recibio la cadena patron, si paso el tiempo timeout
+// en milisegundos antes de recibir el patron devuelve FALSE.
+
+bool_t receiveBytesUntilReceiveStringOrTimeoutBlocking(
+   uartMap_t uart, char* string, uint16_t stringSize,
+   char* receiveBuffer, uint32_t* receiveBufferSize,
+   tick_t timeout );
+
+//-------------------------------------------------------------
+
+//-------------------------------------------------------------
+
+// Return TRUE if have unread data in RX FIFO
+bool_t uartRxReady( uartMap_t uart );
+// Return TRUE if have space in TX FIFO
+bool_t uartTxReady( uartMap_t uart );
+// Read from RX FIFO
+uint8_t uartRxRead( uartMap_t uart );
+// Write in TX FIFO
+void uartTxWrite( uartMap_t uart, uint8_t value );
+
+//-------------------------------------------------------------
+// UART Initialization
 void uartConfig( uartMap_t uart, uint32_t baudRate );
 
+// Read 1 byte from RX FIFO, check first if exist aviable data
 bool_t uartReadByte( uartMap_t uart, uint8_t* receivedByte );
-void uartWriteByte( uartMap_t uart, uint8_t byte );
+// Blocking Write 1 byte to TX FIFO
+void uartWriteByte( uartMap_t uart, uint8_t value );
 
+// Blocking Send a string
 void uartWriteString( uartMap_t uart, char* str );
 
 /*==================[ISR external functions declaration]======================*/

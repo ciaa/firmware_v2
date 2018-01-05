@@ -1,6 +1,5 @@
-/* 
-Copyright 2015-2017, Eric Pernia.
-All rights reserved.
+/* Copyright 2015-2017, Eric Pernia.
+   All rights reserved.
 
 This file is part sAPI library for microcontrollers.
 
@@ -33,6 +32,31 @@ POSSIBILITY OF SUCH DAMAGE.
 
 // Date: 2017-12-14
 
+/* 
+ESP01 (ESP8266) connections:
+
+   +--------------------------------------+
+   |  |          +----+                   |           
+   |  +--+  |    |    |      RX o o VCC   |
+   |     |  |    +----+   GPIO0 o o RST   |         
+   |  +--+  |    +----+   GPIO2 o o CH_PD |
+   |  |     |    |    |     GND o o TX    |
+   |  +-----+    +----+                   |
+   +--------------------------------------+
+
+   VCC ESP8266 <--> +3.3V EDU-CIAA-NXP
+   RST ESP8266 <--> (SIN CONEXION)
+ CH_PD ESP8266 <--> +3.3V EDU-CIAA-NXP
+    TX ESP8266 <--> RX EDU-CIAA-NXP
+
+    RX ESP8266 <--> TX EDU-CIAA-NXP
+ GPIO0 ESP8266 <--> (SIN CONEXION)
+ GPIO0 ESP8266 <--> (SIN CONEXION)
+   GND ESP8266 <--> GND EDU-CIAA-NXP
+
+  AT commands: http://www.pridopia.co.uk/pi-doc/ESP8266ATCommandsSet.pdf
+*/
+
 /*==================[inlcusiones]============================================*/
 
 #include "sapi.h"        // <= Biblioteca sAPI
@@ -42,18 +66,24 @@ POSSIBILITY OF SUCH DAMAGE.
 
 /*==================[definiciones y macros]==================================*/
 
-//#define UART_SELECTED   UART_GPIO
-//#define UART_SELECTED   UART_485
-//#define UART_SELECTED   UART_ENET
+// UART list:
+//  - UART_GPIO or UART_485
+//  - UART_USB or UART_ENET
+//  - UART_232
 
-#define UART_DEBUG           UART_USB
-#define UART_ESP01           UART_232
-#define UARTS_BAUD_RATE      115200
+#define UART_DEBUG                 UART_USB
+#define UART_ESP01                 UART_232
+#define UARTS_BAUD_RATE            115200
 
-#define WIFI_SSID            "miWifi"     // Setear Red Wi-Fi
-#define WIFI_PASSWORD        "miPassWifi" // Setear password
+#define ESP01_RX_BUFF_SIZE         1024
 
-#define ESP01_RX_BUFF_SIZE   1024
+#define WIFI_SSID                  "miWifi"     // Setear Red Wi-Fi
+#define WIFI_PASSWORD              "miPassWifi" // Setear password
+
+#define THINGSPEAK_SERVER_URL      "api.thingspeak.com"
+#define THINGSPEAK_SERVER_PORT     80
+#define THINGSPEAK_WRITE_API_KEY   "7E7IOJ276BSDLOBA"
+#define THINGSPEAK_FIELD_NUMBER    1
 
 /*==================[definiciones de datos internos]=========================*/
 
@@ -103,8 +133,6 @@ void esp01CleanRxBuffer( void ){
 // AT+CIPSTART="TCP","api.thingspeak.com",80
 bool_t esp01SendTPCIPDataToServer( char* url, uint32_t port, char* strData, uint32_t strDataLen ){
 
-   bool_t retVal = FALSE;
-
    // Enviar dato "data" al servidor "url", puerto "port".
    debugPrintlnString( ">>>> ===========================================================" );
    debugPrintString( ">>>> Enviar dato: \"" );
@@ -114,17 +142,19 @@ bool_t esp01SendTPCIPDataToServer( char* url, uint32_t port, char* strData, uint
    debugPrintString( "\", puerto \"" );
    debugPrintInt( port );
    debugPrintlnString( "\"..." );
+   debugPrintEnter();
 
    // AT+CIPSTART="TCP","url",port ---------------------------
-   retVal = esp01ConnectToServer( url, port );
+   if( !esp01ConnectToServer( url, port ) )
+      return FALSE;
 
-   // USAR DATAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+   // Ejemplo:
+   // AT+CIPSEND=47 ------------------------------------------
+   // GET /update?api_key=7E7IOJ276BSDLOBA&field1=66 ---------
+   if( !esp01SendTCPIPData( strData, strDataLen ) )
+      return FALSE;
 
-   // AT+CIPSEND=39 ------------------------------------------
-   // GET /update?key=7E7IOJ276BSDLOBA&1=66 ------------------
-   retVal &= esp01SendTCPIPData( strData, strDataLen );
-
-   return retVal;
+   return TRUE;
 }
 
 
@@ -455,24 +485,23 @@ int main( void ){
    while( TRUE )
    {
       // Armo el dato a enviar, en este caso para grabar un dato en el canal de Thinspeak
-      // Ejemplo: "GET /update?key=7E7IOJ276BSDLOBA&1=66"
+      // Ejemplo: "GET /update?api_key=7E7IOJ276BSDLOBA&field1=66"
 
       tcpIpDataToSend[0] = 0; // Reseteo la cadena que guarda las otras agregando un caracter NULL al principio
 
-      strcat( tcpIpDataToSend, "GET /update?key=" );         // Agrego la peticion de escritura de datos
+      strcat( tcpIpDataToSend, "GET /update?api_key=" );     // Agrego la peticion de escritura de datos
 
-      strcat( tcpIpDataToSend, "7E7IOJ276BSDLOBA" );         // Agrego la clave del canal
+      strcat( tcpIpDataToSend, THINGSPEAK_WRITE_API_KEY );   // Agrego la clave de escritura del canal
 
-      strcat( tcpIpDataToSend, "&" );                        // Agrego field del canal
-      strcat( tcpIpDataToSend, intToString(1) );
+      strcat( tcpIpDataToSend, "&field" );                   // Agrego field del canal
+      strcat( tcpIpDataToSend, intToString(THINGSPEAK_FIELD_NUMBER) );
 
       strcat( tcpIpDataToSend, "=" );                        // Agrego el valor a enviar
       strcat( tcpIpDataToSend, intToString( sensorValue ) );
 
-
       // Envio los datos TCP/IP al Servidor de Thingpeak
-
-      esp01SendTPCIPDataToServer( "api.thingspeak.com", 80,
+      // Ver en: https://thingspeak.com/channels/377497/
+      esp01SendTPCIPDataToServer( THINGSPEAK_SERVER_URL, THINGSPEAK_SERVER_PORT,
                                   tcpIpDataToSend, strlen( tcpIpDataToSend ) );
 
       sensorValue++;

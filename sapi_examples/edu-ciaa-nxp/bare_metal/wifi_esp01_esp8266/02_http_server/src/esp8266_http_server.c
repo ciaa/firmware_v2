@@ -34,6 +34,31 @@
 
 /* Date: 2017-14-11 */
 
+/* 
+ESP01 (ESP8266) connections:
+
+   +--------------------------------------+
+   |  |          +----+                   |           
+   |  +--+  |    |    |      RX o o VCC   |
+   |     |  |    +----+   GPIO0 o o RST   |         
+   |  +--+  |    +----+   GPIO2 o o CH_PD |
+   |  |     |    |    |     GND o o TX    |
+   |  +-----+    +----+                   |
+   +--------------------------------------+
+
+   VCC ESP8266 <--> +3.3V EDU-CIAA-NXP
+   RST ESP8266 <--> (SIN CONEXION)
+ CH_PD ESP8266 <--> +3.3V EDU-CIAA-NXP
+    TX ESP8266 <--> RX EDU-CIAA-NXP
+
+    RX ESP8266 <--> TX EDU-CIAA-NXP
+ GPIO0 ESP8266 <--> (SIN CONEXION)
+ GPIO0 ESP8266 <--> (SIN CONEXION)
+   GND ESP8266 <--> GND EDU-CIAA-NXP
+
+  AT commands: http://www.pridopia.co.uk/pi-doc/ESP8266ATCommandsSet.pdf
+*/
+
 /*==================[inclusions]=============================================*/
 
 #include "sapi.h"
@@ -41,8 +66,9 @@
 /*==================[macros and definitions]=================================*/
 
 // Se deben definir los datos del nombre de la red y la contrasenia.
-#define WIFI_NAME      "WiFi-Arnet-ucx1"
-#define WIFI_PASS      "NWVPHW7KWC"
+#define WIFI_NAME        "miWifi"     // Setear Red Wi-Fi
+#define WIFI_PASS        "miPassWifi" // Setear password
+
 // El maximo tiempo que se espera una respuesta del modulo ESP8266
 #define WIFI_MAX_DELAY 60000
 // Inicio y fin de lo enviado por el usuario, le da formato HTML al texto.

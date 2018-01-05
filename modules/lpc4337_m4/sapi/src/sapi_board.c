@@ -65,19 +65,19 @@ void boardConfig(void) {
 
    Board_Init(); // From Board module (modules/lpc4337_m4/board)
 
-   // Inicializar el conteo de Ticks con resolución de 1ms, sin tickHook
-   tickConfig( 1 );
+   // Inicializar el conteo de Ticks con resolucion de 1ms
+   tickInit( 1 );
 
    // Inicializar GPIOs
    gpioConfig( 0, GPIO_ENABLE );
 
-   // Configuración de pines de entrada para Teclas de la EDU-CIAA-NXP
+   // Configuracion de pines de entrada para Teclas de la EDU-CIAA-NXP
    gpioConfig( TEC1, GPIO_INPUT );
    gpioConfig( TEC2, GPIO_INPUT );
    gpioConfig( TEC3, GPIO_INPUT );
    gpioConfig( TEC4, GPIO_INPUT );
 
-   // Configuración de pines de salida para Leds de la EDU-CIAA-NXP
+   // Configuracion de pines de salida para Leds de la EDU-CIAA-NXP
    gpioConfig( LEDR, GPIO_OUTPUT );
    gpioConfig( LEDG, GPIO_OUTPUT );
    gpioConfig( LEDB, GPIO_OUTPUT );
@@ -86,7 +86,7 @@ void boardConfig(void) {
    gpioConfig( LED3, GPIO_OUTPUT );
 
 
-   // Configuración de pines de entrada de la CIAA-NXP
+   // Configuracion de pines de entrada de la CIAA-NXP
    gpioConfig( DI0, GPIO_INPUT );
    gpioConfig( DI1, GPIO_INPUT );
    gpioConfig( DI2, GPIO_INPUT );
@@ -96,7 +96,7 @@ void boardConfig(void) {
    gpioConfig( DI6, GPIO_INPUT );
    gpioConfig( DI7, GPIO_INPUT );
 
-   // Configuración de pines de salida de la CIAA-NXP
+   // Configuracion de pines de salida de la CIAA-NXP
    gpioConfig( DO0, GPIO_OUTPUT );
    gpioConfig( DO1, GPIO_OUTPUT );
    gpioConfig( DO2, GPIO_OUTPUT );

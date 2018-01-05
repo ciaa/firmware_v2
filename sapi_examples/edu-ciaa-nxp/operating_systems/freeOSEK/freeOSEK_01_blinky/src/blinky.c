@@ -7,8 +7,8 @@
 /*==================[inlcusiones]============================================*/
 
 //#include "blinky.h"   // <= own header (optional)
-#include "sapi.h"        // <= sAPI header
-#include "os.h"       // <= freeOSEK
+#include "sapi.h"       // <= sAPI header
+#include "os.h"         // <= freeOSEK
 
 /*==================[definiciones y macros]==================================*/
 
@@ -28,7 +28,7 @@ int main( void )
    // ---------- CONFIGURACIONES ------------------------------
    // Inicializar y configurar la plataforma
    boardConfig();
-
+   
    // ---------- INICIAR SISTEMA OPERATIVO --------------------
 	// Starts the operating system in the Application Mode 1
 	// This example has only one Application Mode
@@ -74,8 +74,5 @@ TASK(PeriodicTask2)
 /*==================[definiciones de funciones internas]=====================*/
 
 /*==================[definiciones de funciones externas]=====================*/
-
-// Board_Init();
-// ciaaIOInit();
 
 /*==================[end of file]============================================*/

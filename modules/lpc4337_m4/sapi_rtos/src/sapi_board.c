@@ -37,8 +37,8 @@
 
 #include "sapi_board.h"
 
-//#include "sapi_tick.h"
 #include "sapi_gpio.h"
+#include "sapi_cyclesCounter.h"
 
 /*==================[macros and definitions]=================================*/
 
@@ -60,15 +60,14 @@ void boardConfig(void) {
    // Read clock settings and update SystemCoreClock variable
    SystemCoreClockUpdate();
 
-   Board_Init(); // From Board module (modules/lpc4337_m4/board)
+   cyclesCounterConfig( SystemCoreClock );
 
-   // Inicializar el conteo de Ticks con resolución de 1ms, sin tickHook
-   //tickConfig( 1, 0 );
+   Board_Init(); // From Board module (modules/lpc4337_m4/board)
 
    // Inicializar GPIOs
    gpioConfig( 0, GPIO_ENABLE );
 
-   // Configuración de pines de entrada para Teclas de la EDU-CIAA-NXP
+   // Configuracion de pines de entrada para Teclas de la EDU-CIAA-NXP
    gpioConfig( TEC1, GPIO_INPUT );
    gpioConfig( TEC2, GPIO_INPUT );
    gpioConfig( TEC3, GPIO_INPUT );
@@ -81,7 +80,6 @@ void boardConfig(void) {
    gpioConfig( LED1, GPIO_OUTPUT );
    gpioConfig( LED2, GPIO_OUTPUT );
    gpioConfig( LED3, GPIO_OUTPUT );
-
 
    // Configuracion de pines de entrada de la CIAA-NXP
    gpioConfig( DI0, GPIO_INPUT );

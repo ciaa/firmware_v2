@@ -45,11 +45,11 @@
 
 /*==================[macros and definitions]=================================*/
 
-#define EMPTY_POSITION   255
-#define SERVO_TOTALNUMBER   9
-#define SERVO_COMPLETECYCLE_PERIOD   20000  /*value in uSec */
-#define SERVO_MAXUPTIME_PERIOD   2000  /*value in uSec */
-#define SERVO_MINUPTIME_PERIOD   500 /*value in uSec */
+#define EMPTY_POSITION               255
+#define SERVO_TOTALNUMBER            9
+#define SERVO_COMPLETECYCLE_PERIOD   20000  /* value in uSec */
+#define SERVO_MAXUPTIME_PERIOD       2000   /* value in uSec */
+#define SERVO_MINUPTIME_PERIOD       500    /* value in uSec */
 
 /*==================[internal data declaration]==============================*/
 
@@ -98,8 +98,7 @@ static bool_t servoDetach( servoMap_t servoNumber );
  * the signal, its necessary to connect servo number with the DIOMap_t (sAPI_PeripheralMap.h).
  * This way the user sets "servos", while using gpio outputs internally so the gpioWrite()
  * function can be easily used*/
-static const uint8_t servoMap[SERVO_TOTALNUMBER] =
-{
+static const uint8_t servoMap[SERVO_TOTALNUMBER] = {
    /* Servo name | DIOMap name | Name in the board*/
    /* SERVO0 */ T_FIL1, /* T_FIL1 */
    /* SERVO1 */ T_COL0, /* T_COL0 */
@@ -268,15 +267,13 @@ static bool_t servoAttach( servoMap_t servoNumber)
    bool_t success = FALSE;
    uint8_t position = 0;
 
-   /* Pin must b config as Output */
-   gpioConfig( (gpioMap_t)servoNumber, GPIO_OUTPUT );
+   /* Pin must be configure as Output */
+   gpioConfig( (gpioMap_t)servoMap[servoNumber], GPIO_OUTPUT );
 
    position = servoIsAttached(servoNumber);
-   if(position==0)
-   {
+   if( position==0 ){
       position = servoIsAttached(EMPTY_POSITION); /* Searches for the first empty position */
-      if(position) /* if position==0 => there is no room in the list for another servo */
-      {
+      if(position){ /* if position==0 => there is no room in the list for another servo */
          AttachedServoList[position-1].servo = servoNumber;
          /* Enables the compare match interrupt */
          Timer_EnableCompareMatch( AttachedServoList[position-1].associatedTimer,

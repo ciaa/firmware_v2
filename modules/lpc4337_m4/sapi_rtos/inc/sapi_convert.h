@@ -71,6 +71,8 @@ bool_t uint64ToString( uint64_t value, char* result, uint8_t base );
 
 char* uintToAsciiHex( uint64_t value, uint8_t bitSize );
 
+char* intToString( int64_t value );
+
 /*==================[examples]===============================================*/
 
 /*==================[end of file]============================================*/

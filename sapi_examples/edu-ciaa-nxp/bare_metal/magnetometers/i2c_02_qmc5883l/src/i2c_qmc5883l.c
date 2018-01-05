@@ -65,6 +65,8 @@ static char uartBuff[10];
 
 /*==================[external data definition]===============================*/
 
+CONSOLE_PRINT_ENABLE
+
 /*==================[internal functions definition]==========================*/
 uint8_t registroAleer;
 
@@ -76,7 +78,7 @@ uint8_t x_MSB, x_LSB;
 uint8_t y_MSB, y_LSB;
 uint8_t z_MSB, z_LSB;
 
-   uint8_t dataToReadBuffer;
+uint8_t dataToReadBuffer;
 
 /*==================[external functions definition]==========================*/
 
@@ -95,12 +97,12 @@ int main(void){
 
    qmc5883lPrepareDefaultConfig( &qmc5883L_configValue );
 
-   qmc5883L_configValue.mode    = QMC5883L_continuous_measurement;
+   qmc5883L_configValue.mode = QMC5883L_continuous_measurement;
 
    qmc5883lConfig( qmc5883L_configValue );
 
-   /* Inicializar Uart */
-   uartConfig( UART_USB, BAUD_RATE );
+   // Inicializar UART_USB como salida de consola
+   consolePrintConfigUart( UART_USB, BAUD_RATE );
 
 
    /* ------------- REPETIR POR SIEMPRE ------------- */

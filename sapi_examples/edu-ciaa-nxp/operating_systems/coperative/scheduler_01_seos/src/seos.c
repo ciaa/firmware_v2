@@ -127,10 +127,8 @@ static void scheduleAndDispatchTasks(void){
 /* ------------------- TICK HOOK -------------------- */
 
 /* FUNCION que se ejecuta cada vez que ocurre un Tick. */
-static bool_t myTickHook(void *ptr){
-
+static void myTickHook( void *ptr ){
    scheduleAndDispatchTasks();
-   return 0;
 }
 
 /*==================[external functions definition]==========================*/
@@ -144,12 +142,13 @@ int main(void){
    boardConfig();
 
    /* Inicializar el conteo de Ticks con resolucion de 1ms (se ejecuta
-      periódicamente una interrupcón cada 1ms que incrementa un contador de
-      Ticks obteniendose una base de tiempos). Se agrega además un "tick hook"
-      nombrado myTickHook. El tick hook es simplemente una función que se
-      ejecutará períodicamente con cada interrupción de Tick, este nombre se
-      refiere a una función "enganchada" a una interrupción */
-   tickConfig( 1, myTickHook );
+      periodicamente una interrupcon cada 1ms que incrementa un contador de
+      Ticks obteniendose una base de tiempos). Se agrega ademas un "tick hook"
+      nombrado myTickHook. El tick hook es simplemente una funcion que se
+      ejecutara periodicamente con cada interrupcion de Tick, este nombre se
+      refiere a una funcion "enganchada" a una interrupcion */
+   tickInit( 1 );
+   tickCallbackSet( myTickHook, NULL );
 
    /* ----- REPETIR POR SIEMPRE (SUPER LOOP) ----- */
 
@@ -160,7 +159,6 @@ int main(void){
          la de Tick. Comente esta duncion y note el aumento de temperatura
          del microcontrolador */
       sleepUntilNextInterrupt();
-
    }
 
    /* NO DEBE LLEGAR NUNCA AQUI, debido a que a este programa no es llamado

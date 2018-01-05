@@ -39,7 +39,7 @@
 
 #include "sapi_7_segment_display.h"   /* <= own header */
 
-//#include "sapi_delay.h"               /* <= delay header */
+#include "sapi_delay.h"               /* <= delay header */
 #include "sapi_gpio.h"                /* <= GPIO header */
 
 /*==================[macros and definitions]=================================*/

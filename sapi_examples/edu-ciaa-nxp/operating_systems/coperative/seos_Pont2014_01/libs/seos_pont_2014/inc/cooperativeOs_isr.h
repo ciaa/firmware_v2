@@ -63,7 +63,7 @@ void schedulerInit( void );
 void schedulerStart( tick_t );
 
 // FUNCION que contiene el planificador de tareas.
-bool_t schedulerUpdate( void *ptr );
+void schedulerUpdate( void *ptr );
 
 /*==================[cplusplus]==============================================*/
 
