@@ -44,18 +44,17 @@
 #PROJECT = examples/blinky_rit
 #PROJECT = examples/adc_fir_dac
 #PROJECT = examples/freertos_blinky
-#PROJECT = sapi_examples/edu-ciaa-nxp/sapi_usb_host_01_mass_storage_fatfilesystem
 
 #------------ sapi_examples ------------------------------------
 
 #------------ Bare-metal examples ------------
 
 #PROJECT = sapi_examples/edu-ciaa-nxp/bare_metal/gpio/gpio_01_switches_leds
-#PROJECT = sapi_examples/edu-ciaa-nxp/bare_metal/gpio/gpio_02_blinky
+PROJECT = sapi_examples/edu-ciaa-nxp/bare_metal/gpio/gpio_02_blinky
 #PROJECT = sapi_examples/edu-ciaa-nxp/bare_metal/gpio/gpio_03_blinky_switch
 #PROJECT = sapi_examples/edu-ciaa-nxp/bare_metal/gpio/gpio_04_led_sequences
 
-	#PROJECT = sapi_examples/edu-ciaa-nxp/bare_metal/keypad_7segment_01
+#PROJECT = sapi_examples/edu-ciaa-nxp/bare_metal/keypad_7segment_01
 #PROJECT = sapi_examples/edu-ciaa-nxp/bare_metal/lcd_01
 
 #PROJECT = sapi_examples/edu-ciaa-nxp/bare_metal/uart/uart_01_echo
@@ -81,7 +80,7 @@
 
 #PROJECT = sapi_examples/edu-ciaa-nxp/bare_metal/ultrasonicSensors/ultrasonicSensor_HCSR04_01
 
-	#PROJECT = sapi_examples/edu-ciaa-nxp/bare_metal/spi_01_sdCard_fatFileSystem
+#PROJECT = sapi_examples/edu-ciaa-nxp/bare_metal/spi_01_sdCard_fatFileSystem
 
 #PROJECT = sapi_examples/edu-ciaa-nxp/bare_metal/wifi_esp01_esp8266/01_uart_bridge
 #PROJECT = sapi_examples/edu-ciaa-nxp/bare_metal/wifi_esp01_esp8266/02_http_server
@@ -98,7 +97,7 @@
 
 #PROJECT = sapi_examples/edu-ciaa-nxp/operating_systems/freeRTOS/freeRTOS_01_blinky
 #PROJECT = sapi_examples/edu-ciaa-nxp/operating_systems/freeRTOS/freeRTOS_02_Queue
-	#PROJECT = sapi_examples/edu-ciaa-nxp/operating_systems/freeRTOS/freeRTOS_03_ChanFatFS_SPI_SdCard_ADC_log
+#PROJECT = sapi_examples/edu-ciaa-nxp/operating_systems/freeRTOS/freeRTOS_03_ChanFatFS_SPI_SdCard_ADC_log
 
 #-------------------------------------------------------------------------------
 # current target

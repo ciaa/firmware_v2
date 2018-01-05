@@ -36,7 +36,7 @@
 /*==================[inlcusiones]============================================*/
 
 #include "sd_spi.h"   // <= own header (optional)
-#include "sapi.h"       // <= sAPI header
+#include "sapi.h"     // <= sAPI header
 
 #include "ff.h"       // <= Biblioteca FAT FS
 
@@ -56,7 +56,7 @@ static FIL fp;             // <-- File object needed for each open file
 /*==================[declaraciones de funciones externas]====================*/
 
 // FUNCION que se ejecuta cada vezque ocurre un Tick
-bool_t diskTickHook( void *ptr );
+void diskTickHook( void *ptr );
 
 
 /*==================[funcion principal]======================================*/
@@ -71,9 +71,10 @@ int main( void ){
    // SPI configuration
    spiConfig( SPI0 );
 
-   // Inicializar el conteo de Ticks con resolución de 10ms,
+   // Inicializar el conteo de Ticks con resolucion de 10ms,
    // con tickHook diskTickHook
-   tickConfig( 10, diskTickHook );
+   tickConfig( 10 );
+   tickCallbackSet( diskTickHook, NULL );
 
    // ------ PROGRAMA QUE ESCRIBE EN LA SD -------
 
@@ -124,7 +125,7 @@ int main( void ){
 /*==================[definiciones de funciones externas]=====================*/
 
 // FUNCION que se ejecuta cada vezque ocurre un Tick
-bool_t diskTickHook( void *ptr ){
+void diskTickHook( void *ptr ){
    disk_timerproc();   // Disk timer process
    return 1;
 }

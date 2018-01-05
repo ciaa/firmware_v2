@@ -52,6 +52,7 @@
 #include "sapi_adc.h"                    // Use ADC0 peripheral
 #include "sapi_dac.h"                    // Use DAC peripheral
 #include "sapi_i2c.h"                    // Use I2C0 peripheral
+#include "sapi_spi.h"                    // Use SPI0 peripheral
 #include "sapi_rtc.h"                    // Use RTC peripheral
 #include "sapi_sleep.h"                  // Use ARM ASM instructions
 #include "sapi_cyclesCounter.h"          // Use ARM Debug Registers
