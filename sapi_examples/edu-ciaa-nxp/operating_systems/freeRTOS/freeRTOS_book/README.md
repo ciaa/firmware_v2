@@ -7,4 +7,8 @@
 #  EXAMPLE003: Experimenting with priorities
 #  EXAMPLE004: Using the Blocked state to create delay
 #  EXAMPLE005: Converting the example tasks to use vTaskDelayUntil
+#  EXAMPLE006: Combining blocking and non-blocking tasks
+#  EXAMPLE007: Defining an idle task hook function
+#  EXAMPLE008: Changing task priorities
+#  EXAMPLE009: Deleting tasks
 #
