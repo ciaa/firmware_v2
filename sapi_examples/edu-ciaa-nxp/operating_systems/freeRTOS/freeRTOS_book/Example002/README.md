@@ -1,4 +1,5 @@
-﻿# Example002 of  Richard Barry´s book w/freeRTOS & sAPI.
+﻿# Examples of  Richard Barry´s book w/freeRTOS & sAPI.
 #
-# https://www.freertos.org/Documentation/RTOS_book.html 
-
+# Example002: Using the task parameter
+#
+# https://www.freertos.org/Documentation/RTOS_book.html
