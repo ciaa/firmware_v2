@@ -103,6 +103,7 @@ PROJECT = sapi_examples/edu-ciaa-nxp/bare_metal/gpio/gpio_02_blinky
 #PROJECT = sapi_examples/edu-ciaa-nxp/operating_systems/freeRTOS/freeRTOS_book/Example002
 #PROJECT = sapi_examples/edu-ciaa-nxp/operating_systems/freeRTOS/freeRTOS_book/Example003
 #PROJECT = sapi_examples/edu-ciaa-nxp/operating_systems/freeRTOS/freeRTOS_book/Example004
+#PROJECT = sapi_examples/edu-ciaa-nxp/operating_systems/freeRTOS/freeRTOS_book/Example005
 
 #-------------------------------------------------------------------------------
 # current target
