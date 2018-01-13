@@ -81,9 +81,6 @@ const char *pcTextForMain = "\r\nExample004 - Using the Blocked state to create 
 static void prvSetupHardware(void);
 
 
-/* Used as a loop counter to create a very crude delay. */
-#define mainDELAY_LOOP_COUNT		( 0xffffff )
-
 /* The task function. */
 void vTaskFunction( void *pvParameters );
 
@@ -138,8 +135,8 @@ int main( void )
 
 void vTaskFunction( void *pvParameters )
 {
-char *pcTaskName;
-/*	const TickType_t xDelay250ms = pdMS_TO_TICKS( 250UL );
+	char *pcTaskName;
+	/*	const TickType_t xDelay250ms = pdMS_TO_TICKS( 250UL );
 	Not available in the freeRTOS version included in the firmware_v2 modules */
 
 	const TickType_t xDelay250ms = 250UL/portTICK_RATE_MS;
