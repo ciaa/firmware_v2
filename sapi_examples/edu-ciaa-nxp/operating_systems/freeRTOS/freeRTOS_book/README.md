@@ -11,4 +11,11 @@
 #  EXAMPLE007: Defining an idle task hook function
 #  EXAMPLE008: Changing task priorities
 #  EXAMPLE009: Deleting tasks
+#  EXAMPLE010: Blocking when receiving from a queue
+#  EXAMPLE011: Blocking when sending to a queue or sending structures on a queue
+#  EXAMPLE012: Using a binary semaphore to synchronize a task with an interrupt
+#  EXAMPLE013: Using a counting semaphore to synchronize a task with an interrupt
+#  EXAMPLE014: Sending and receiving on a queue from within an interrupt
+#  EXAMPLE015: Re-writing vPrintString() to use a semaphore
+#  EXAMPLE016: Re-writing vPrintString() to use a gatekeeper task
 #
