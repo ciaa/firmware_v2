@@ -155,8 +155,8 @@ int main( void )
 
 static void vSenderTask( void *pvParameters )
 {
-int32_t lValueToSend;
-BaseType_t xStatus;
+	int32_t lValueToSend;
+	BaseType_t xStatus;
 
 	/* Two instances are created of this task so the value that is sent to the
 	queue is passed in via the task parameter rather than be hard coded.  This way
