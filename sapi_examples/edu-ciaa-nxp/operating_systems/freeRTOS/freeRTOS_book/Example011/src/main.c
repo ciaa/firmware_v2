@@ -129,7 +129,8 @@ static void prvSetupHardware(void)
 	gpioWrite( LED1, ON );
 	gpioWrite( LED2, ON );
 	gpioWrite( LED3, ON );
-}/*-----------------------------------------------------------*/
+}
+/*-----------------------------------------------------------*/
 
 int main( void )
 {
@@ -272,4 +273,3 @@ static void vReceiverTask( void *pvParameters )
 		}
 	}
 }
-
