@@ -74,7 +74,7 @@ DEBUG_PRINT_ENABLE;
 #define	vPrintString(str) debugPrintString(str)
 
 
-const char *pcTextForMain = "\r\nExample005 - Converting the example tasks to use vTaskDelayUntil\r\n";
+const char *pcTextForMain = "\r\nExample005 - Converting the example tasks to use vTaskDelayUntil()\r\n";
 
 
 /* Sets up system hardware */

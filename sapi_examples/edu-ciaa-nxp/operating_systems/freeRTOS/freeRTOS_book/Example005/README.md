@@ -2,5 +2,5 @@
 #
 # https://www.freertos.org/Documentation/RTOS_book.html
 #
-#  EXAMPLE005: Converting the example tasks to use vTaskDelayUntil
+#  EXAMPLE005: Converting the example tasks to use vTaskDelayUntil()
 #
