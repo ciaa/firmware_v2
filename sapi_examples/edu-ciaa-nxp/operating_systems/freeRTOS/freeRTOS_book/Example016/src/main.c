@@ -204,11 +204,6 @@ int main(void)
 static void vHandlerTask( void *pvParameters )
 {
 	/* As per most tasks, this task is implemented within an infinite loop. */
-	/* Take the semaphore once to start with so the semaphore is empty before the
-	 * infinite loop is entered.  The semaphore was created before the scheduler
-	 * was started so before this task ran for the first time.*/
-   xSemaphoreTake(xBinarySemaphore, (portTickType) 0);
-
 	for( ;; )
 	{
 		/* LED state is toggled, keep a live */
