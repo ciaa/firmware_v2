@@ -4,5 +4,3 @@
 #
 #  EXAMPLE015: Resetting a software timer
 #
-#/* #include <conio.h>
-#   Not available in the tools/arm-none-eabi/include/ */
