@@ -32,7 +32,7 @@ microcontrollers.
 - gcc-arm-none-eabi
 
 ## Usage
-* Make sure you have an ```arm-none-eabi-*``` toolchain configured in your ```PATH```. If you don't have it, download [GCC ARM Embedded](https://launchpad.net/gcc-arm-embedded).
+* Make sure you have an ```arm-none-eabi-*``` toolchain configured in your ```PATH```. If you don't have it, download [GCC ARM Embedded](https://developer.arm.com/open-source/gnu-toolchain/gnu-rm).
 * ```git clone https://github.com/pridolfi/workspace.git && cd workspace```
 * ```cp project.mk.template project.mk```
 * Define ```PROJECT```, ```TARGET``` and ```BOARD``` (optional) variables in ```project.mk``` according to the project you want to compile.
