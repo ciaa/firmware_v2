@@ -39,7 +39,7 @@
 
 bool_t hmc5883lIsAlive( void ){
 
-   uint8_t idRegister[3];
+   uint8_t idRegister[3] = { 0, 0, 0 };
 
    // i2cRead( I2C0, HMC5883L_ADD, HMC5883L_REG_ID_REG_A, &idRegister, 3 );
 

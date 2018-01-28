@@ -77,7 +77,7 @@ bool_t servoConfig( servoMap_t servoNumber, servoConfig_t config );
  * @param:   value:   value of the servo, from 0 to 180
  * @return:   position (1 ~ SERVO_TOTALNUMBER), 0 if the element was not found.
  */
-uint8_t servoIsAttached( servoMap_t servoNumber);
+uint8_t servoIsAttached( servoMap_t servoNumber );
 
 /*
  * @brief: read the value of the servo
@@ -85,7 +85,7 @@ uint8_t servoIsAttached( servoMap_t servoNumber);
  * @return: value of the servo (0 ~ 180).
  *   If an error ocurred, return = EMPTY_POSITION = 255
  */
-uint16_t servoRead( servoMap_t servoNumber);
+uint16_t servoRead( servoMap_t servoNumber );
 
 /*
  * @brief: change the value of the servo
@@ -94,6 +94,30 @@ uint16_t servoRead( servoMap_t servoNumber);
  * @return: True if the value was successfully changed, False if not.
  */
 bool_t servoWrite( servoMap_t servoNumber, uint16_t angle );
+
+
+
+uint32_t valueToMicroseconds( uint8_t );
+
+void servoInitTimers( void );
+bool_t servoAttach( servoMap_t servoNumber );
+bool_t servoDetach( servoMap_t servoNumber );
+
+
+void timer1CompareMatch0func( void* ptr );
+void timer1CompareMatch1func( void* ptr );
+void timer1CompareMatch2func( void* ptr );
+void timer1CompareMatch3func( void* ptr );
+
+void timer2CompareMatch0func( void* ptr );
+void timer2CompareMatch1func( void* ptr );
+void timer2CompareMatch2func( void* ptr );
+void timer2CompareMatch3func( void* ptr );
+
+void timer3CompareMatch0func( void* ptr );
+void timer3CompareMatch1func( void* ptr );
+void timer3CompareMatch2func( void* ptr );
+void timer3CompareMatch3func( void* ptr );
 
 /*==================[cplusplus]==============================================*/
 

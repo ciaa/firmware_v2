@@ -100,6 +100,9 @@ static bool_t dht11_StartRead(void) {
 	uint32_t n_tick         = 0;
 	uint32_t n_bit          = 0;
 
+   (void) flag_timeout;   // Use a variable to not produce compiler Warnings
+   (void) flag_error;     // Use a variable to not produce compiler Warnings
+   
 	dht11_GPIO_Low();
 	delay(20);
 	dht11_GPIO_High();

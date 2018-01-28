@@ -47,7 +47,7 @@ typedef struct {
 } io_port_t;
 
 static const io_port_t gpioLEDBits[] = {{5,0},{5,1},{5,2},{0,14},{1,11},{1,12}};
-static uint32_t lcd_cfg_val;
+//static uint32_t lcd_cfg_val;
 
 void Board_UART_Init(LPC_USART_T *pUART)
 {

@@ -98,6 +98,7 @@ typedef enum Esp8266State{
 /*==================[definiciones de datos internos]=========================*/
 
 //Nombres de los estados en forma de strings para imprimir por pantalla.
+/*
 static const char Esp8266StatusToString[][MAX_COMMAND_LENGHT] = {
    "ESP_INIT",
    "ESP_SEND_AT",
@@ -140,6 +141,8 @@ static const char Esp8266StatusToString[][MAX_COMMAND_LENGHT] = {
    "ESP_WAIT_CIFSR",
    "ESP_LOAD_IP"
 };
+*/
+
 // Respuestas del ESP8266
 static const char Response_OK[]        = "OK";
 static const char Response_CWJAP_OK[]  = "+CWJAP:";

@@ -38,6 +38,7 @@
 
 #include "sapi_rgb.h"
 #include "chip.h"
+#include "sapi_timer.h"
 
 /*==================[definiciones y macros]==================================*/
 
@@ -77,9 +78,9 @@ static RgbLed_t RgbLeds [MAX_AMOUNT_OF_RGB_LEDS];
 
 /*==================[declaraciones de funciones internas]====================*/
 
-static bool_t UpdateLedsStates   (void *param);
-static void   StabilizePwmValues (LedRgbMap_t rgbLed);
-static void	  InitRgbFirstTime   (void);
+static void UpdateLedsStates( void *param);
+static void StabilizePwmValues( LedRgbMap_t rgbLed );
+static void	InitRgbFirstTime( void );
 
 /*==================[declaraciones de funciones externas]====================*/
 
@@ -88,7 +89,7 @@ static void	  InitRgbFirstTime   (void);
 /**
  * FUNCION de INTERRUPCION DEL Timer que se ejecuta cada vezque ocurre un Tick.
  */
-static bool_t UpdateLedsStates     (void *param){
+static void UpdateLedsStates( void *param ){
 // Variable para contar el paso del tiempo
 static uint32_t ticksCounter = 0;
 uint8_t index;
@@ -112,7 +113,7 @@ uint8_t index;
 			}
 		}
 	}
-	return TRUE;
+	//return TRUE;
 }
 
 /**

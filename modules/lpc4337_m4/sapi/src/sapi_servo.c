@@ -64,32 +64,11 @@ typedef struct
    * it won't be the same to attach a servo in one position or another in the list*/
    uint8_t associatedTimer;
    uint8_t associatedCompareMatch;
-   voidFunctionPointer_t associatedFunction;
+   callBackFuncPtr_t associatedFunction;
 
 }attachedServo_t;
 
 /*==================[internal functions declaration]=========================*/
-
-static uint32_t valueToMicroseconds(uint8_t );
-
-static void timer1CompareMatch0func(void);
-static void timer1CompareMatch1func(void);
-static void timer1CompareMatch2func(void);
-static void timer1CompareMatch3func(void);
-
-static void timer2CompareMatch0func(void);
-static void timer2CompareMatch1func(void);
-static void timer2CompareMatch2func(void);
-static void timer2CompareMatch3func(void);
-
-static void timer3CompareMatch0func(void);
-static void timer3CompareMatch1func(void);
-static void timer3CompareMatch2func(void);
-static void timer3CompareMatch3func(void);
-
-static void servoInitTimers( void );
-static bool_t servoAttach( servoMap_t servoNumber );
-static bool_t servoDetach( servoMap_t servoNumber );
 
 /*==================[internal data definition]===============================*/
 
@@ -98,7 +77,7 @@ static bool_t servoDetach( servoMap_t servoNumber );
  * the signal, its necessary to connect servo number with the DIOMap_t (sAPI_PeripheralMap.h).
  * This way the user sets "servos", while using gpio outputs internally so the gpioWrite()
  * function can be easily used*/
-static const uint8_t servoMap[SERVO_TOTALNUMBER] = {
+static const uint8_t servoMap[ SERVO_TOTALNUMBER ] = {
    /* Servo name | DIOMap name | Name in the board*/
    /* SERVO0 */ T_FIL1, /* T_FIL1 */
    /* SERVO1 */ T_COL0, /* T_COL0 */
@@ -112,18 +91,18 @@ static const uint8_t servoMap[SERVO_TOTALNUMBER] = {
 };
 
 /*when the user adds a servo with servoAttach the list updates with the servo number*/
-static attachedServo_t AttachedServoList[SERVO_TOTALNUMBER] =
+static attachedServo_t AttachedServoList[ SERVO_TOTALNUMBER ] =
 {
 /*position |Servo number | value | asociatedTimer | associatedCompareMatch | associatedFunction*/
-   /*0*/	{EMPTY_POSITION , 0,  TIMER1 , TIMERCOMPAREMATCH1 , timer1CompareMatch1func},
-   /*1*/	{EMPTY_POSITION , 0 , TIMER1 , TIMERCOMPAREMATCH2 , timer1CompareMatch2func},
-   /*2*/	{EMPTY_POSITION , 0 , TIMER1 , TIMERCOMPAREMATCH3 , timer1CompareMatch3func},
-   /*3*/	{EMPTY_POSITION , 0 , TIMER2 , TIMERCOMPAREMATCH1 , timer2CompareMatch1func},
-   /*4*/	{EMPTY_POSITION , 0 , TIMER2 , TIMERCOMPAREMATCH2 , timer2CompareMatch2func},
-   /*5*/	{EMPTY_POSITION , 0 , TIMER2 , TIMERCOMPAREMATCH3 , timer2CompareMatch3func},
-   /*6*/	{EMPTY_POSITION , 0 , TIMER3 , TIMERCOMPAREMATCH1 , timer3CompareMatch1func},
-   /*7*/	{EMPTY_POSITION , 0 , TIMER3 , TIMERCOMPAREMATCH2 , timer3CompareMatch2func},
-   /*8*/	{EMPTY_POSITION , 0 , TIMER3 , TIMERCOMPAREMATCH3 , timer3CompareMatch3func}
+   /*0*/	{ EMPTY_POSITION , 0,  TIMER1 , TIMERCOMPAREMATCH1 , timer1CompareMatch1func },
+   /*1*/	{ EMPTY_POSITION , 0 , TIMER1 , TIMERCOMPAREMATCH2 , timer1CompareMatch2func },
+   /*2*/	{ EMPTY_POSITION , 0 , TIMER1 , TIMERCOMPAREMATCH3 , timer1CompareMatch3func },
+   /*3*/	{ EMPTY_POSITION , 0 , TIMER2 , TIMERCOMPAREMATCH1 , timer2CompareMatch1func },
+   /*4*/	{ EMPTY_POSITION , 0 , TIMER2 , TIMERCOMPAREMATCH2 , timer2CompareMatch2func },
+   /*5*/	{ EMPTY_POSITION , 0 , TIMER2 , TIMERCOMPAREMATCH3 , timer2CompareMatch3func },
+   /*6*/	{ EMPTY_POSITION , 0 , TIMER3 , TIMERCOMPAREMATCH1 , timer3CompareMatch1func },
+   /*7*/	{ EMPTY_POSITION , 0 , TIMER3 , TIMERCOMPAREMATCH2 , timer3CompareMatch2func },
+   /*8*/	{ EMPTY_POSITION , 0 , TIMER3 , TIMERCOMPAREMATCH3 , timer3CompareMatch3func }
 };
 
 /*==================[external data definition]===============================*/
@@ -137,7 +116,7 @@ static attachedServo_t AttachedServoList[SERVO_TOTALNUMBER] =
  * @note   Should be used with Timer_microsecondsToTicks to use some of
  *   the functions in the sAPI_Timer that requires ticks as a parameter
 */
-static uint32_t valueToMicroseconds(uint8_t value){
+uint32_t valueToMicroseconds( uint8_t value ){
 
    return (SERVO_MINUPTIME_PERIOD+(value*SERVO_MAXUPTIME_PERIOD)/180);
 }
@@ -147,8 +126,8 @@ static uint32_t valueToMicroseconds(uint8_t value){
  * (to visualize it, think about the 'timer ramp')
  * @note:   this function can't be generalized because sAPI_Timer functions expect void-void function pointers
  */
-static void timer1CompareMatch0func(void)
-{
+void timer1CompareMatch0func( void* ptr ){
+
    uint8_t servoListPosition= 0;
 
    for(servoListPosition=0;servoListPosition<3;servoListPosition++)
@@ -163,23 +142,19 @@ static void timer1CompareMatch0func(void)
    }
 }
 
-static void timer1CompareMatch1func(void)
-{
+void timer1CompareMatch1func( void* ptr ){
    gpioWrite(servoMap[AttachedServoList[0].servo],FALSE);
 }
 
-static void timer1CompareMatch2func(void)
-{
+void timer1CompareMatch2func( void* ptr ){
    gpioWrite(servoMap[AttachedServoList[1].servo],FALSE);
 }
 
-static void timer1CompareMatch3func(void)
-{
+void timer1CompareMatch3func( void* ptr ){
    gpioWrite(servoMap[AttachedServoList[2].servo],FALSE);
 }
 
-static void timer2CompareMatch0func(void)
-{
+void timer2CompareMatch0func( void* ptr ){
    uint8_t servoListPosition= 3;
 
    for(servoListPosition=3;servoListPosition<6;servoListPosition++)
@@ -194,19 +169,19 @@ static void timer2CompareMatch0func(void)
 	}
 }
 
-static void timer2CompareMatch1func(void){
+void timer2CompareMatch1func( void* ptr ){
    gpioWrite(servoMap[AttachedServoList[3].servo],FALSE);
 }
 
-static void timer2CompareMatch2func(void){
+void timer2CompareMatch2func( void* ptr ){
    gpioWrite(servoMap[AttachedServoList[4].servo],FALSE);
 }
 
-static void timer2CompareMatch3func(void){
+void timer2CompareMatch3func( void* ptr ){
    gpioWrite(servoMap[AttachedServoList[5].servo],FALSE);
 }
 
-static void timer3CompareMatch0func(void){
+void timer3CompareMatch0func( void* ptr ){
 
    uint8_t servoListPosition= 6;
 
@@ -222,16 +197,16 @@ static void timer3CompareMatch0func(void){
    }
 }
 
-static void timer3CompareMatch1func(void){
-   gpioWrite(servoMap[AttachedServoList[6].servo],FALSE);
+void timer3CompareMatch1func( void* ptr ){
+   gpioWrite( servoMap[AttachedServoList[6].servo], FALSE );
 }
 
-static void timer3CompareMatch2func(void){
-   gpioWrite(servoMap[AttachedServoList[7].servo],FALSE);
+void timer3CompareMatch2func( void* ptr ){
+   gpioWrite( servoMap[AttachedServoList[7].servo], FALSE );
 }
 
-static void timer3CompareMatch3func(void){
-   gpioWrite(servoMap[AttachedServoList[8].servo],FALSE);
+void timer3CompareMatch3func( void* ptr ){
+   gpioWrite( servoMap[AttachedServoList[8].servo], FALSE );
 }
 
 
@@ -242,7 +217,7 @@ static void timer3CompareMatch3func(void){
  * @IMPORTANT:   this function uses Timer 1, 2 and 3 to generate the servo signals, so
  *   they won't be available to use.
  */
-static void servoInitTimers(void){
+void servoInitTimers(void){
    Timer_Init( TIMER1,
                Timer_microsecondsToTicks(SERVO_COMPLETECYCLE_PERIOD),
                timer1CompareMatch0func
@@ -262,7 +237,7 @@ static void servoInitTimers(void){
  * @param   servoNumber:   ID of the servo, from 0 to 8
  * @return: True if servo was successfully attached, False if not.
  */
-static bool_t servoAttach( servoMap_t servoNumber)
+bool_t servoAttach( servoMap_t servoNumber )
 {
    bool_t success = FALSE;
    uint8_t position = 0;
@@ -293,7 +268,7 @@ static bool_t servoAttach( servoMap_t servoNumber)
  * @param   servoNumber:   ID of the servo, from 0 to 8
  * @return: True if servo was successfully detached, False if not.
  */
-static bool_t servoDetach( servoMap_t servoNumber )
+bool_t servoDetach( servoMap_t servoNumber )
 {
    bool_t success = FALSE;
    uint8_t position = 0;
@@ -380,15 +355,14 @@ uint8_t servoIsAttached( servoMap_t servoNumber ){
  * @return: value of the servo (0 ~ 180).
  *   If an error ocurred, return = EMPTY_POSITION = 255
  */
-uint16_t servoRead( servoMap_t servoNumber){
+uint16_t servoRead( servoMap_t servoNumber ){
 
    uint8_t position = 0, value = 0;
    position = servoIsAttached(servoNumber);
 
    if(position){
       value = AttachedServoList[position-1].value;
-   }
-   else{
+   } else{
       value = EMPTY_POSITION;
    }
    return value;

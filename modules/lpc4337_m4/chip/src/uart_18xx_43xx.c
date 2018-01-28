@@ -95,7 +95,7 @@ STATIC void Chip_UART_ABIntHandler(LPC_USART_T *pUART)
 /* Initializes the pUART peripheral */
 void Chip_UART_Init(LPC_USART_T *pUART)
 {
-    volatile uint32_t tmp;
+   volatile uint32_t tmp;
 
 	/* Enable UART clocking. UART base clock(s) must already be enabled */
 	Chip_Clock_EnableOpts(UART_PClock[Chip_UART_GetIndex(pUART)], true, true, 1);
@@ -103,10 +103,10 @@ void Chip_UART_Init(LPC_USART_T *pUART)
 	/* Enable FIFOs by default, reset them */
 	Chip_UART_SetupFIFOS(pUART, (UART_FCR_FIFO_EN | UART_FCR_RX_RS | UART_FCR_TX_RS));
 
-    /* Disable Tx */
-    Chip_UART_TXDisable(pUART);
+   /* Disable Tx */
+   Chip_UART_TXDisable(pUART);
 
-    /* Disable interrupts */
+   /* Disable interrupts */
 	pUART->IER = 0;
 	/* Set LCR to default state */
 	pUART->LCR = 0;
@@ -125,6 +125,7 @@ void Chip_UART_Init(LPC_USART_T *pUART)
 		pUART->MCR = 0;
 		/*Dummy Reading to Clear Status */
 		tmp = pUART->MSR;
+      (void) tmp; // Use a variable to not produce compiler Warnings
 	}
 
 	/* Default 8N1, with DLAB disabled */

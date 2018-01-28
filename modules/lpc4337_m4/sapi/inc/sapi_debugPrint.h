@@ -54,49 +54,49 @@ void debugPrintlnHex( uint64_t number, uint8_t bitSize );
 #if( DEBUG_PRINT == ON )
 
    // Initialize
-   #define DEBUG_PRINT_ENABLE                       static print_t debugPrint;
-   #define debugPrintSetUart(uart);                 printSetUart(&(debugPrint),(uart));
-   #define debugPrintConfigUart(uart,baudRate);     printConfigUart(&(debugPrint),(uart),(baudRate));
+   #define DEBUG_PRINT_ENABLE                      static print_t debugPrint;
+   #define debugPrintSetUart(uart)                 printSetUart(&(debugPrint),(uart))
+   #define debugPrintConfigUart(uart,baudRate)     printConfigUart(&(debugPrint),(uart),(baudRate))
 
    // Print String
-   #define debugPrintString(string);                printString((debugPrint),(string));
-   #define debugPrintEnter();                       printEnter(debugPrint);
-   #define debugPrintlnString(string);              printlnString((debugPrint),(string));
+   #define debugPrintString(string)                printString((debugPrint),(string))
+   #define debugPrintEnter()                       printEnter(debugPrint)
+   #define debugPrintlnString(string)              printlnString((debugPrint),(string))
 
    // Print Integer
-   #define debugPrintIntFormat(number,format);      printIntFormat((debugPrint),(number),(format));
-   #define debugPrintUIntFormat(number,format);     printUIntFormat((debugPrint),(number),(format));
-   #define debugPrintlnIntFormat(number,format);    printlnIntFormat((debugPrint),(number),(format));
-   #define debugPrintlnUIntFormat(number,format);   printlnUIntFormat((debugPrint),(number),(format));
-   #define debugPrintInt(number);                   printInt((debugPrint),(number));
-   #define debugPrintUInt(number);                  printUInt((debugPrint),(number));
-   #define debugPrintlnInt(number);                 printlnInt((debugPrint),(number));
-   #define debugPrintlnUInt(number);                printlnUInt((debugPrint),(number));
-   #define debugPrintHex(number,bitSize);           printHex((debugPrint),(number),(bitSize));
-   #define debugPrintlnHex(number,bitSize);         printlnHex((debugPrint),(number),(bitSize));
+   #define debugPrintIntFormat(number,format)      printIntFormat((debugPrint),(number),(format))
+   #define debugPrintUIntFormat(number,format)     printUIntFormat((debugPrint),(number),(format))
+   #define debugPrintlnIntFormat(number,format)    printlnIntFormat((debugPrint),(number),(format))
+   #define debugPrintlnUIntFormat(number,format)   printlnUIntFormat((debugPrint),(number),(format)
+   #define debugPrintInt(number)                   printInt((debugPrint),(number))
+   #define debugPrintUInt(number)                  printUInt((debugPrint),(number))
+   #define debugPrintlnInt(number)                 printlnInt((debugPrint),(number))
+   #define debugPrintlnUInt(number)                printlnUInt((debugPrint),(number))
+   #define debugPrintHex(number,bitSize)           printHex((debugPrint),(number),(bitSize))
+   #define debugPrintlnHex(number,bitSize)         printlnHex((debugPrint),(number),(bitSize))
 
 #else
 
    // Initialize
-   #define DEBUG_PRINT_ENABLE                       ;
-   #define debugPrintConfigUart(uart,baudRate);     ;
+   #define DEBUG_PRINT_ENABLE                      (void)
+   #define debugPrintConfigUart(uart,baudRate)     do { (void) (uart); (void) (baudRate); } while(0)
 
    // Print String
-   #define debugPrintString(string);                ;
-   #define debugPrintEnter();                       ;
-   #define debugPrintlnString(string);              ;
+   #define debugPrintString(string)                do { (void) (string); } while(0)
+   #define debugPrintEnter()                       (void)
+   #define debugPrintlnString(string)              do { (void) (string); } while(0)
 
    // Print Integer
-   #define debugPrintIntFormat(number,format);      ;
-   #define debugPrintUIntFormat(number,format);     ;
-   #define debugPrintlnIntFormat(number,format);    ;
-   #define debugPrintlnUIntFormat(number,format);   ;
-   #define debugPrintInt(number);                   ;
-   #define debugPrintUInt(number);                  ;
-   #define debugPrintlnInt(number);                 ;
-   #define debugPrintlnUInt(number);                ;
-   #define debugPrintHex(number,bitSize);           ;
-   #define debugPrintlnHex(number,bitSize);         ;
+   #define debugPrintIntFormat(number,format)      do { (void) (number); (void) (format); } while(0)
+   #define debugPrintUIntFormat(number,format)     do { (void) (number); (void) (format); } while(0)
+   #define debugPrintlnIntFormat(number,format)    do { (void) (number); (void) (format); } while(0)
+   #define debugPrintlnUIntFormat(number,format)   do { (void) (number); (void) (format); } while(0)
+   #define debugPrintInt(number)                   do { (void) (number); } while(0)
+   #define debugPrintUInt(number)                  do { (void) (number); } while(0)
+   #define debugPrintlnInt(number)                 do { (void) (number); } while(0)
+   #define debugPrintlnUInt(number)                do { (void) (number); } while(0)
+   #define debugPrintHex(number,bitSize)           do { (void) (number); (void) (bitSize); } while(0)
+   #define debugPrintlnHex(number,bitSize)         do { (void) (number); (void) (bitSize); } while(0)
 
 #endif
 

@@ -61,7 +61,6 @@ void* callBackFuncParams = NULL;
 bool_t tickInit( tick_t tickRateMSvalue ) {
 
    bool_t ret_val = 1;
-   tick_t tickRateHz = 0;
 
    if( tickRateMSvalue == 0 ){
       tickPowerSet( OFF );
@@ -77,10 +76,9 @@ bool_t tickInit( tick_t tickRateMSvalue ) {
          tickRateHz =  100 =>  100 ticks per second => 10 ms tick
          tickRateHz =   20 =>   20 ticks per second => 50 ms tick
          */
-         tickRateHz = 1000 / tickRateMSvalue;
-
          // Init SysTick interrupt, tickRateHz ticks per second
-         SysTick_Config( SystemCoreClock / tickRateHz);
+         SysTick_Config( SystemCoreClock * tickRateMSvalue / 1000 );
+         
          /*
          if ( SysTick_Config( CMU_ClockFreqGet(cmuClock_CORE) / tickRateHz) ){
 		      //DEBUG_BREAK;
