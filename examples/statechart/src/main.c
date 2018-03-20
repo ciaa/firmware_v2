@@ -1,4 +1,4 @@
-/* Copyright 2016, Pablo Ridolfi
+/* Copyright 2017, Pablo Ridolfi, Juan Esteban Alarcón, Juan Manuel Cruz
  * All rights reserved.
  *
  * This file is part of Workspace.
@@ -46,14 +46,61 @@
 /* Include statechart header file. Be sure you run the statechart C code
  * generation tool!
  */
-#include "Idleblink.h"
+#include "Prefix.h"
+#include "TimerTicks.h"
+
 
 /*==================[macros and definitions]=================================*/
+/* Compilation choices */
+#define SCT_1 (1)	/* Test Statechart EDU-CIAA-NXP - Blink LED3
+						#define __USE_TIME_EVENTS (false)
+						rm prefix.sct
+ 	 	 	 	 	 	cp Blink.-sct prefix.sct 							 */
+#define SCT_1 (1)	/* Test Statechart EDU-CIAA-NXP - Blink TimeEvent LED3
+						#define __USE_TIME_EVENTS (true)
+ 	 	 	 	 	 	rm prefix.sct
+ 	 	 	 	 	 	cp BlinkTimeEvent.-sct prefix.sct 					 */
+#define SCT_2 (2)	/* Test Statechart EDU-CIAA-NXP - Idle Blink LED3
+						#define __USE_TIME_EVENTS (true)
+ 	 	 	 	 	 	rm prefix.sct
+ 	 	 	 	 	 	cp IdleBlink.-sct prefix.sct 					 	 */
+#define SCT_2 (2)	/* Test Statechart EDU-CIAA-NXP - Button
+						#define __USE_TIME_EVENTS (true)
+ 	 	 	 	 	 	rm prefix.sct
+ 	 	 	 	 	 	cp Button.-sct prefix.sct 							 */
+#define SCT_3 (3)	/* Test Statechart EDU-CIAA-NXP - IDE LPCXpresso - Application
+						#define __USE_TIME_EVENTS (true)
+ 	 	 	 	 	 	rm prefix.sct
+ 	 	 	 	 	 	cp Application.-sct prefix.sct 								*/
+#define SCT_3 (3)	/* Test Statechart EDU-CIAA-NXP - IDE LPCXpresso - Portón
+						#define __USE_TIME_EVENTS (true)
+ 	 	 	 	 	 	rm prefix.sct
+ 	 	 	 	 	 	cp Porton.-sct prefix.sct 							 		*/
+
+/* Select a compilation choise	*/
+#define TEST (SCT_1)
 
 /*==================[internal data declaration]==============================*/
 
-/** statechart instance */
-static Idleblink statechart;
+volatile bool SysTick_Time_Flag = false;
+
+/*! This is a state machine */
+static Prefix statechart;
+
+
+/* Select a TimeEvents choise	*/
+#define __USE_TIME_EVENTS (false)	/* "false" without TimeEvents */
+/*#define __USE_TIME_EVENTS (true)	/* or "true" with TimerEvents */
+
+/*! This is a timed state machine that requires timer services */
+#if (__USE_TIME_EVENTS == true)
+	#define NOF_TIMERS (sizeof(PrefixTimeEvents)/sizeof(sc_boolean))
+#else
+	#define NOF_TIMERS 0
+#endif
+
+TimerTicks ticks[NOF_TIMERS];
+
 
 /*==================[internal functions declaration]=========================*/
 
@@ -72,54 +119,264 @@ static void initHardware(void);
 static void initHardware(void)
 {
 	Board_Init();
-	Board_Buttons_Init();
 	SystemCoreClockUpdate();
 	SysTick_Config(SystemCoreClock / 1000);
 }
 
 /*==================[external functions definition]==========================*/
 
+/*! \file This header defines prototypes for all functions that are required by the state machine implementation.
+
+This is a state machine uses time events which require access to a timing service. Thus the function prototypes:
+	- prefix_setTimer and
+	- prefix_unsetTimer
+are defined.
+
+This state machine makes use of operations declared in the state machines interface or internal scopes. Thus the function prototypes:
+	- prefixIface_opLED
+are defined.
+
+These functions will be called during a 'run to completion step' (runCycle) of the statechart.
+There are some constraints that have to be considered for the implementation of these functions:
+	- never call the statechart API functions from within these functions.
+	- make sure that the execution time is as short as possible.
+
+*/
 /** state machine user-defined external function (action)
  *
  * @param handle state machine instance
+ * @param LEDNumber number of LED
  * @param onoff state machine operation parameter
  */
-void idleblinkIface_opLED(Idleblink* handle, const sc_boolean onoff)
+void prefixIface_opLED(Prefix* handle, sc_integer LEDNumber, sc_boolean State)
 {
-	Board_LED_Set(LED, onoff);
+	Board_LED_Set((uint8_t) LEDNumber, State);
 }
 
-/** SysTick interrupt handler */
+
+/*!
+ * This is a timed state machine that requires timer services
+ */
+
+#if (__USE_TIME_EVENTS == true)
+/*! This function has to set up timers for the time events that are required by the state machine. */
+/*!
+	This function will be called for each time event that is relevant for a state when a state will be entered.
+	\param evid An unique identifier of the event.
+	\time_ms The time in milli seconds
+	\periodic Indicates the the time event must be raised periodically until the timer is unset
+*/
+void prefix_setTimer(Prefix* handle, const sc_eventid evid, const sc_integer time_ms, const sc_boolean periodic)
+{
+	SetNewTimerTick(ticks, NOF_TIMERS, evid, time_ms, periodic);
+}
+
+/*! This function has to unset timers for the time events that are required by the state machine. */
+/*!
+	This function will be called for each time event taht is relevant for a state when a state will be left.
+	\param evid An unique identifier of the event.
+*/
+void prefix_unsetTimer(Prefix* handle, const sc_eventid evid)
+{
+	UnsetTimerTick(ticks, NOF_TIMERS, evid);
+}
+#endif
+
+
+/**
+ * @brief	Handle interrupt from SysTick timer
+ * @return	Nothing
+ */
 void SysTick_Handler(void)
 {
-	/* send evTick event to state machine every 1ms */
-	idleblinkIface_raise_evTick(&statechart);
-
-	/* update state machine every 1ms */
-	idleblink_runCycle(&statechart);
+	SysTick_Time_Flag = true;
 }
 
-/** main function, application entry point */
+
+#if (TEST == SCT_1)	/* Test Statechart EDU-CIAA-NXP - Blink LED3
+						#define __USE_TIME_EVENTS (false)
+						rm prefix.sct
+ 	 	 	 	 	 	cp Blink.-sct prefix.sct 							 */
+					/* Test Statechart EDU-CIAA-NXP - Blink TimeEvent LED3
+						#define __USE_TIME_EVENTS (true)
+ 	 	 	 	 	 	rm prefix.sct
+ 	 	 	 	 	 	cp BlinkTimeEvent.-sct prefix.sct 					 */
+/**
+ * @brief	main routine for statechart example
+ * @return	Function should not exit.
+ */
 int main(void)
 {
-	/* init and reset state machine */
-	idleblink_init(&statechart);
-	idleblink_enter(&statechart);
+	#if (__USE_TIME_EVENTS == true)
+	uint32_t i;
+	#endif
 
+	/* Generic Initialization */
 	initHardware();
 
-	while (1) {
-		if (Buttons_GetStatus() != NO_BUTTON_PRESSED) {
-			/* if a button is pressed, send evButton to state machine */
-			idleblinkIface_raise_evButton(&statechart);
+	/* Statechart Initialization */
+	#if (__USE_TIME_EVENTS == true)
+	InitTimerTicks(ticks, NOF_TIMERS);
+	#endif
 
-			/* wait until button is released */
-			while (Buttons_GetStatus() != NO_BUTTON_PRESSED) {
-				__WFI(); /* wait for interrupt */
+	prefix_init(&statechart);
+	prefix_enter(&statechart);
+
+	/* LEDs toggle in main */
+	while (1) {
+		__WFI();
+
+		if (SysTick_Time_Flag == true) {
+			SysTick_Time_Flag = false;
+
+			#if (__USE_TIME_EVENTS == true)
+			UpdateTimers(ticks, NOF_TIMERS);
+			for (i = 0; i < NOF_TIMERS; i++) {
+				if (IsPendEvent(ticks, NOF_TIMERS, ticks[i].evid) == true) {
+
+					prefix_raiseTimeEvent(&statechart, ticks[i].evid);	// Event -> Ticks.evid => OK
+					MarkAsAttEvent(ticks, NOF_TIMERS, ticks[i].evid);
+				}
 			}
+			#else
+			prefixIface_raise_evTick(&statechart);					// Event -> evTick => OK
+			#endif
+
+			prefix_runCycle(&statechart);							// Run Cycle of Statechart
 		}
 	}
 }
+#endif
+
+
+#if (TEST == SCT_2)	/* Test Statechart EDU-CIAA-NXP - Idle Blink LED3
+						#define __USE_TIME_EVENTS (true)
+ 	 	 	 	 	 	rm prefix.sct
+ 	 	 	 	 	 	cp IdleBlink.-sct prefix.sct 					 	 */
+					/* Test Statechart EDU-CIAA-NXP - Button
+						#define __USE_TIME_EVENTS (true)
+ 	 	 	 	 	 	rm prefix.sct
+ 	 	 	 	 	 	cp Button.-sct prefix.sct 							 */
+/**
+ * @brief	main routine for statechart example
+ * @return	Function should not exit.
+ */
+int main(void)
+{
+#if (__USE_TIME_EVENTS == true)
+	uint32_t i;
+#endif
+
+	uint32_t BUTTON_Status;
+
+	/* Generic Initialization */
+	initHardware();
+
+	/* Statechart Initialization */
+	#if (__USE_TIME_EVENTS == true)
+	InitTimerTicks(ticks, NOF_TIMERS);
+	#endif
+
+	prefix_init(&statechart);
+	prefix_enter(&statechart);
+
+	/* LEDs toggle in main */
+	while (1) {
+		__WFI();
+
+		if (SysTick_Time_Flag == true) {
+			SysTick_Time_Flag = false;
+
+			#if (__USE_TIME_EVENTS == true)
+			UpdateTimers(ticks, NOF_TIMERS);
+			for (i = 0; i < NOF_TIMERS; i++) {
+				if (IsPendEvent(ticks, NOF_TIMERS, ticks[i].evid) == true) {
+
+					prefix_raiseTimeEvent(&statechart, ticks[i].evid);	// Event -> Ticks.evid => OK
+					MarkAsAttEvent(ticks, NOF_TIMERS, ticks[i].evid);
+				}
+			}
+			#else
+			prefixIface_raise_evTick(&statechart);					// Event -> evTick => OK
+			#endif
+
+			BUTTON_Status = Buttons_GetStatus();
+			if (BUTTON_Status != 0)
+				prefixIface_raise_evTECXOprimido(&statechart);		// Event -> evTECXOprimodo => OK
+			else
+				prefixIface_raise_evTECXNoOprimido(&statechart);	// Event -> evTECXNoOprimido => OK
+
+			prefix_runCycle(&statechart);							// Run Cycle of Statechart
+		}
+	}
+}
+#endif
+
+
+#if (TEST == SCT_3)	/* Test Statechart EDU-CIAA-NXP - IDE LPCXpresso - Application
+						#define __USE_TIME_EVENTS (true)
+ 	 	 	 	 	 	rm prefix.sct
+ 	 	 	 	 	 	cp Application.-sct prefix.sct 								*/
+					/* Test Statechart EDU-CIAA-NXP - IDE LPCXpresso - Portón
+						#define __USE_TIME_EVENTS (true)
+ 	 	 	 	 	 	rm prefix.sct
+ 	 	 	 	 	 	cp Porton.-sct prefix.sct 							 		*/
+
+/**
+ * @brief	main routine for statechart example
+ * @return	Function should not exit.
+ */
+int main(void)
+{
+	#if (__USE_TIME_EVENTS == true)
+	uint32_t i;
+	#endif
+
+	uint32_t BUTTON_Status;
+
+	/* Generic Initialization */
+	initHardware();
+
+	/* Statechart Initialization */
+	#if (__USE_TIME_EVENTS == true)
+	InitTimerTicks(ticks, NOF_TIMERS);
+	#endif
+
+	prefix_init(&statechart);
+	prefix_enter(&statechart);
+
+	/* LEDs toggle in main */
+	while (1) {
+		__WFI();
+
+		if (SysTick_Time_Flag == true) {
+			SysTick_Time_Flag = false;
+
+			#if (__USE_TIME_EVENTS == true)
+			UpdateTimers(ticks, NOF_TIMERS);
+			for (i = 0; i < NOF_TIMERS; i++) {
+				if (IsPendEvent(ticks, NOF_TIMERS, ticks[i].evid) == true) {
+
+					prefix_raiseTimeEvent(&statechart, ticks[i].evid);	// Event -> Ticks.evid => OK
+					MarkAsAttEvent(ticks, NOF_TIMERS, ticks[i].evid);
+				}
+			}
+			#else
+			prefixIface_raise_evTick(&statechart);					// Event -> evTick => OK
+			#endif
+
+			BUTTON_Status = Buttons_GetStatus();
+			if (BUTTON_Status != 0)									// Event -> evTECXOprimodo => OK
+				prefixIface_raise_evTECXOprimido(&statechart, BUTTON_Status);	// Value -> Tecla
+			else													// Event -> evTECXNoOprimido => OK
+				prefixIface_raise_evTECXNoOprimido(&statechart);
+
+			prefix_runCycle(&statechart);							// Run Cycle of Statechart
+		}
+	}
+}
+#endif
+
 
 /** @} doxygen end group definition */
 
