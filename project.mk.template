@@ -44,6 +44,7 @@
 #PROJECT = examples/blinky_rit
 #PROJECT = examples/adc_fir_dac
 #PROJECT = examples/freertos_blinky
+#PROJECT = examples/statechart
 
 #------------ sapi_examples ------------------------------------
 
