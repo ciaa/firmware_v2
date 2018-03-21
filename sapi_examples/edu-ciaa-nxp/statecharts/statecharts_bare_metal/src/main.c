@@ -93,8 +93,8 @@ static Prefix statechart;
 
 
 /* Select a TimeEvents choise	*/
-/*#define __USE_TIME_EVENTS (false)	/* "false" without TimeEvents */
-#define __USE_TIME_EVENTS (true)	/* or "true" with TimerEvents */
+#define __USE_TIME_EVENTS (false)	/* "false" without TimeEvents */
+//#define __USE_TIME_EVENTS (true)	/* or "true" with TimerEvents */
 
 /*! This is a timed state machine that requires timer services */
 #if (__USE_TIME_EVENTS == true)
