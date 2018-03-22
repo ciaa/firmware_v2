@@ -1,6 +1,6 @@
 GeneratorModel for yakindu::c {
 
-	statechart idleblink {
+	statechart prefix {
 
 		feature Outlet {
 			targetProject = "firmware_v2"

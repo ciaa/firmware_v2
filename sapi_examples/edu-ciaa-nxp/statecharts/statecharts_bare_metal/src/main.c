@@ -41,7 +41,7 @@
 /*==================[inclusions]=============================================*/
 
 #include "main.h"
-#include "board.h"
+#include "sapi.h"       // <= sAPI header
 
 /* Include statechart header file. Be sure you run the statechart C code
  * generation tool!
@@ -80,6 +80,10 @@
 /* Select a compilation choise	*/
 #define TEST (SCT_1)
 
+
+#define TICKRATE_1MS	(1)				/* 1000 ticks per second */
+#define TICKRATE_MS		(TICKRATE_1MS)	/* 1000 ticks per second */
+
 /*==================[internal data declaration]==============================*/
 
 volatile bool SysTick_Time_Flag = false;
@@ -90,7 +94,7 @@ static Prefix statechart;
 
 /* Select a TimeEvents choise	*/
 #define __USE_TIME_EVENTS (false)	/* "false" without TimeEvents */
-/*#define __USE_TIME_EVENTS (true)	/* or "true" with TimerEvents */
+//#define __USE_TIME_EVENTS (true)	/* or "true" with TimerEvents */
 
 /*! This is a timed state machine that requires timer services */
 #if (__USE_TIME_EVENTS == true)
@@ -104,24 +108,11 @@ TimerTicks ticks[NOF_TIMERS];
 
 /*==================[internal functions declaration]=========================*/
 
-/** @brief hardware initialization function
- *	@return none
- */
-static void initHardware(void);
-
 /*==================[internal data definition]===============================*/
 
 /*==================[external data definition]===============================*/
 
 /*==================[internal functions definition]==========================*/
-
-/** clock and peripherals initialization */
-static void initHardware(void)
-{
-	Board_Init();
-	SystemCoreClockUpdate();
-	SysTick_Config(SystemCoreClock / 1000);
-}
 
 /*==================[external functions definition]==========================*/
 
@@ -150,7 +141,7 @@ There are some constraints that have to be considered for the implementation of 
  */
 void prefixIface_opLED(Prefix* handle, sc_integer LEDNumber, sc_boolean State)
 {
-	Board_LED_Set((uint8_t) LEDNumber, State);
+	gpioWrite( (LEDR + LEDNumber), State);
 }
 
 
@@ -184,11 +175,10 @@ void prefix_unsetTimer(Prefix* handle, const sc_eventid evid)
 
 
 /**
- * @brief	Handle interrupt from SysTick timer
+ * @brief	Hook on Handle interrupt from SysTick timer
  * @return	Nothing
  */
-void SysTick_Handler(void)
-{
+void myTickHook( void *ptr ){
 	SysTick_Time_Flag = true;
 }
 
@@ -212,7 +202,13 @@ int main(void)
 	#endif
 
 	/* Generic Initialization */
-	initHardware();
+	boardConfig();
+
+	/* Init Ticks counter => TICKRATE_MS */
+	tickConfig( TICKRATE_MS );
+
+	/* Add Tick Hook */
+	tickCallbackSet( myTickHook, (void*)NULL );
 
 	/* Statechart Initialization */
 	#if (__USE_TIME_EVENTS == true)
@@ -257,7 +253,18 @@ int main(void)
 						#define __USE_TIME_EVENTS (true)
  	 	 	 	 	 	rm prefix.sct
  	 	 	 	 	 	cp Button.-sct prefix.sct 							 */
-/**
+
+
+uint32_t Buttons_GetStatus_(void) {
+	uint8_t ret = false;
+
+	if (gpioRead( TEC1 ) == 0)
+		ret = true;
+
+	return ret;
+}
+
+ /**
  * @brief	main routine for statechart example
  * @return	Function should not exit.
  */
@@ -270,7 +277,13 @@ int main(void)
 	uint32_t BUTTON_Status;
 
 	/* Generic Initialization */
-	initHardware();
+	boardConfig();
+
+	/* Init Ticks counter => TICKRATE_MS */
+	tickConfig( TICKRATE_MS );
+
+	/* Add Tick Hook */
+	tickCallbackSet( myTickHook, (void*)NULL );
 
 	/* Statechart Initialization */
 	#if (__USE_TIME_EVENTS == true)
@@ -300,7 +313,7 @@ int main(void)
 			prefixIface_raise_evTick(&statechart);					// Event -> evTick => OK
 			#endif
 
-			BUTTON_Status = Buttons_GetStatus();
+		    BUTTON_Status = Buttons_GetStatus_();
 			if (BUTTON_Status != 0)
 				prefixIface_raise_evTECXOprimido(&statechart);		// Event -> evTECXOprimodo => OK
 			else
@@ -322,6 +335,18 @@ int main(void)
  	 	 	 	 	 	rm prefix.sct
  	 	 	 	 	 	cp Porton.-sct prefix.sct 							 		*/
 
+
+uint32_t Buttons_GetStatus_(void) {
+	uint8_t ret = false;
+	uint32_t idx;
+
+	for (idx = 0; idx < 4; ++idx) {
+		if (gpioRead( TEC1 + idx ) == 0)
+			ret |= 1 << idx;
+	}
+	return ret;
+}
+
 /**
  * @brief	main routine for statechart example
  * @return	Function should not exit.
@@ -335,7 +360,13 @@ int main(void)
 	uint32_t BUTTON_Status;
 
 	/* Generic Initialization */
-	initHardware();
+	boardConfig();
+
+	/* Init Ticks counter => TICKRATE_MS */
+	tickConfig( TICKRATE_MS );
+
+	/* Add Tick Hook */
+	tickCallbackSet( myTickHook, (void*)NULL );
 
 	/* Statechart Initialization */
 	#if (__USE_TIME_EVENTS == true)
@@ -365,7 +396,7 @@ int main(void)
 			prefixIface_raise_evTick(&statechart);					// Event -> evTick => OK
 			#endif
 
-			BUTTON_Status = Buttons_GetStatus();
+			BUTTON_Status = Buttons_GetStatus_();
 			if (BUTTON_Status != 0)									// Event -> evTECXOprimodo => OK
 				prefixIface_raise_evTECXOprimido(&statechart, BUTTON_Status);	// Value -> Tecla
 			else													// Event -> evTECXNoOprimido => OK
