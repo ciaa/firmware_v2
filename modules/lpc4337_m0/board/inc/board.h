@@ -119,6 +119,12 @@ extern "C" {
 #define JOY_PRESS           0x10
 #define NO_BUTTON_PRESSED   0x00
 
+/* EDU-CIAA-NXP button defines */
+#define TEC1_PRESSED        0x01
+#define TEC2_PRESSED        0x02
+#define TEC3_PRESSED        0x04
+#define TEC4_PRESSED        0x08
+
 /*Define if use SDCARD for Mass Storage Example*/
 // #define CFG_SDCARD
 
@@ -242,10 +248,13 @@ void Board_Joystick_Init(void);
 uint8_t Joystick_GetStatus(void);
 
 /**
- * @brief	Returns button(s) state on board
- * @return	Returns BUTTONS_BUTTON1 if button1 is pressed
+ * @brief	Return button(s) state on board
+ * @return	Returns NO_BUTTON_PRESSED or TEC*_PRESSED, where *={1,2,3,4}
+ * @note
+ * Return values are ORed, so you can check if two buttons are pressed
+ * at the same time.
  */
-uint32_t Buttons_GetStatus (void);
+uint32_t Buttons_GetStatus(void);
 
 /**
  * @brief	Initialize I2S interface for the board and UDA1380
@@ -286,7 +295,7 @@ void Board_LCD_WriteData(const uint8_t *data, uint16_t size);
  * @}
  */
 
-#include "board_api.h"
+#include "board_api-.h"
 
 #ifdef __cplusplus
 }

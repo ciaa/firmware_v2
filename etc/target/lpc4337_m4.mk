@@ -37,6 +37,10 @@ TARGET_NAME := lpc4337_m4
 
 # Default cross-toolchain
 CROSS_PREFIX ?= arm-none-eabi-
+CC=$(CROSS_PREFIX)gcc
+AS=$(CROSS_PREFix)gcc
+CXX=$(CROSS_PREFIX)g++
+LD=$(CROSS_PREFIX)gcc
 
 # variables de rutas o carpetas
 OUT_PATH = out/$(TARGET_NAME)

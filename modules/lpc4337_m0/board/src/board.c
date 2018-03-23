@@ -52,6 +52,8 @@ typedef struct {
 
 static const io_port_t gpioLEDBits[] = {{5,0},{5,1},{5,2},{0,14},{1,11},{1,12}};
 static uint32_t lcd_cfg_val;
+static const io_port_t gpioBtnBits[] = {{0,4},{0,8},{0,9},{1,9}};
+static const uint8_t gpioBtnIDs[] = {TEC1_PRESSED, TEC2_PRESSED, TEC3_PRESSED, TEC4_PRESSED};
 
 void Board_UART_Init(LPC_USART_T *pUART)
 {
@@ -145,16 +147,31 @@ void Board_LED_Toggle(uint8_t LEDNumber)
 
 void Board_Buttons_Init(void)
 {
-	Chip_SCU_PinMuxSet(0x2, 7, (SCU_MODE_PULLUP | SCU_MODE_INBUFF_EN | SCU_MODE_ZIF_DIS | SCU_MODE_FUNC0));		// P2_7 as GPIO0[7]
-	Chip_GPIO_SetPinDIRInput(LPC_GPIO_PORT, BUTTONS_BUTTON1_GPIO_PORT_NUM, BUTTONS_BUTTON1_GPIO_BIT_NUM);	// input
+	/* EDU-CIAA-NXP buttons */
+	PINMUX_GRP_T pin_config[] = {
+			{1, 0, MD_PUP|MD_EZI|FUNC0},	/* TEC1 -> P1_0 */
+			{1, 1, MD_PUP|MD_EZI|FUNC0},	/* TEC2 -> P1_1 */
+			{1, 2, MD_PUP|MD_EZI|FUNC0},	/* TEC3 -> P1_2 */
+			{1, 6, MD_PUP|MD_EZI|FUNC0} 	/* TEC4 -> P1_6 */
+	};
+
+	Chip_SCU_SetPinMuxing(pin_config, (sizeof(pin_config) / sizeof(PINMUX_GRP_T)));
+
+	for (uint8_t i = 0; i < (sizeof(gpioBtnBits) / sizeof(io_port_t)); i++) {
+		Chip_GPIO_SetPinDIRInput(LPC_GPIO_PORT, gpioBtnBits[i].port, gpioBtnBits[i].pin);
+	}
 }
 
 uint32_t Buttons_GetStatus(void)
 {
 	uint8_t ret = NO_BUTTON_PRESSED;
-	if (Chip_GPIO_GetPinState(LPC_GPIO_PORT, BUTTONS_BUTTON1_GPIO_PORT_NUM, BUTTONS_BUTTON1_GPIO_BIT_NUM) == 0) {
-		ret |= BUTTONS_BUTTON1;
+
+	for (uint8_t i = 0; i < (sizeof(gpioBtnBits) / sizeof(io_port_t)); i++) {
+		if (Chip_GPIO_GetPinState(LPC_GPIO_PORT, gpioBtnBits[i].port, gpioBtnBits[i].pin) == 0) {
+			ret |= gpioBtnIDs[i];
+		}
 	}
+
 	return ret;
 }
 
@@ -187,6 +204,9 @@ void Board_Init(void)
 	/* Initialize LEDs */
 	Board_LED_Init();
 	Chip_ENET_RMIIEnable(LPC_ETHERNET);
+
+	/* Initialize Buttons */
+	Board_Buttons_Init();
 }
 
 void Board_I2C_Init(I2C_ID_T id)
