@@ -29,10 +29,10 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-freertos_PATH := modules/lpc4337_m4/freertos
+freertos_PATH := modules/lpc54102_m4/freertos
 
 freertos_SRC_FILES += $(wildcard $(freertos_PATH)/src/*.c)
 
-freertos_SRC_FOLDERS += modules/lpc4337_m4/freertos/src
+freertos_SRC_FOLDERS += $(freertos_PATH)/src
 
-freertos_INC_FOLDERS += modules/lpc4337_m4/freertos/inc
+freertos_INC_FOLDERS += $(freertos_PATH)/inc

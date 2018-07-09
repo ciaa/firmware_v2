@@ -33,7 +33,7 @@
 #include "task.h"
 #include "FreeRTOSCommonHooks.h"
 
-#include "board.h"
+#include "chip.h"
 
 /*****************************************************************************
  * Private types/enumerations/variables
@@ -43,6 +43,7 @@
 #else
 #define __WEAK__   __attribute__((weak))
 #endif
+
 /*****************************************************************************
  * Public types/enumerations/variables
  ****************************************************************************/
@@ -67,8 +68,8 @@ void FreeRTOSDelay(uint32_t ms)
 /* FreeRTOS malloc fail hook */
 __WEAK__ void vApplicationMallocFailedHook(void)
 {
-	DEBUGSTR("DIE:ERROR:FreeRTOS: Malloc Failure!\r\n");
 	taskDISABLE_INTERRUPTS();
+	__BKPT(0x01);
 	for (;; ) {}
 }
 
@@ -85,14 +86,29 @@ __WEAK__ void vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskNam
 	(void) pxTask;
 	(void) pcTaskName;
 
-	DEBUGOUT("DIE:ERROR:FreeRTOS: Stack overflow in task %s\r\n", pcTaskName);
 	/* Run time stack overflow checking is performed if
 	   configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
 	   function is called if a stack overflow is detected. */
 	taskDISABLE_INTERRUPTS();
+	__BKPT(0x02);
 	for (;; ) {}
 }
 
 /* FreeRTOS application tick hook */
 __WEAK__ void vApplicationTickHook(void)
 {}
+
+#ifdef __CC_ARM
+#ifndef EXTRA_HEAP_SZ
+#define EXTRA_HEAP_SZ 0x6000
+#endif
+static uint32_t extra_heap[EXTRA_HEAP_SZ / sizeof(uint32_t)];
+__attribute__((used)) unsigned __user_heap_extend(int var0, void **base, unsigned requested_size)
+{
+	if (requested_size > EXTRA_HEAP_SZ)
+		return 0;
+
+	*base = (void *) extra_heap;
+	return sizeof(extra_heap);
+}
+#endif
