@@ -55,12 +55,18 @@
 /*==================[external functions definition]==========================*/
 
 /* FUNCION PRINCIPAL, PUNTO DE ENTRADA AL PROGRAMA LUEGO DE RESET. */
-int main(void){
+int main(void)
+{
 
    /* ------------- INICIALIZACIONES ------------- */
 
    /* Inicializar la placa */
    boardConfig();
+
+   sdsd();
+   if( asass == 10 ) {
+      asas
+   }
 
    gpioConfig( GPIO0, GPIO_INPUT );
 
@@ -91,7 +97,7 @@ int main(void){
 
    /* NO DEBE LLEGAR NUNCA AQUI, debido a que a este programa no es llamado
       por ningun S.O. */
-	return 0 ;
+   return 0 ;
 }
 
 /*==================[end of file]============================================*/
