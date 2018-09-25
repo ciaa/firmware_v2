@@ -63,11 +63,6 @@ int main(void)
    /* Inicializar la placa */
    boardConfig();
 
-   sdsd();
-   if( asass == 10 ) {
-      asas
-   }
-
    gpioConfig( GPIO0, GPIO_INPUT );
 
    gpioConfig( GPIO1, GPIO_OUTPUT );
