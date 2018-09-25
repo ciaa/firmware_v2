@@ -1,0 +1,63 @@
+Mon Mar 12 20:28:18 2018: build-wrapper, version 5.1 (linux-x86)
+Mon Mar 12 20:28:18 2018: System name: Linux Nodename: dell2ul Release: 4.4.119-1-MANJARO Version: #1 SMP PREEMPT Wed Feb 28 19:51:55 UTC 2018 Machine: x86_64
+Mon Mar 12 20:28:18 2018: socket path: /tmp/build-wrapper-socket.IVKnxQ
+Mon Mar 12 20:28:18 2018: dynamic library found: /opt/SonarQube/build-wrapper-linux-x86/libinterceptor-i686.so
+Mon Mar 12 20:28:18 2018: dynamic library found: /opt/SonarQube/build-wrapper-linux-x86/libinterceptor-x86_64.so
+Mon Mar 12 20:28:18 2018: command executed as: <build-wrapper-linux-x86-64>
+Mon Mar 12 20:28:18 2018: command line received: <make clean all>
+Mon Mar 12 20:28:18 2018: env 0: <LS_COLORS=rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=01;05;37;41:mi=01;05;37;41:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.axv=01;35:*.anx=01;35:*.ogv=01;35:*.ogx=01;35:*.pdf=00;32:*.ps=00;32:*.txt=00;32:*.patch=00;32:*.diff=00;32:*.log=00;32:*.tex=00;32:*.doc=00;32:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.axa=00;36:*.oga=00;36:*.spx=00;36:*.xspf=00;36:>
+Mon Mar 12 20:28:18 2018: env 1: <LC_MEASUREMENT=es_CO.UTF-8>
+Mon Mar 12 20:28:18 2018: env 2: <LC_PAPER=es_CO.UTF-8>
+Mon Mar 12 20:28:18 2018: env 3: <LC_MONETARY=es_CO.UTF-8>
+Mon Mar 12 20:28:18 2018: env 4: <LANG=en_US.utf8>
+Mon Mar 12 20:28:18 2018: env 5: <GDM_LANG=en_US.utf8>
+Mon Mar 12 20:28:18 2018: env 6: <YAOURT_COLORS=nb=1:pkg=1:ver=1;32:lver=1;45:installed=1;42:grp=1;34:od=1;41;5:votes=1;44:dsc=0:other=1;35>
+Mon Mar 12 20:28:18 2018: env 7: <DISPLAY=:0>
+Mon Mar 12 20:28:18 2018: env 8: <OLDPWD=/opt/SonarQube/sonar-scanner-3.0.3.778-linux/bin>
+Mon Mar 12 20:28:18 2018: env 9: <EDITOR=/usr/bin/nano>
+Mon Mar 12 20:28:18 2018: env 10: <COLORTERM=rxvt>
+Mon Mar 12 20:28:18 2018: env 11: <MOZ_PLUGIN_PATH=/usr/lib/mozilla/plugins>
+Mon Mar 12 20:28:18 2018: env 12: <XDG_VTNR=7>
+Mon Mar 12 20:28:18 2018: env 13: <LC_NAME=es_CO.UTF-8>
+Mon Mar 12 20:28:18 2018: env 14: <XDG_SESSION_ID=c2>
+Mon Mar 12 20:28:18 2018: env 15: <XDG_GREETER_DATA_DIR=/var/lib/lightdm-data/larsul>
+Mon Mar 12 20:28:18 2018: env 16: <USER=larsul>
+Mon Mar 12 20:28:18 2018: env 17: <DESKTOP_SESSION=i3>
+Mon Mar 12 20:28:18 2018: env 18: <PT7HOME=/opt/pt>
+Mon Mar 12 20:28:18 2018: env 19: <GTK2_RC_FILES=/home/larsul/.gtkrc-2.0>
+Mon Mar 12 20:28:18 2018: env 20: <QT_QPA_PLATFORMTHEME=qt5ct>
+Mon Mar 12 20:28:18 2018: env 21: <PWD=/home/larsul/Dropbox/UBA/201802_IngSoftware/Repos/firmware_v2>
+Mon Mar 12 20:28:18 2018: env 22: <HOME=/home/larsul>
+Mon Mar 12 20:28:18 2018: env 23: <BROWSER=/usr/bin/firefox>
+Mon Mar 12 20:28:18 2018: env 24: <XDG_SESSION_TYPE=x11>
+Mon Mar 12 20:28:18 2018: env 25: <XDG_SESSION_DESKTOP=i3>
+Mon Mar 12 20:28:18 2018: env 26: <LC_ADDRESS=es_CO.UTF-8>
+Mon Mar 12 20:28:18 2018: env 27: <LC_NUMERIC=es_CO.UTF-8>
+Mon Mar 12 20:28:18 2018: env 28: <SAL_USE_VCLPLUGIN=gtk>
+Mon Mar 12 20:28:18 2018: env 29: <DESKTOP_STARTUP_ID=i3/terminal/938-5-dell2ul_TIME10725560>
+Mon Mar 12 20:28:18 2018: env 30: <GTK_MODULES=canberra-gtk-module>
+Mon Mar 12 20:28:18 2018: env 31: <MAIL=/var/spool/mail/larsul>
+Mon Mar 12 20:28:18 2018: env 32: <TERM=rxvt-unicode-256color>
+Mon Mar 12 20:28:18 2018: env 33: <SHELL=/bin/bash>
+Mon Mar 12 20:28:18 2018: env 34: <XDG_SEAT_PATH=/org/freedesktop/DisplayManager/Seat0>
+Mon Mar 12 20:28:18 2018: env 35: <XDG_CURRENT_DESKTOP=i3>
+Mon Mar 12 20:28:18 2018: env 36: <COLORFGBG=default;default>
+Mon Mar 12 20:28:18 2018: env 37: <XDG_SEAT=seat0>
+Mon Mar 12 20:28:18 2018: env 38: <SHLVL=3>
+Mon Mar 12 20:28:18 2018: env 39: <WINDOWID=62914580>
+Mon Mar 12 20:28:18 2018: env 40: <LC_TELEPHONE=es_CO.UTF-8>
+Mon Mar 12 20:28:18 2018: env 41: <GDMSESSION=i3>
+Mon Mar 12 20:28:18 2018: env 42: <LOGNAME=larsul>
+Mon Mar 12 20:28:18 2018: env 43: <DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus>
+Mon Mar 12 20:28:18 2018: env 44: <XDG_RUNTIME_DIR=/run/user/1000>
+Mon Mar 12 20:28:18 2018: env 45: <XAUTHORITY=/home/larsul/.Xauthority>
+Mon Mar 12 20:28:18 2018: env 46: <ANT_HOME=/usr/share/apache-ant>
+Mon Mar 12 20:28:18 2018: env 47: <XDG_SESSION_PATH=/org/freedesktop/DisplayManager/Session0>
+Mon Mar 12 20:28:18 2018: env 48: <PATH=/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/home/larsul/.platformio/penv/bin:/home/larsul/bin:/opt/SonarQube/build-wrapper-linux-x86:/opt/SonarQube/sonar-scanner-3.0.3.778-linux/bin>
+Mon Mar 12 20:28:18 2018: env 49: <LC_IDENTIFICATION=es_CO.UTF-8>
+Mon Mar 12 20:28:18 2018: env 50: <LC_TIME=es_CO.UTF-8>
+Mon Mar 12 20:28:18 2018: env 51: <_=/opt/SonarQube/build-wrapper-linux-x86/build-wrapper-linux-x86-64>
+Mon Mar 12 20:28:18 2018: executing: <make clean all>
+Mon Mar 12 20:28:18 2018: initializing json file
+Mon Mar 12 20:28:25 2018: finalizing json file
+Mon Mar 12 20:28:25 2018: returned with code: 0
